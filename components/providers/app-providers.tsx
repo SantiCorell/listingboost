@@ -15,7 +15,11 @@ export function AppProviders({
   session: Session | null;
 }) {
   return (
-    <SessionProvider session={session} refetchInterval={0} refetchOnWindowFocus>
+    <SessionProvider
+      session={session}
+      refetchInterval={120}
+      refetchOnWindowFocus
+    >
       <CookieConsentProvider>
         <PageViewTracker />
         <JobNotificationsProvider />

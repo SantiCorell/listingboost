@@ -191,6 +191,23 @@ export function SiteHeader() {
                         Admin
                       </Link>
                     ) : null}
+                    <Link
+                      href="/settings"
+                      className="rounded-lg px-3 py-2.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      Ajustes
+                    </Link>
+                    <button
+                      type="button"
+                      className="w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-destructive hover:bg-destructive/10"
+                      onClick={() => {
+                        setMobileOpen(false);
+                        void signOut({ redirectTo: "/", redirect: true });
+                      }}
+                    >
+                      Cerrar sesión
+                    </button>
                   </>
                 ) : (
                   <>
@@ -489,16 +506,25 @@ export function SiteHeader() {
                     </DropdownMenuItem>
                   ) : null}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href={upsell.href} className="cursor-pointer font-medium text-amber-700 dark:text-amber-400">
+                  {upsell.disabled ? (
+                    <DropdownMenuItem disabled className="cursor-not-allowed opacity-60">
                       <Crown className="h-4 w-4" />
                       {upsell.label}
-                    </Link>
-                  </DropdownMenuItem>
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem asChild>
+                      <Link href={upsell.href} className="cursor-pointer font-medium text-amber-700 dark:text-amber-400">
+                        <Crown className="h-4 w-4" />
+                        {upsell.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer text-destructive focus:text-destructive"
-                    onClick={() => signOut({ callbackUrl: "/" })}
+                    onClick={() => {
+                      void signOut({ redirectTo: "/", redirect: true });
+                    }}
                   >
                     <LogOut className="h-4 w-4" />
                     Cerrar sesión
