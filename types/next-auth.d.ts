@@ -24,5 +24,7 @@ declare module "next-auth/jwt" {
     id?: string;
     plan?: Plan;
     role?: UserRole;
+    /** Sincronizado desde Prisma para reflejar cambios en Ajustes. */
+    name?: string | null;
   }
 }

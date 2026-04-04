@@ -35,6 +35,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user?.id) {
         token.id = user.id;
         token.sub = user.id;
+        if (user.name !== undefined && user.name !== null) {
+          token.name = user.name;
+        }
       }
       const id = (token.id as string | undefined) ?? (token.sub as string | undefined);
       if (!id) return token;
@@ -42,11 +45,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       try {
         const row = await prisma.user.findUnique({
           where: { id },
-          select: { plan: true, role: true },
+          select: { plan: true, role: true, name: true },
         });
         if (row) {
           token.plan = row.plan as Plan;
           token.role = row.role as UserRole;
+          token.name = row.name;
         }
       } catch (e) {
         console.error("[auth] jwt prisma.user.findUnique:", e);
@@ -61,6 +65,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.role = role;
         session.user.isAdmin =
           role === "ADMIN" || parseAdminEmails().includes((session.user.email ?? "").toLowerCase());
+        if (token.name !== undefined) {
+          session.user.name = token.name;
+        }
       }
       return session;
     },
