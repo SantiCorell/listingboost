@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { SubscriptionCheckoutPlan } from "@/lib/stripe/plan-mapping";
+import { parseCheckoutResponse } from "@/lib/api/parse-checkout-response";
 import { Loader2 } from "lucide-react";
 
 export function CheckoutPlanButton({
@@ -33,14 +34,12 @@ export function CheckoutPlanButton({
         window.location.href = "/login?callbackUrl=/pricing";
         return;
       }
-      if (!r.ok) {
-        const t = await r.text();
-        setMsg(t || "No se pudo iniciar el pago.");
+      const result = await parseCheckoutResponse(r);
+      if (!result.ok) {
+        setMsg(result.message);
         return;
       }
-      const data = (await r.json()) as { url?: string };
-      if (data.url) window.location.href = data.url;
-      else setMsg("No se recibió URL de checkout.");
+      window.location.href = result.url;
     } catch {
       setMsg("Error de red.");
     } finally {

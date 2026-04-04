@@ -7,6 +7,7 @@ import { historyTake } from "@/lib/usage";
 import { canOpenSavedStudy } from "@/lib/history-access";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CreditsUpsellBanner } from "@/components/pricing/credits-upsell-banner";
 import { ChevronRight, Lock } from "lucide-react";
 
 export default async function HistoryPage() {
@@ -35,6 +36,7 @@ export default async function HistoryPage() {
 
   return (
     <div className="space-y-8">
+      <CreditsUpsellBanner />
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Historial</h1>

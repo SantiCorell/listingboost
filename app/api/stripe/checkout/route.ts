@@ -1,6 +1,8 @@
+import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { prisma } from "@/lib/prisma";
+import { isStripeSecretConfigured } from "@/lib/stripe/env";
 import { getStripe } from "@/services/stripe/client";
 import {
   stripePriceIdForCreditPurchase,
@@ -19,7 +21,7 @@ function stripeHttpMessage(e: unknown, fallback: string): string {
     if (o.code === "resource_missing") {
       return (
         "El Price ID no existe en el modo Stripe de tu clave (test vs live). " +
-        "Si usas sk_live_…, crea o copia los precios en el Dashboard con el interruptor «Live» y actualiza STRIPE_PRICE_ID_* en .env."
+        "Si usas sk_live_…, crea o copia los precios en el Dashboard con el interruptor «Live» y actualiza STRIPE_PRICE_ID_* en Vercel."
       );
     }
     if (typeof o.message === "string") return o.message;
@@ -30,19 +32,32 @@ function stripeHttpMessage(e: unknown, fallback: string): string {
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) {
-    return new Response("No autorizado", { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
   if (!isCommerceEnabled()) {
-    return new Response(
-      "Los pagos están temporalmente desactivados. Solo está disponible el plan Free.",
+    return NextResponse.json(
+      { error: "Los pagos están temporalmente desactivados. Solo está disponible el plan Free." },
       { status: 403 },
+    );
+  }
+
+  if (!isStripeSecretConfigured()) {
+    return NextResponse.json(
+      {
+        error:
+          "Falta STRIPE_SECRET_KEY en el servidor. En Vercel → Project → Settings → Environment Variables, añade la «Secret key» de Stripe (Developers → API keys: sk_live_… o sk_test_…). Guarda y vuelve a desplegar.",
+      },
+      { status: 503 },
     );
   }
 
   const base = process.env.NEXT_PUBLIC_APP_URL;
   if (!base) {
-    return new Response("NEXT_PUBLIC_APP_URL no configurada", { status: 500 });
+    return NextResponse.json(
+      { error: "NEXT_PUBLIC_APP_URL no configurada (URL pública de la app, sin barra final)." },
+      { status: 500 },
+    );
   }
 
   let body: Record<string, unknown> = {};
@@ -56,7 +71,17 @@ export async function POST(req: Request) {
   }
 
   const type = (body.type as string) || "subscription";
-  const stripe = getStripe();
+
+  let stripe: ReturnType<typeof getStripe>;
+  try {
+    stripe = getStripe();
+  } catch (e) {
+    console.error("[stripe checkout] init", e);
+    return NextResponse.json(
+      { error: "No se pudo conectar con Stripe. Revisa STRIPE_SECRET_KEY en Vercel." },
+      { status: 503 },
+    );
+  }
 
   const existing = await prisma.subscription.findFirst({
     where: { userId: session.user.id },
@@ -75,9 +100,10 @@ export async function POST(req: Request) {
     const priceId = stripePriceIdForCreditPurchase(user.plan);
     if (!priceId) {
       console.error("[stripe checkout credits] falta price id para plan", user.plan);
-      return new Response(
-        `Falta el precio Stripe de créditos para tu plan actual (${planLabel(user.plan)}). ` +
-          `En .env define el STRIPE_PRICE_ID_CREDIT_* que corresponda (FREE / PRO / PRO_PLUS / ENTERPRISE).`,
+      return NextResponse.json(
+        {
+          error: `Falta el precio Stripe de créditos para ${planLabel(user.plan)}. En Vercel define el STRIPE_PRICE_ID_CREDIT_* que corresponda a tu plan (FREE / PRO / PRO_PLUS / ENTERPRISE).`,
+        },
         { status: 500 },
       );
     }
@@ -103,15 +129,14 @@ export async function POST(req: Request) {
           userId: session.user.id,
           checkoutType: "credits",
           credits: String(quantity),
-          /** Tarifa aplicada: cada plan usa su Price de Stripe (ver stripePriceIdForCreditPurchase). */
           creditPlan: user.plan,
         },
       });
-      return Response.json({ url: checkoutSession.url });
+      return NextResponse.json({ url: checkoutSession.url });
     } catch (e) {
       console.error("[stripe checkout credits]", e);
-      return new Response(
-        stripeHttpMessage(e, "Error al crear el pago en Stripe."),
+      return NextResponse.json(
+        { error: stripeHttpMessage(e, "Error al crear el pago en Stripe.") },
         { status: 502 },
       );
     }
@@ -119,12 +144,15 @@ export async function POST(req: Request) {
 
   const plan = (body.plan as SubscriptionCheckoutPlan) || "PRO";
   if (!["PRO", "PRO_PLUS", "ENTERPRISE"].includes(plan)) {
-    return new Response("Plan no válido", { status: 400 });
+    return NextResponse.json({ error: "Plan no válido" }, { status: 400 });
   }
 
   const priceId = stripePriceIdForSubscription(plan);
   if (!priceId) {
-    return new Response(`Falta precio Stripe para ${plan}`, { status: 500 });
+    return NextResponse.json(
+      { error: `Falta STRIPE_PRICE_ID_${plan} en las variables de entorno.` },
+      { status: 500 },
+    );
   }
 
   if (plan === "ENTERPRISE" && !process.env.STRIPE_PRICE_ID_ENTERPRISE?.trim()) {
@@ -137,17 +165,23 @@ export async function POST(req: Request) {
   try {
     price = await stripe.prices.retrieve(priceId);
   } catch {
-    return new Response("No se pudo validar el precio en Stripe.", { status: 502 });
+    return NextResponse.json(
+      { error: "No se pudo validar el precio en Stripe (¿test vs live?)." },
+      { status: 502 },
+    );
   }
   if (price.type !== "recurring") {
-    return new Response(
-      "El precio del plan no es recurrente. En Stripe debe ser suscripción mensual; ejecuta npm run stripe:seed:write o crea un Price con facturación mensual.",
+    return NextResponse.json(
+      {
+        error:
+          "El precio del plan no es recurrente mensual en Stripe. Crea un Price con facturación «month» o ejecuta npm run stripe:seed:write.",
+      },
       { status: 500 },
     );
   }
   if (price.recurring?.interval !== "month") {
-    return new Response(
-      "El plan debe facturarse cada mes en Stripe (intervalo «month» en el Price).",
+    return NextResponse.json(
+      { error: "El plan debe facturarse cada mes en Stripe (intervalo «month» en el Price)." },
       { status: 500 },
     );
   }
@@ -173,11 +207,11 @@ export async function POST(req: Request) {
         metadata: { userId: session.user.id, targetPlan: plan },
       },
     });
-    return Response.json({ url: checkoutSession.url });
+    return NextResponse.json({ url: checkoutSession.url });
   } catch (e) {
     console.error("[stripe checkout subscription]", e);
-    return new Response(
-      stripeHttpMessage(e, "Error al crear la suscripción en Stripe."),
+    return NextResponse.json(
+      { error: stripeHttpMessage(e, "Error al crear la suscripción en Stripe.") },
       { status: 502 },
     );
   }

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Coins } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { parseCheckoutResponse } from "@/lib/api/parse-checkout-response";
 
 const PRESETS = [5, 10, 25, 50, 100] as const;
 
@@ -50,14 +51,12 @@ export function BuyCreditsButton({
         window.location.href = "/login?callbackUrl=/pricing/credits";
         return;
       }
-      if (!r.ok) {
-        const t = await r.text();
-        setMsg(t || "Créditos no disponibles (revisa Stripe).");
+      const result = await parseCheckoutResponse(r);
+      if (!result.ok) {
+        setMsg(result.message);
         return;
       }
-      const data = (await r.json()) as { url?: string };
-      if (data.url) window.location.href = data.url;
-      else setMsg("No se recibió URL de pago.");
+      window.location.href = result.url;
     } catch {
       setMsg("Error de red.");
     } finally {

@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductSeoForm } from "@/components/product/product-seo-form";
+import { CreditsUpsellBanner } from "@/components/pricing/credits-upsell-banner";
 
 export default async function ProductSeoPage() {
   const session = await auth();
@@ -18,6 +19,7 @@ export default async function ProductSeoPage() {
           Multicanal hoy; roadmap: Amazon, Etsy, Milanuncios y más pipes.
         </p>
       </div>
+      <CreditsUpsellBanner />
       <ProductSeoForm userPlan={user.plan} />
     </div>
   );
