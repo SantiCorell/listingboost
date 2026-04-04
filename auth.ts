@@ -7,6 +7,7 @@ import { parseAdminEmails } from "@/lib/auth/admin";
 import { authConfig, sessionOptions } from "./auth.config";
 import { credentialsProvider } from "./lib/auth/credentials-provider";
 import { googleProvider } from "./lib/auth/google-provider";
+import { sendRegistrationWelcomeEmail } from "@/lib/email/send-registration-welcome";
 
 const google = googleProvider();
 const providers = google ? [google, credentialsProvider()] : [credentialsProvider()];
@@ -72,6 +73,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           data: {
             termsAcceptedAt: new Date(),
           },
+        });
+      }
+      if (user.email) {
+        const displayName = user.name?.trim() || user.email.split("@")[0] || "Usuario";
+        void sendRegistrationWelcomeEmail({ to: user.email, name: displayName }).catch((err) => {
+          console.error("[auth createUser] welcome email:", err);
         });
       }
     },

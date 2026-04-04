@@ -3,6 +3,7 @@
 import { hash } from "bcryptjs";
 import type { AccountKind } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { sendRegistrationWelcomeEmail } from "@/lib/email/send-registration-welcome";
 import { z } from "zod";
 
 const accountKindEnum = z.enum(["EMPRESA", "AUTONOMO", "PARTICULAR"]);
@@ -88,6 +89,10 @@ export async function registerUser(
       profileType: null,
       termsAcceptedAt: new Date(),
     },
+  });
+
+  void sendRegistrationWelcomeEmail({ to: email, name }).catch((err) => {
+    console.error("[registerUser] welcome email:", err);
   });
 
   return { ok: true };

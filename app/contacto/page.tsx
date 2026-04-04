@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { APP_NAME, ENGINE_NAME } from "@/lib/constants";
 import { getPublicContactEmail } from "@/lib/contact";
-import { ContactMailtoForm } from "@/components/contact/contact-mailto-form";
+import { ContactForm } from "@/components/contact/contact-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo-jsonld";
@@ -139,10 +139,11 @@ export default function ContactoPage() {
               <CardContent className="p-6 sm:p-8">
                 <h2 className="text-lg font-semibold">Enviar mensaje</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Rellena el formulario y confirma en tu app de correo. Así evitamos spam y tú controlas el envío.
+                  Te respondemos al email que indiques. Sin abrir el cliente de correo: el mensaje llega directo al
+                  equipo.
                 </p>
                 <div className="mt-6">
-                  <ContactMailtoForm toEmail={email} />
+                  <ContactForm fallbackMailTo={email} />
                 </div>
               </CardContent>
             </Card>
