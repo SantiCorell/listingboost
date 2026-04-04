@@ -41,15 +41,15 @@ npm run dev
 
 Abre [http://localhost:3000](http://localhost:3000). Regístrate, entra al dashboard y ejecuta un análisis.
 
-### Si ves 500, `routes-manifest.json` ENOENT o fallos al renombrar `*.pack.gz` en `.next/cache`
+### Si ves 500, ENOENT en `routes-manifest`, `_buildManifest.js.tmp`, `app-build-manifest.json` o `*.pack.gz`
 
-Suele ser **caché de Next/webpack corrupta** (común en macOS con iCloud/antivirus) o dos procesos tocando `.next` a la vez. Para el servidor (`Ctrl+C`) y en la raíz:
+Suele ser **caché de Next/Turbopack corrupta** (macOS + iCloud/antivirus en Escritorio, o **dos terminales** con `npm run dev` a la vez). **Para el servidor** (`Ctrl+C`), luego:
 
 ```bash
 npm run dev:clean
 ```
 
-Eso borra `.next` y `node_modules/.cache` y arranca **Turbopack** (`next dev --turbopack`). Si necesitas webpack clásico: `npm run dev:clean:webpack`.
+Eso borra `.next`, `.turbo` y `node_modules/.cache` y arranca **Turbopack**. Si sigue fallando: `npm run dev:clean:webpack` (webpack sin caché persistente en `next.config`).
 
 ## Scripts
 
