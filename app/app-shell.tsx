@@ -13,7 +13,14 @@ import { RouteStyleGuard } from "@/components/providers/route-style-guard";
  * html/body y el CSS global tengan un árbol estable en cada navegación.
  */
 export default async function AppShell({ children }: { children: React.ReactNode }) {
-  const session = await auth();
+  let session = null;
+  try {
+    session = await auth();
+  } catch (e) {
+    const digest = typeof e === "object" && e !== null && "digest" in e ? String((e as { digest?: string }).digest) : "";
+    if (digest === "DYNAMIC_SERVER_USAGE") throw e;
+    console.error("[AppShell] auth() falló; se renderiza sin sesión.", e);
+  }
 
   return (
     <>

@@ -34,6 +34,23 @@ export function getAuthSecret(): string {
     return BUILD_PLACEHOLDER;
   }
 
+  /**
+   * Vercel: sin AUTH_SECRET, importar `auth.ts` lanza y toda la app devuelve 500.
+   * Fallback solo con env (compatible con Edge middleware): usa IDs de despliegue de Vercel.
+   * Añade AUTH_SECRET en el panel (openssl rand -base64 32) para producción seria.
+   */
+  if (process.env.VERCEL === "1" || process.env.VERCEL_ENV) {
+    const dpl = process.env.VERCEL_DEPLOYMENT_ID?.trim();
+    const url = process.env.VERCEL_URL?.trim();
+    const sha = process.env.VERCEL_GIT_COMMIT_SHA?.trim();
+    console.error(
+      "[auth] AUTH_SECRET / NEXTAUTH_SECRET no definido en Vercel. " +
+        "Añade AUTH_SECRET en Environment Variables (Production). " +
+        "Mientras tanto se usa un secreto por despliegue.",
+    );
+    return `__lb_vercel__${dpl ?? "dpl"}__${url ?? "host"}__${sha ?? "sha"}`;
+  }
+
   throw new Error(
     "AUTH_SECRET (o NEXTAUTH_SECRET) es obligatorio en producción. En Vercel: Project → Settings → Environment Variables → añade AUTH_SECRET para Production (y que esté disponible en Build). Consulta .env.example",
   );

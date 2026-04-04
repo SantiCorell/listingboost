@@ -38,13 +38,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const id = (token.id as string | undefined) ?? (token.sub as string | undefined);
       if (!id) return token;
 
-      const row = await prisma.user.findUnique({
-        where: { id },
-        select: { plan: true, role: true },
-      });
-      if (row) {
-        token.plan = row.plan as Plan;
-        token.role = row.role as UserRole;
+      try {
+        const row = await prisma.user.findUnique({
+          where: { id },
+          select: { plan: true, role: true },
+        });
+        if (row) {
+          token.plan = row.plan as Plan;
+          token.role = row.role as UserRole;
+        }
+      } catch (e) {
+        console.error("[auth] jwt prisma.user.findUnique:", e);
       }
       return token;
     },
