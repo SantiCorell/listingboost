@@ -62,10 +62,20 @@ type Form = z.infer<typeof schema>;
 
 type Props = {
   googleAuthAvailable: boolean;
+  variant?: "page" | "modal";
+  onSwitchToLogin?: () => void;
+  /** Tras registro OK en modal: cambiar a pestaña login. */
+  onRegistered?: () => void;
 };
 
-export function RegisterForm({ googleAuthAvailable }: Props) {
+export function RegisterForm({
+  googleAuthAvailable,
+  variant = "page",
+  onSwitchToLogin,
+  onRegistered,
+}: Props) {
   const router = useRouter();
+  const isModal = variant === "modal";
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const form = useForm<Form>({
@@ -100,20 +110,43 @@ export function RegisterForm({ googleAuthAvailable }: Props) {
       setErr(res.error ?? "Error al registrar");
       return;
     }
+    if (isModal && onRegistered) {
+      onRegistered();
+      return;
+    }
     router.push("/login?registered=1");
   }
 
   return (
-    <Card className="mx-auto w-full overflow-visible rounded-2xl border-border/70 bg-card/95 shadow-xl shadow-primary/5 backdrop-blur-sm">
-      <CardHeader className="space-y-1 px-4 pb-3 pt-5 text-center sm:px-6 sm:pb-4 sm:pt-6 sm:text-left">
-        <CardTitle className="text-lg font-semibold sm:text-xl">Elige cómo entrar</CardTitle>
+    <Card
+      className={cn(
+        "mx-auto w-full overflow-visible",
+        isModal
+          ? "rounded-xl border-0 bg-transparent shadow-none"
+          : "rounded-2xl border-border/70 bg-card/95 shadow-xl shadow-primary/5 backdrop-blur-sm",
+      )}
+    >
+      <CardHeader
+        className={cn(
+          "space-y-1 text-center sm:text-left",
+          isModal ? "px-0 pb-2 pt-0" : "px-4 pb-3 pt-5 sm:px-6 sm:pb-4 sm:pt-6",
+        )}
+      >
+        <CardTitle className={cn("font-semibold", isModal ? "text-base" : "text-lg sm:text-xl")}>
+          Elige cómo entrar
+        </CardTitle>
         <p className="text-sm text-muted-foreground">
           {googleAuthAvailable
             ? "La mayoría usa Google en un clic. O completa el formulario con email."
             : "Completa el formulario. En menos de un minuto tienes cuenta."}
         </p>
       </CardHeader>
-      <CardContent className="space-y-5 px-4 pb-28 sm:space-y-6 sm:px-6 sm:pb-8">
+      <CardContent
+        className={cn(
+          "space-y-4 sm:space-y-5",
+          isModal ? "px-0 pb-4" : "space-y-5 px-4 pb-28 sm:space-y-6 sm:px-6 sm:pb-8",
+        )}
+      >
         {googleAuthAvailable ? (
           <div className="space-y-3">
             <GoogleSignInButton mode="signup" callbackUrl="/dashboard" />
@@ -180,7 +213,12 @@ export function RegisterForm({ googleAuthAvailable }: Props) {
           <div className="grid gap-4 sm:grid-cols-1">
             <div className="space-y-2">
               <Label htmlFor="name">Nombre y apellidos</Label>
-              <Input id="name" autoComplete="name" className="h-11" {...form.register("name")} />
+              <Input
+              id="name"
+              autoComplete="name"
+              className="h-12 min-h-[48px] text-base sm:h-11 sm:text-sm"
+              {...form.register("name")}
+            />
               {form.formState.errors.name ? (
                 <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
               ) : null}
@@ -188,7 +226,14 @@ export function RegisterForm({ googleAuthAvailable }: Props) {
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" autoComplete="email" className="h-11" {...form.register("email")} />
+              <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              inputMode="email"
+              className="h-12 min-h-[48px] text-base sm:h-11 sm:text-sm"
+              {...form.register("email")}
+            />
               {form.formState.errors.email ? (
                 <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
               ) : null}
@@ -207,13 +252,21 @@ export function RegisterForm({ googleAuthAvailable }: Props) {
                   id="companyName"
                   autoComplete="organization"
                   placeholder="Ej. Mi tienda SL"
-                  className="h-11"
+                  className="h-12 min-h-[48px] text-base sm:h-11 sm:text-sm"
                   {...form.register("companyName")}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Teléfono</Label>
-                <Input id="phone" type="tel" autoComplete="tel" placeholder="+34 …" className="h-11" {...form.register("phone")} />
+                <Input
+                  id="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  placeholder="+34 …"
+                  className="h-12 min-h-[48px] text-base sm:h-11 sm:text-sm"
+                  {...form.register("phone")}
+                />
               </div>
             </div>
           </details>
@@ -225,7 +278,7 @@ export function RegisterForm({ googleAuthAvailable }: Props) {
                 id="password"
                 type="password"
                 autoComplete="new-password"
-                className="h-11"
+                className="h-12 min-h-[48px] text-base sm:h-11 sm:text-sm"
                 {...form.register("password")}
               />
               {form.formState.errors.password ? (
@@ -241,7 +294,7 @@ export function RegisterForm({ googleAuthAvailable }: Props) {
                 id="confirmPassword"
                 type="password"
                 autoComplete="new-password"
-                className="h-11"
+                className="h-12 min-h-[48px] text-base sm:h-11 sm:text-sm"
                 {...form.register("confirmPassword")}
               />
               {form.formState.errors.confirmPassword ? (
@@ -283,39 +336,58 @@ export function RegisterForm({ googleAuthAvailable }: Props) {
 
           {err ? <p className="text-sm text-destructive">{err}</p> : null}
 
-          <Button type="submit" className="hidden h-12 w-full text-base font-semibold sm:flex" size="lg" disabled={loading}>
+          <Button
+            type="submit"
+            className={cn("h-12 w-full text-base font-semibold", !isModal && "hidden sm:flex")}
+            size="lg"
+            disabled={loading}
+          >
             {loading ? <Loader2 className="animate-spin" /> : "Crear cuenta"}
           </Button>
 
-          <p className="hidden text-center text-sm text-muted-foreground sm:block">
-            ¿Ya tienes cuenta?{" "}
-            <Link href="/login" className="font-semibold text-primary hover:underline">
-              Iniciar sesión
-            </Link>
-          </p>
+          {!isModal ? (
+            <p className="hidden text-center text-sm text-muted-foreground sm:block">
+              ¿Ya tienes cuenta?{" "}
+              <Link href="/login" className="font-semibold text-primary hover:underline">
+                Iniciar sesión
+              </Link>
+            </p>
+          ) : (
+            <p className="text-center text-sm text-muted-foreground">
+              ¿Ya tienes cuenta?{" "}
+              <button
+                type="button"
+                className="font-semibold text-primary underline-offset-4 hover:underline"
+                onClick={() => onSwitchToLogin?.()}
+              >
+                Iniciar sesión
+              </button>
+            </p>
+          )}
         </form>
       </CardContent>
 
-      {/* Barra fija móvil: el CTA siempre visible (convierte mejor). */}
-      <div
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-background/90 p-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur-md supports-[padding:max(0px)]:pb-[max(1rem,env(safe-area-inset-bottom))] sm:hidden"
-        role="presentation"
-      >
-        <Button
-          type="submit"
-          form="register-form"
-          className="h-12 w-full text-base font-semibold shadow-md"
-          size="lg"
-          disabled={loading}
+      {!isModal ? (
+        <div
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-background/90 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur-md sm:hidden"
+          role="presentation"
         >
-          {loading ? <Loader2 className="animate-spin" /> : "Crear cuenta"}
-        </Button>
-        <p className="mt-2 text-center text-xs text-muted-foreground">
-          <Link href="/login" className="font-medium text-primary hover:underline">
-            ¿Ya tienes cuenta? Iniciar sesión
-          </Link>
-        </p>
-      </div>
+          <Button
+            type="submit"
+            form="register-form"
+            className="h-12 w-full min-h-[48px] text-base font-semibold shadow-md"
+            size="lg"
+            disabled={loading}
+          >
+            {loading ? <Loader2 className="animate-spin" /> : "Crear cuenta"}
+          </Button>
+          <p className="mt-2 text-center text-xs text-muted-foreground">
+            <Link href="/login" className="font-medium text-primary hover:underline">
+              ¿Ya tienes cuenta? Iniciar sesión
+            </Link>
+          </p>
+        </div>
+      ) : null}
     </Card>
   );
 }

@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { isGoogleAuthConfigured } from "@/lib/auth/google-available";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
@@ -22,6 +23,8 @@ export default async function AppShell({ children }: { children: React.ReactNode
     console.error("[AppShell] auth() falló; se renderiza sin sesión.", e);
   }
 
+  const googleAuthAvailable = isGoogleAuthConfigured();
+
   return (
     <>
       <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
@@ -29,7 +32,7 @@ export default async function AppShell({ children }: { children: React.ReactNode
         <NavigationStyleReset />
         <RouteStyleGuard />
         <div className="flex min-h-screen flex-col">
-          <SiteHeader />
+          <SiteHeader googleAuthAvailable={googleAuthAvailable} />
           <main className="flex min-h-0 flex-1 flex-col">{children}</main>
           <SiteFooter />
         </div>

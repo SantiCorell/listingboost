@@ -35,6 +35,7 @@ import {
   Shield,
   Coins,
 } from "lucide-react";
+import { AuthModal } from "@/components/auth/auth-modal";
 
 function initials(name: string | null | undefined, email: string | null | undefined) {
   if (name?.trim()) {
@@ -51,13 +52,22 @@ function firstName(name: string | null | undefined, email: string | null | undef
   return "Usuario";
 }
 
-export function SiteHeader() {
+export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boolean }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authInitialTab, setAuthInitialTab] = useState<"login" | "register">("login");
+
+  function openAuthModal(tab: "login" | "register") {
+    setMobileOpen(false);
+    setAuthInitialTab(tab);
+    setAuthOpen(true);
+  }
   const plan = (session?.user?.plan ?? "FREE") as Plan;
   const commerceEnabled = process.env.NEXT_PUBLIC_COMMERCE_ENABLED === "true";
   const upsell = headerUpsell(session?.user?.plan, commerceEnabled);
+  const isAdminUser = Boolean(session?.user?.isAdmin);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -168,7 +178,11 @@ export function SiteHeader() {
                     >
                       Scan URL (panel)
                     </Link>
-                    {commerceEnabled ? (
+                    {session.user.isAdmin ? (
+                      <p className="rounded-lg px-3 py-2.5 text-sm font-medium text-amber-800 dark:text-amber-200">
+                        Uso ilimitado (admin)
+                      </p>
+                    ) : commerceEnabled ? (
                       <Link
                         href="/pricing/credits"
                         className="flex items-center gap-2 rounded-lg px-3 py-2.5 font-semibold text-primary hover:bg-primary/10"
@@ -214,20 +228,27 @@ export function SiteHeader() {
                     <p className="mt-4 px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       Acceso
                     </p>
-                    <Link
-                      href="/login"
-                      className="rounded-lg px-3 py-2.5 font-medium hover:bg-accent"
-                      onClick={() => setMobileOpen(false)}
+                    <button
+                      type="button"
+                      className="w-full rounded-lg px-3 py-2.5 text-left font-medium hover:bg-accent"
+                      onClick={() => openAuthModal("login")}
                     >
                       Iniciar sesión
-                    </Link>
-                    <Link
-                      href="/register"
-                      className="rounded-lg px-3 py-2.5 font-medium text-primary hover:bg-accent"
-                      onClick={() => setMobileOpen(false)}
+                    </button>
+                    <button
+                      type="button"
+                      className="w-full rounded-lg px-3 py-2.5 text-left font-semibold text-primary hover:bg-accent"
+                      onClick={() => openAuthModal("register")}
                     >
                       Registrarse
-                    </Link>
+                    </button>
+                    <p className="px-3 pt-1 text-[10px] text-muted-foreground">
+                      También puedes usar{" "}
+                      <Link href="/login" className="underline underline-offset-2" onClick={() => setMobileOpen(false)}>
+                        /login
+                      </Link>{" "}
+                      si prefieres página completa.
+                    </p>
                   </>
                 )}
               </nav>
@@ -381,33 +402,35 @@ export function SiteHeader() {
                   </Badge>
                 </span>
               </div>
-              {upsell.disabled ? (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled
-                  className="hidden cursor-not-allowed gap-1.5 border-dashed px-3 text-xs text-muted-foreground sm:flex"
-                  title={upsell.sub}
-                >
-                  <Crown className="h-3.5 w-3.5 shrink-0 opacity-50" />
-                  <span className="max-w-[9rem] truncate">{upsell.label}</span>
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  className="hidden gap-1.5 border border-amber-400/35 bg-gradient-to-r from-amber-400/25 via-amber-300/20 to-amber-500/15 px-3 text-amber-950 shadow-sm hover:from-amber-400/35 hover:to-amber-500/25 dark:border-amber-400/25 dark:from-amber-400/15 dark:text-amber-50 sm:flex"
-                  asChild
-                  title={upsell.sub}
-                >
-                  <Link href={upsell.href}>
-                    <Crown className="h-3.5 w-3.5 shrink-0" />
-                    <span className="max-w-[7rem] truncate text-xs font-semibold sm:max-w-[9rem]">
-                      {upsell.label}
-                    </span>
-                  </Link>
-                </Button>
-              )}
-              {commerceEnabled ? (
+              {!isAdminUser ? (
+                upsell.disabled ? (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled
+                    className="hidden cursor-not-allowed gap-1.5 border-dashed px-3 text-xs text-muted-foreground sm:flex"
+                    title={upsell.sub}
+                  >
+                    <Crown className="h-3.5 w-3.5 shrink-0 opacity-50" />
+                    <span className="max-w-[9rem] truncate">{upsell.label}</span>
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    className="hidden gap-1.5 border border-amber-400/35 bg-gradient-to-r from-amber-400/25 via-amber-300/20 to-amber-500/15 px-3 text-amber-950 shadow-sm hover:from-amber-400/35 hover:to-amber-500/25 dark:border-amber-400/25 dark:from-amber-400/15 dark:text-amber-50 sm:flex"
+                    asChild
+                    title={upsell.sub}
+                  >
+                    <Link href={upsell.href}>
+                      <Crown className="h-3.5 w-3.5 shrink-0" />
+                      <span className="max-w-[7rem] truncate text-xs font-semibold sm:max-w-[9rem]">
+                        {upsell.label}
+                      </span>
+                    </Link>
+                  </Button>
+                )
+              ) : null}
+              {commerceEnabled && !isAdminUser ? (
                 <Button
                   size="sm"
                   variant="outline"
@@ -465,7 +488,7 @@ export function SiteHeader() {
                       Boost de ficha
                     </Link>
                   </DropdownMenuItem>
-                  {commerceEnabled ? (
+                  {commerceEnabled && !isAdminUser ? (
                     <DropdownMenuItem asChild>
                       <Link href="/pricing/credits" className="cursor-pointer font-semibold text-primary">
                         <Coins className="h-4 w-4" />
@@ -487,20 +510,24 @@ export function SiteHeader() {
                       </Link>
                     </DropdownMenuItem>
                   ) : null}
-                  <DropdownMenuSeparator />
-                  {upsell.disabled ? (
-                    <DropdownMenuItem disabled className="cursor-not-allowed opacity-60">
-                      <Crown className="h-4 w-4" />
-                      {upsell.label}
-                    </DropdownMenuItem>
-                  ) : (
-                    <DropdownMenuItem asChild>
-                      <Link href={upsell.href} className="cursor-pointer font-medium text-amber-700 dark:text-amber-400">
-                        <Crown className="h-4 w-4" />
-                        {upsell.label}
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
+                  {!isAdminUser ? (
+                    <>
+                      <DropdownMenuSeparator />
+                      {upsell.disabled ? (
+                        <DropdownMenuItem disabled className="cursor-not-allowed opacity-60">
+                          <Crown className="h-4 w-4" />
+                          {upsell.label}
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem asChild>
+                          <Link href={upsell.href} className="cursor-pointer font-medium text-amber-700 dark:text-amber-400">
+                            <Crown className="h-4 w-4" />
+                            {upsell.label}
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
+                    </>
+                  ) : null}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer text-destructive focus:text-destructive"
@@ -527,20 +554,27 @@ export function SiteHeader() {
                   Planes Pro
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/login">Iniciar sesión</Link>
+              <Button variant="ghost" size="sm" type="button" onClick={() => openAuthModal("login")}>
+                Iniciar sesión
               </Button>
               <Button
                 size="sm"
+                type="button"
                 className="border border-primary/15 bg-gradient-to-r from-primary to-primary/90 shadow-md shadow-primary/20"
-                asChild
+                onClick={() => openAuthModal("register")}
               >
-                <Link href="/register">Registrarse</Link>
+                Registrarse
               </Button>
             </>
           )}
         </div>
       </div>
+      <AuthModal
+        open={authOpen}
+        onOpenChange={setAuthOpen}
+        googleAuthAvailable={googleAuthAvailable}
+        initialTab={authInitialTab}
+      />
     </header>
   );
 }

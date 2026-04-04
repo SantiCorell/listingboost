@@ -16,7 +16,7 @@ export default async function HistoryPage() {
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: session.user.id },
   });
-  const take = historyTake(user.plan);
+  const take = historyTake(user.plan, session.user.role, session.user.email);
 
   const [products, audits] = await Promise.all([
     prisma.productAnalysis.findMany({

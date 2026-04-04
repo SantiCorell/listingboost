@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { CREDIT_COST_URL_AUDIT } from "@/lib/usage";
-import { ArrowRight, Coins, Crown, LineChart, PackageSearch, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, Coins, Crown, Infinity, LineChart, PackageSearch, Shield, Sparkles, Zap } from "lucide-react";
 
 function initials(name: string | null, email: string | null) {
   if (name?.trim()) {
@@ -26,6 +26,7 @@ export function DashboardAccountHero({
   monthlyLimit,
   bonusCreditsRemaining,
   commerceEnabled,
+  isAdmin,
 }: {
   displayName: string;
   email: string | null;
@@ -33,16 +34,82 @@ export function DashboardAccountHero({
   analysesThisMonth: number;
   monthlyLimit: number;
   bonusCreditsRemaining: number;
-  /** Pagos Stripe (planes + créditos). */
   commerceEnabled: boolean;
+  isAdmin: boolean;
 }) {
   const used = analysesThisMonth;
   const limit = monthlyLimit;
-  /** `used` / `limit` son unidades de cupo (boost = 1, scan URL = 2). */
   const includedLeft = Math.max(0, limit - used);
   const pctUsed = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
   const totalCreditsAvailable = includedLeft + bonusCreditsRemaining;
   const isPaid = plan !== "FREE";
+
+  if (isAdmin) {
+    return (
+      <section className="relative overflow-hidden rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-500/[0.12] via-card to-violet-500/[0.08] p-6 shadow-xl shadow-amber-500/10 sm:p-8">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-amber-400/20 blur-3xl" />
+        <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-amber-500/35 bg-gradient-to-br from-amber-500 to-amber-600 text-xl font-bold text-amber-950 shadow-lg">
+              <Shield className="h-8 w-8" aria-hidden />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{displayName}</h2>
+                <Badge className="gap-1 border border-amber-500/40 bg-amber-500/20 text-amber-950 dark:text-amber-50">
+                  <Shield className="h-3 w-3" />
+                  Admin
+                </Badge>
+                <Badge variant="secondary" className="font-mono text-xs">
+                  Plan {planLabel(plan)}
+                </Badge>
+              </div>
+              {email ? (
+                <p className="mt-1 truncate text-sm text-muted-foreground" title={email}>
+                  {email}
+                </p>
+              ) : null}
+              <p className="mt-3 flex flex-wrap items-center gap-2 text-sm leading-relaxed text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/25 bg-background/60 px-3 py-1 text-sm font-semibold text-foreground">
+                  <Infinity className="h-4 w-4 text-amber-600" aria-hidden />
+                  Uso ilimitado
+                </span>
+                Boost y scan URL no consumen cupo en cuentas administrador.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <Button asChild size="sm" className="gap-1.5 shadow-md">
+                  <Link href="/dashboard/product">
+                    <PackageSearch className="h-4 w-4" />
+                    Boost ficha
+                    <ArrowRight className="h-3.5 w-3.5 opacity-70" />
+                  </Link>
+                </Button>
+                <Button asChild size="sm" variant="secondary" className="gap-1.5">
+                  <Link href="/dashboard/audit">
+                    <LineChart className="h-4 w-4" />
+                    Scan URL
+                  </Link>
+                </Button>
+                <Button asChild size="sm" variant="outline" className="gap-1 border-amber-500/30">
+                  <Link href="/admin">
+                    <Shield className="h-4 w-4" />
+                    Panel admin
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className="w-full rounded-2xl border border-border/60 bg-background/70 p-5 backdrop-blur-md lg:max-w-[260px]">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Créditos de plataforma</p>
+            <p className="mt-2 text-2xl font-bold tabular-nums text-muted-foreground">—</p>
+            <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
+              Como admin no aplican límites de consumo; el contador del plan es solo informativo.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/[0.12] via-card to-violet-500/[0.08] p-6 shadow-xl shadow-primary/10 sm:p-8">

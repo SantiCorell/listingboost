@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import type { Plan, User } from "@prisma/client";
+import type { Plan, User, UserRole } from "@prisma/client";
 import { FREE_HISTORY_LIMIT } from "@/lib/constants";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { isPaidPlan, monthlyIncludedLimit } from "@/lib/plans";
+import { userIsAdmin } from "@/lib/auth/admin";
 
 function startOfMonth(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -45,6 +46,9 @@ export function monthlyLimit(plan: Plan): number {
 export async function assertCanAnalyze(userId: string, creditCost = CREDIT_COST_PRODUCT): Promise<User> {
   let user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
   user = await resetMonthlyUsageIfNeeded(user);
+  if (userIsAdmin(user.role, user.email)) {
+    return user;
+  }
   const cap = monthlyIncludedLimit(user.plan);
   const includedLeft = Math.max(0, cap - user.analysesThisMonth);
   const totalAvailable = includedLeft + user.bonusCreditsRemaining;
@@ -74,8 +78,11 @@ export async function assertCanAnalyze(userId: string, creditCost = CREDIT_COST_
 }
 
 export async function recordAnalysisUsage(userId: string, kind: string) {
-  const cost = creditCostForUsageKind(kind);
   const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  if (userIsAdmin(user.role, user.email)) {
+    return;
+  }
+  const cost = creditCostForUsageKind(kind);
   const cap = monthlyIncludedLimit(user.plan);
   const includedLeft = Math.max(0, cap - user.analysesThisMonth);
   const fromBundle = Math.min(cost, includedLeft);
@@ -99,7 +106,12 @@ export async function recordAnalysisUsage(userId: string, kind: string) {
   ]);
 }
 
-export function historyTake(plan: Plan): number | undefined {
+export function historyTake(
+  plan: Plan,
+  role?: UserRole | null,
+  email?: string | null,
+): number | undefined {
+  if (userIsAdmin(role, email)) return undefined;
   if (isPaidPlan(plan)) return undefined;
   return FREE_HISTORY_LIMIT;
 }

@@ -25,6 +25,7 @@ export default async function DashboardPage() {
   const limit = monthlyIncludedLimit(user.plan);
   const commerceEnabled = isCommerceEnabled();
   const displayName = user.name?.trim() || user.email?.split("@")[0] || "Usuario";
+  const isAdmin = Boolean(session.user.isAdmin);
 
   const [recentProducts, recentAudits] = await Promise.all([
     prisma.productAnalysis.findMany({
@@ -49,17 +50,30 @@ export default async function DashboardPage() {
         monthlyLimit={limit}
         bonusCreditsRemaining={user.bonusCreditsRemaining}
         commerceEnabled={commerceEnabled}
+        isAdmin={isAdmin}
       />
 
       <div>
         <h2 className="text-lg font-semibold tracking-tight">Resumen rápido</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Plan <span className="font-medium text-foreground">{planLabel(user.plan)}</span> · mismas acciones en
-          formato compacto.
+          {isAdmin ? (
+            <>
+              Cuenta <span className="font-medium text-foreground">administrador</span> · uso ilimitado en la plataforma.
+            </>
+          ) : (
+            <>
+              Plan <span className="font-medium text-foreground">{planLabel(user.plan)}</span> · mismas acciones en
+              formato compacto.
+            </>
+          )}
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div
+        className={
+          isAdmin ? "grid gap-4 sm:grid-cols-2" : "grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        }
+      >
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Plan</CardTitle>
@@ -69,53 +83,57 @@ export default async function DashboardPage() {
               <Badge variant="secondary" className="text-base font-semibold">
                 {planLabel(user.plan)}
               </Badge>
-              {user.plan === "FREE" && commerceEnabled ? (
+              {!isAdmin && user.plan === "FREE" && commerceEnabled ? (
                 <Button size="sm" variant="outline" asChild>
                   <Link href="/pricing">Mejorar plan</Link>
                 </Button>
-              ) : user.plan === "PRO" && commerceEnabled ? (
+              ) : !isAdmin && user.plan === "PRO" && commerceEnabled ? (
                 <Button size="sm" variant="outline" asChild>
                   <Link href="/pricing">Subir a Pro+</Link>
                 </Button>
-              ) : user.plan === "FREE" && !commerceEnabled ? (
+              ) : !isAdmin && user.plan === "FREE" && !commerceEnabled ? (
                 <span className="text-xs text-muted-foreground">Pagos próximamente</span>
               ) : null}
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Incluidos este mes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold tabular-nums">
-              {user.analysesThisMonth}
-              <span className="text-lg font-normal text-muted-foreground"> / {limit}</span>
-            </p>
-            <p className="text-xs text-muted-foreground">Cupo del plan (se renueva cada mes)</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Créditos extra</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold tabular-nums">{user.bonusCreditsRemaining}</p>
-            {commerceEnabled ? (
-              <Button size="sm" variant="link" className="h-auto p-0 text-xs font-semibold" asChild>
-                <Link href="/pricing/credits">Comprar créditos</Link>
-              </Button>
-            ) : (
-              <span className="text-xs text-muted-foreground">Créditos: próximamente</span>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
+        {!isAdmin ? (
+          <>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Incluidos este mes</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold tabular-nums">
+                  {user.analysesThisMonth}
+                  <span className="text-lg font-normal text-muted-foreground"> / {limit}</span>
+                </p>
+                <p className="text-xs text-muted-foreground">Cupo del plan (se renueva cada mes)</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Créditos extra</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold tabular-nums">{user.bonusCreditsRemaining}</p>
+                {commerceEnabled ? (
+                  <Button size="sm" variant="link" className="h-auto p-0 text-xs font-semibold" asChild>
+                    <Link href="/pricing/credits">Comprar créditos</Link>
+                  </Button>
+                ) : (
+                  <span className="text-xs text-muted-foreground">Créditos: próximamente</span>
+                )}
+              </CardContent>
+            </Card>
+          </>
+        ) : null}
+        <Card className={isAdmin ? "sm:col-span-1" : ""}>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Acciones</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
-            <Button asChild className="w-full justify-between" size="sm">
+            <Button asChild className="h-11 w-full justify-between sm:h-9" size="sm">
               <Link href="/dashboard/product">
                 <span className="flex items-center gap-2">
                   <PackageSearch className="h-4 w-4" />
@@ -124,7 +142,7 @@ export default async function DashboardPage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild variant="secondary" className="w-full justify-between" size="sm">
+            <Button asChild variant="secondary" className="h-11 w-full justify-between sm:h-9" size="sm">
               <Link href="/dashboard/audit">
                 <span className="flex items-center gap-2">
                   <LineChart className="h-4 w-4" />
