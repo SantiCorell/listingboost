@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       { path: "/producto/boost-de-ficha", priority: 0.9, changeFrequency: "weekly" },
       { path: "/producto/scan-seo-url", priority: 0.9, changeFrequency: "weekly" },
       { path: "/producto/hashtags-redes", priority: 0.9, changeFrequency: "weekly" },
+      { path: "/producto/inmobiliarias", priority: 0.88, changeFrequency: "weekly" },
       { path: "/pricing", priority: 0.85, changeFrequency: "monthly" },
       { path: "/contacto", priority: 0.7, changeFrequency: "monthly" },
       { path: "/login", priority: 0.5, changeFrequency: "monthly" },

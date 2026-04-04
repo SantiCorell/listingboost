@@ -44,6 +44,11 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/producto/inmobiliarias" className="transition-colors hover:text-foreground">
+                  Inmobiliarias
+                </Link>
+              </li>
+              <li>
                 <Link href="/pricing" className="transition-colors hover:text-foreground">
                   Planes y precios
                 </Link>

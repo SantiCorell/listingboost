@@ -17,6 +17,7 @@ export const CREDIT_COST_URL_AUDIT = 2;
 
 export function creditCostForUsageKind(kind: string): number {
   if (kind === "url_audit") return CREDIT_COST_URL_AUDIT;
+  if (kind === "url_audit_pdf") return 1;
   return CREDIT_COST_PRODUCT;
 }
 
@@ -77,12 +78,12 @@ export async function assertCanAnalyze(userId: string, creditCost = CREDIT_COST_
   return user;
 }
 
-export async function recordAnalysisUsage(userId: string, kind: string) {
+export async function recordAnalysisUsage(userId: string, kind: string, creditCostOverride?: number) {
   const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
   if (userIsAdmin(user.role, user.email)) {
     return;
   }
-  const cost = creditCostForUsageKind(kind);
+  const cost = creditCostOverride ?? creditCostForUsageKind(kind);
   const cap = monthlyIncludedLimit(user.plan);
   const includedLeft = Math.max(0, cap - user.analysesThisMonth);
   const fromBundle = Math.min(cost, includedLeft);

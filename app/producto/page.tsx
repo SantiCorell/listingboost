@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductLandingFaq } from "@/components/producto/product-landing-faq";
 import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo-jsonld";
-import { ArrowRight, Hash, LineChart, PackageSearch, Zap } from "lucide-react";
+import { ArrowRight, Building2, Hash, LineChart, PackageSearch, Zap } from "lucide-react";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
 
@@ -66,6 +66,12 @@ const cards = [
     title: "Hashtags para redes",
     desc: "Bloques de hashtags con # listos para Instagram, TikTok y Shorts, alineados con tu producto e idioma de mercado.",
   },
+  {
+    href: "/producto/inmobiliarias",
+    icon: Building2,
+    title: "Inmobiliarias · portales y web",
+    desc: "Idealista, Fotocasa o sitio propio: scan URL modular, boost de fichas y flujo pensado para captación local.",
+  },
 ];
 
 export default function ProductoHubPage() {
@@ -104,7 +110,7 @@ export default function ProductoHubPage() {
 
         <section className="mt-14 space-y-4" aria-labelledby="modulos">
           <h2 id="modulos" className="text-2xl font-bold tracking-tight">
-            Tres módulos, un mismo flujo de trabajo
+            Módulos y sectores
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Cada página siguiente profundiza en un módulo: qué problema resuelve, qué entregables obtienes, para

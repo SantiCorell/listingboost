@@ -2,8 +2,14 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { discoverSitemapReport } from "@/lib/sitemap/discover";
 import { scoreUrlAudit } from "@/lib/seo/score-url";
-import { assertCanAnalyze, CREDIT_COST_URL_AUDIT, recordAnalysisUsage } from "@/lib/usage";
+import { assertCanAnalyze, recordAnalysisUsage } from "@/lib/usage";
+import {
+  modulesFromPreset,
+  totalCreditsForUrlAudit,
+  type UrlAuditModuleOptions,
+} from "@/lib/url-audit/credits-config";
 import {
   buildUrlAuditSystemPrompt,
   buildUrlAuditUserPrompt,
@@ -19,12 +25,33 @@ const inputSchema = z.object({
   country: z.string().min(2).max(80),
   keywordHint: z.string().max(200).optional(),
   pageType: z.nativeEnum(UrlPageType),
+  preset: z.enum(["essential", "standard", "complete", "custom"]),
+  includeFullLlm: z.boolean().optional(),
+  includeSitemap: z.boolean().optional(),
 });
+
+function resolveModules(
+  data: z.infer<typeof inputSchema>,
+): UrlAuditModuleOptions {
+  if (data.preset !== "custom") {
+    return modulesFromPreset(data.preset);
+  }
+  return {
+    includeFullLlm: data.includeFullLlm ?? true,
+    includeSitemap: data.includeSitemap ?? false,
+  };
+}
 
 export type UrlAuditActionState =
   | { status: "idle" }
   | { status: "error"; message: string }
-  | { status: "success"; auditId: string; output: unknown };
+  | {
+      status: "success";
+      auditId: string;
+      output: unknown;
+      creditsCharged: number;
+      modules: UrlAuditModuleOptions;
+    };
 
 export async function runUrlAudit(
   payload: z.infer<typeof inputSchema>,
@@ -39,8 +66,11 @@ export async function runUrlAudit(
     return { status: "error", message: "URL o parámetros inválidos." };
   }
 
+  const modules = resolveModules(parsed.data);
+  const creditsNeeded = totalCreditsForUrlAudit(modules);
+
   try {
-    await assertCanAnalyze(session.user.id, CREDIT_COST_URL_AUDIT);
+    await assertCanAnalyze(session.user.id, creditsNeeded);
   } catch (e) {
     return {
       status: "error",
@@ -64,6 +94,24 @@ export async function runUrlAudit(
   const pageType = parsed.data.pageType;
   const heuristic = scoreUrlAudit(crawl, pageType);
 
+  let sitemapReport: Awaited<ReturnType<typeof discoverSitemapReport>> | null = null;
+  if (modules.includeSitemap) {
+    try {
+      sitemapReport = await discoverSitemapReport(parsed.data.url);
+    } catch (e) {
+      sitemapReport = {
+        seedUrl: parsed.data.url,
+        origin: "",
+        sitemapSourcesTried: [],
+        sitemapXmlUrls: [],
+        totalUrls: 0,
+        urlSample: [],
+        truncated: false,
+        errors: [e instanceof Error ? e.message : "Error al analizar sitemaps"],
+      };
+    }
+  }
+
   const crawlSummary = {
     finalUrl: crawl.finalUrl,
     statusCode: crawl.statusCode,
@@ -83,44 +131,57 @@ export async function runUrlAudit(
     externalLinksCount: crawl.linksExternal.length,
     schemaDetected: crawl.schemaHints.map((s) => s.type),
     textSample: crawl.mainTextSample.slice(0, 6000),
+    sitemapReport,
   };
 
-  const userPrompt = buildUrlAuditUserPrompt({
-    url: parsed.data.url,
-    country: parsed.data.country,
-    keywordHint: parsed.data.keywordHint,
-    pageType,
-    crawlSummary,
-    heuristic: {
-      overallScore: heuristic.overallScore,
-      scoresByCategory: heuristic.scoresByCategory,
-      issues: heuristic.issues,
-      quickWins: heuristic.quickWins,
-    },
-  });
+  let llmParsed: z.infer<typeof urlAuditLlmSchema> | null = null;
 
-  const llm = await deepseekChatJson({
-    messages: [
-      { role: "system", content: buildUrlAuditSystemPrompt() },
-      { role: "user", content: userPrompt },
-    ],
-    userId: session.user.id,
-    operation: "url_audit",
-  });
+  if (modules.includeFullLlm) {
+    const userPrompt = buildUrlAuditUserPrompt({
+      url: parsed.data.url,
+      country: parsed.data.country,
+      keywordHint: parsed.data.keywordHint,
+      pageType,
+      crawlSummary,
+      heuristic: {
+        overallScore: heuristic.overallScore,
+        scoresByCategory: heuristic.scoresByCategory,
+        issues: heuristic.issues,
+        quickWins: heuristic.quickWins,
+      },
+    });
 
-  if (!llm.ok) {
-    return { status: "error", message: llm.error };
-  }
+    const llm = await deepseekChatJson({
+      messages: [
+        { role: "system", content: buildUrlAuditSystemPrompt() },
+        { role: "user", content: userPrompt },
+      ],
+      userId: session.user.id,
+      operation: "url_audit",
+    });
 
-  const validated = urlAuditLlmSchema.safeParse(llm.json);
-  if (!validated.success) {
-    return {
-      status: "error",
-      message: "La respuesta del modelo no tenía el formato esperado.",
-    };
+    if (!llm.ok) {
+      return { status: "error", message: llm.error };
+    }
+
+    const validated = urlAuditLlmSchema.safeParse(llm.json);
+    if (!validated.success) {
+      return {
+        status: "error",
+        message: "La respuesta del modelo no tenía el formato esperado.",
+      };
+    }
+    llmParsed = validated.data;
   }
 
   const output = {
+    modules: {
+      preset: parsed.data.preset,
+      includeFullLlm: modules.includeFullLlm,
+      includeSitemap: modules.includeSitemap,
+      creditsCharged: creditsNeeded,
+    },
+    sitemapReport,
     crawl,
     scores: {
       overallScore: heuristic.overallScore,
@@ -128,7 +189,7 @@ export async function runUrlAudit(
     },
     issues: heuristic.issues,
     quickWins: heuristic.quickWins,
-    llm: validated.data,
+    llm: llmParsed,
   };
 
   const row = await prisma.urlAudit.create({
@@ -143,7 +204,13 @@ export async function runUrlAudit(
     },
   });
 
-  await recordAnalysisUsage(session.user.id, "url_audit");
+  await recordAnalysisUsage(session.user.id, "url_audit", creditsNeeded);
 
-  return { status: "success", auditId: row.id, output };
+  return {
+    status: "success",
+    auditId: row.id,
+    output,
+    creditsCharged: creditsNeeded,
+    modules,
+  };
 }

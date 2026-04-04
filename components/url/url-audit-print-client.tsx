@@ -8,7 +8,7 @@ type AuditOutput = {
   scores: { overallScore: number; byCategory: Record<string, number> };
   issues: CrawlIssue[];
   quickWins: string[];
-  llm: UrlAuditLlmOutput;
+  llm: UrlAuditLlmOutput | null;
 };
 
 export function UrlAuditPrintClient({
@@ -24,7 +24,7 @@ export function UrlAuditPrintClient({
 }) {
   const data = output as AuditOutput;
   const { llm, scores, issues, quickWins } = data;
-  const gsc = llm.gscStyle;
+  const gsc = llm?.gscStyle;
 
   return (
     <>
@@ -47,13 +47,23 @@ export function UrlAuditPrintClient({
           </p>
         </header>
 
-        <section>
-          <h2 className="mb-2 text-lg font-semibold">Resumen</h2>
-          <p className="whitespace-pre-wrap text-neutral-800">{llm.summary}</p>
-          <p className="mt-2 text-xs text-neutral-600">
-            Keyword inferida: <strong>{llm.mainKeywordInference}</strong> · Intención: {llm.searchIntent}
-          </p>
-        </section>
+        {llm ? (
+          <section>
+            <h2 className="mb-2 text-lg font-semibold">Resumen</h2>
+            <p className="whitespace-pre-wrap text-neutral-800">{llm.summary}</p>
+            <p className="mt-2 text-xs text-neutral-600">
+              Keyword inferida: <strong>{llm.mainKeywordInference}</strong> · Intención: {llm.searchIntent}
+            </p>
+          </section>
+        ) : (
+          <section>
+            <h2 className="mb-2 text-lg font-semibold">Modo esencial</h2>
+            <p className="text-neutral-800">
+              Este análisis no incluye el bloque largo de IA. Ejecuta de nuevo con preset Estándar o Completo para
+              copys y priorización con modelo.
+            </p>
+          </section>
+        )}
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-lg border border-neutral-200 p-4">
@@ -139,30 +149,34 @@ export function UrlAuditPrintClient({
           </ul>
         </section>
 
-        <section>
-          <h2 className="mb-2 text-lg font-semibold">Acciones priorizadas</h2>
-          <ol className="list-decimal space-y-2 pl-5">
-            {llm.prioritizedActions.map((a, idx) => (
-              <li key={idx}>{a}</li>
-            ))}
-          </ol>
-        </section>
+        {llm ? (
+          <>
+            <section>
+              <h2 className="mb-2 text-lg font-semibold">Acciones priorizadas</h2>
+              <ol className="list-decimal space-y-2 pl-5">
+                {llm.prioritizedActions.map((a, idx) => (
+                  <li key={idx}>{a}</li>
+                ))}
+              </ol>
+            </section>
 
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">Propuestas on-page</h2>
-          <div>
-            <p className="text-xs font-medium text-neutral-500">Title</p>
-            <p className="whitespace-pre-wrap">{llm.recommendedTitle}</p>
-          </div>
-          <div>
-            <p className="text-xs font-medium text-neutral-500">Meta description</p>
-            <p className="whitespace-pre-wrap">{llm.recommendedMetaDescription}</p>
-          </div>
-          <div>
-            <p className="text-xs font-medium text-neutral-500">H1</p>
-            <p className="whitespace-pre-wrap">{llm.recommendedH1}</p>
-          </div>
-        </section>
+            <section className="space-y-3">
+              <h2 className="text-lg font-semibold">Propuestas on-page</h2>
+              <div>
+                <p className="text-xs font-medium text-neutral-500">Title</p>
+                <p className="whitespace-pre-wrap">{llm.recommendedTitle}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-neutral-500">Meta description</p>
+                <p className="whitespace-pre-wrap">{llm.recommendedMetaDescription}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-neutral-500">H1</p>
+                <p className="whitespace-pre-wrap">{llm.recommendedH1}</p>
+              </div>
+            </section>
+          </>
+        ) : null}
 
         <footer className="border-t border-neutral-300 pt-4 text-[10px] text-neutral-500">
           Informe generado por ListingBoost. Los scores son heurísticos; las métricas tipo Search Console son

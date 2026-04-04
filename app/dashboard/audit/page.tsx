@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { UrlAuditForm } from "@/components/url/url-audit-form";
 import { CreditsUpsellBanner } from "@/components/pricing/credits-upsell-banner";
 
@@ -10,11 +11,16 @@ export default function AuditPage() {
           Fetch + parse público, scoring por bloques y quick wins vía motor — sin magia negra.
         </p>
         <p className="mt-2 text-xs text-muted-foreground">
-          Cada scan consume <strong className="text-foreground">2 créditos</strong> (más intensivo que un boost).
+          Elige preset: desde <strong className="text-foreground">2 créditos</strong> (esencial) hasta{" "}
+          <strong className="text-foreground">5</strong> (completo con sitemap). El PDF del informe: +1 crédito.
         </p>
       </div>
       <CreditsUpsellBanner />
-      <UrlAuditForm />
+      <Suspense
+        fallback={<p className="text-sm text-muted-foreground">Cargando formulario de análisis…</p>}
+      >
+        <UrlAuditForm />
+      </Suspense>
     </div>
   );
 }
