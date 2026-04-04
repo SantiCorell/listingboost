@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Zap } from "lucide-react";
 import { APP_NAME } from "@/lib/constants";
@@ -9,28 +8,22 @@ import { cn } from "@/lib/utils";
 const boxBase =
   "relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary via-primary to-accent shadow-md shadow-primary/25 ring-1 ring-primary/15";
 
-/** Marca ListingBoost: logo PNG + refuerzo visual del rayo (ListingBrain™). */
+/** Marca: solo el rayo en el cuadrado (sin imagen PNG). */
 export function BrandLogoLink({
   variant = "header",
   className,
-  priority = false,
   onNavigate,
 }: {
   variant?: "header" | "footer" | "auth" | "sheet";
   className?: string;
-  /** LCP en cabecera global */
-  priority?: boolean;
-  /** P. ej. cerrar menú móvil al pulsar la marca */
   onNavigate?: () => void;
 }) {
-  const dim =
+  const zapClass =
     variant === "footer"
-      ? 40
+      ? "relative z-10 h-5 w-5 text-primary-foreground"
       : variant === "auth"
-        ? 56
-        : variant === "sheet"
-          ? 36
-          : 36;
+        ? "relative z-10 h-8 w-8 text-primary-foreground"
+        : "relative z-10 h-[18px] w-[18px] text-primary-foreground";
 
   const inner = (
     <span
@@ -41,21 +34,9 @@ export function BrandLogoLink({
         variant !== "footer" && variant !== "auth" && "h-9 w-9",
       )}
     >
-      <Image
-        src="/logo.png"
-        alt="ListingBoost"
-        width={dim}
-        height={dim}
-        className="object-contain p-0.5"
-        priority={priority}
-        sizes={`${dim}px`}
-      />
-      <Zap
-        className={cn(
-          "pointer-events-none absolute text-primary-foreground drop-shadow-sm",
-          variant === "auth" ? "right-1 bottom-1 h-4 w-4" : "right-0.5 bottom-0.5 h-3 w-3 sm:h-3.5 sm:w-3.5",
-        )}
-        strokeWidth={2.4}
+      <Zap className={zapClass} strokeWidth={2.35} aria-hidden />
+      <span
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,white_0%,transparent_55%)] opacity-30"
         aria-hidden
       />
     </span>

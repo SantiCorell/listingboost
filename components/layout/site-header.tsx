@@ -234,7 +234,7 @@ export function SiteHeader() {
             </SheetContent>
           </Sheet>
 
-          <BrandLogoLink variant="header" priority />
+          <BrandLogoLink variant="header" />
         </div>
 
         <nav className="hidden items-center gap-0.5 md:flex">
