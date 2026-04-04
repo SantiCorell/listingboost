@@ -78,6 +78,12 @@ export function LoginForm({ googleAuthAvailable }: Props) {
             <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
               Sin contraseña extra: usas la misma que en Google.
             </p>
+            <p className="text-center text-[10px] leading-snug text-muted-foreground/80">
+              Error «redirect_uri_mismatch»: en Vercel define{" "}
+              <code className="font-mono text-[9px]">AUTH_URL</code> como tu URL pública (sin / al final) y en Google
+              Cloud autoriza <code className="font-mono text-[9px]">/api/auth/callback/google</code> para ese dominio
+              (ver <code className="font-mono text-[9px]">.env.example</code>).
+            </p>
             <AuthOauthDivider label="Separador entre Google y email" />
             <p className="text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/90">
               o con email
