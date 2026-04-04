@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
-import { APP_NAME, APP_TAGLINE, ENGINE_NAME } from "@/lib/constants";
+import { APP_NAME, ENGINE_NAME } from "@/lib/constants";
 import { getPublicSiteUrl } from "@/lib/site-url";
 import AppShell from "./app-shell";
 import "./globals.css";
@@ -19,20 +19,13 @@ const jetbrainsMono = JetBrains_Mono({
 
 const siteUrl = getPublicSiteUrl();
 
-const ogImage = {
-  url: "/logo.png",
-  width: 512,
-  height: 512,
-  alt: `${APP_NAME} — listing intelligence, motor ListingBrain™`,
-} as const;
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${APP_NAME} · Listings + URL inteligencia · Wallapop, eBay, Shopify`,
+    default: `${APP_NAME} — Optimiza fichas con IA | Wallapop, eBay, Shopify | SEO y hashtags`,
     template: `%s · ${APP_NAME}`,
   },
-  description: `${APP_TAGLINE} ${APP_NAME} unifica boost de ficha multicanal y scan SEO de URL con ${ENGINE_NAME}. Empieza gratis.`,
+  description: `${APP_NAME}: software de listing intelligence con ${ENGINE_NAME}. Mejora títulos, descripciones y hashtags para Wallapop, eBay, Shopify y más; audita URLs con scoring accionable. Empieza gratis.`,
   applicationName: APP_NAME,
   authors: [{ name: APP_NAME, url: siteUrl }],
   creator: APP_NAME,
@@ -42,38 +35,40 @@ export const metadata: Metadata = {
   keywords: [
     "ListingBoost",
     "ListingBrain",
+    "optimizar ficha Wallapop",
+    "descripción producto IA",
+    "SEO marketplace España",
+    "hashtags Instagram ventas",
+    "auditoría SEO URL",
+    "boost ficha multicanal",
+    "eBay listing optimización",
+    "Shopify descripción producto",
     "SaaS listings",
-    "optimizador marketplace",
-    "SEO Wallapop",
-    "SEO eBay",
-    "Shopify producto",
-    "auditoría URL",
     "listing intelligence",
     "CTR listing",
     "JSON-LD producto",
-    "hashtags Instagram",
     "ficha marketplace IA",
+    "TikTok hashtags producto",
+    "copiar pegar marketplace",
   ],
   openGraph: {
     type: "website",
     locale: "es_ES",
     url: siteUrl,
     siteName: APP_NAME,
-    title: `${APP_NAME} — infra de listings para equipos que escalan catálogo`,
+    title: `${APP_NAME} — Fichas que rankean con IA | marketplaces y SEO on-page`,
     description:
-      "Pipeline propietario: boost de ficha + scan URL en segundos. Diseñado para vendedores, agencias y marcas D2C.",
-    images: [ogImage],
+      "Genera y optimiza fichas con motor propietario: hashtags, estructura por canal y scan SEO de URLs. Prueba gratis; escala a Pro.",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${APP_NAME} — ship faster, rank smarter`,
+    title: `${APP_NAME} | IA para listings y SEO de URL`,
     description:
-      "Stack moderno para generar fichas y auditar URLs sin fricción. Free tier real; escala a Pro cuando el volumen lo pida.",
-    images: [ogImage.url],
+      "Boost multicanal + hashtags listos + auditoría URL. Pensado para vendedores y equipos de catálogo.",
   },
   icons: {
-    icon: [{ url: "/logo.png", type: "image/png", sizes: "any" }],
-    apple: [{ url: "/logo.png", sizes: "180x180", type: "image/png" }],
+    icon: [{ url: "/icon.svg", type: "image/svg+xml", sizes: "any" }],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml", sizes: "180x180" }],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: siteUrl },

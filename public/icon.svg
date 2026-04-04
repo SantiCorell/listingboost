@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="ListingBoost">
+  <defs>
+    <linearGradient id="lb-bg" x1="4" y1="2" x2="30" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7c3aed"/>
+      <stop offset="0.55" stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="lb-zap" x1="12" y1="6" x2="20" y2="26" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ede9fe"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#lb-bg)"/>
+  <!-- Rayo estilo Lucide, relleno (legible en 16px) -->
+  <path
+    fill="url(#lb-zap)"
+    d="M18.1 4.2 8.2 15.1c-.35.36-.09.97.4 1.05l4.55.65 1.9 8.75c.14.65.95.82 1.35.28l9.9-12.75c.33-.43.02-1.06-.52-1.06h-4.9l.85-6.45c.08-.62-.58-1.08-1.15-.78Z"
+  />
+</svg>

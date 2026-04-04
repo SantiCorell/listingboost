@@ -53,7 +53,7 @@ const jsonLdGraph = [
     "@type": "Organization",
     name: APP_NAME,
     url: siteUrl,
-    logo: `${siteUrl}/logo.png`,
+    logo: `${siteUrl}/icon.svg`,
     description:
       "Infra de producto para equipos que viven del catálogo: fichas que rankean + inteligencia on-page en URL.",
     sameAs: [],
