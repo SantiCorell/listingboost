@@ -12,6 +12,17 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "4mb",
     },
   },
+  /**
+   * En macOS (iCloud, antivirus, carpetas sincronizadas) la caché persistente de webpack
+   * en dev a veces falla al renombrar *.pack.gz → ENOENT y deja .next a medias (sin routes-manifest).
+   * Desactivar caché en dev evita ese estado corrupto si usas `npm run dev:webpack`.
+   */
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.cache = false;
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
