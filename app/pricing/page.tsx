@@ -67,7 +67,10 @@ export const metadata: Metadata = {
 const PRICING_CTA_CLASS =
   "inline-flex h-auto min-h-12 w-full flex-col items-center justify-center gap-0.5 whitespace-normal px-3 py-3 text-center text-sm font-semibold leading-snug sm:text-base";
 
-const enterpriseStripeReady = Boolean(process.env.STRIPE_PRICE_ID_ENTERPRISE);
+/** Enterprise online: precio dedicado o, si falta, mismo checkout que Pro+ con metadata ENTERPRISE. */
+const enterpriseStripeReady =
+  Boolean(process.env.STRIPE_PRICE_ID_ENTERPRISE?.trim()) ||
+  Boolean(process.env.STRIPE_PRICE_ID_PRO_PLUS?.trim());
 
 const pricingFaqs = [
   {

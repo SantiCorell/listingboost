@@ -11,7 +11,10 @@ export function stripePriceIdForSubscription(
     case "PRO_PLUS":
       return process.env.STRIPE_PRICE_ID_PRO_PLUS;
     case "ENTERPRISE":
-      return process.env.STRIPE_PRICE_ID_ENTERPRISE;
+      if (process.env.STRIPE_PRICE_ID_ENTERPRISE?.trim()) {
+        return process.env.STRIPE_PRICE_ID_ENTERPRISE;
+      }
+      return process.env.STRIPE_PRICE_ID_PRO_PLUS;
     default:
       return undefined;
   }

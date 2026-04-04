@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import type { Plan } from "@prisma/client";
 import { BrandLogoLink } from "@/components/brand/brand-logo-link";
 import { headerUpsell } from "@/lib/header-upsell";
+import { isCommerceEnabled } from "@/lib/commerce";
 import { planLabel } from "@/lib/plans";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -65,7 +66,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
     setAuthOpen(true);
   }
   const plan = (session?.user?.plan ?? "FREE") as Plan;
-  const commerceEnabled = process.env.NEXT_PUBLIC_COMMERCE_ENABLED === "true";
+  const commerceEnabled = isCommerceEnabled();
   const upsell = headerUpsell(session?.user?.plan, commerceEnabled);
   const isAdminUser = Boolean(session?.user?.isAdmin);
 

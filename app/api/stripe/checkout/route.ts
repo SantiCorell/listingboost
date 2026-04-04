@@ -127,6 +127,12 @@ export async function POST(req: Request) {
     return new Response(`Falta precio Stripe para ${plan}`, { status: 500 });
   }
 
+  if (plan === "ENTERPRISE" && !process.env.STRIPE_PRICE_ID_ENTERPRISE?.trim()) {
+    console.warn(
+      "[stripe checkout] STRIPE_PRICE_ID_ENTERPRISE no definido: se usa el precio Pro+; el plan Enterprise se guarda vía metadata de la suscripción.",
+    );
+  }
+
   let price: Awaited<ReturnType<typeof stripe.prices.retrieve>>;
   try {
     price = await stripe.prices.retrieve(priceId);

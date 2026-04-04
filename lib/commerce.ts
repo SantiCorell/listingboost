@@ -1,7 +1,7 @@
 /**
- * Pagos Stripe (suscripciones + créditos). Desactivado por defecto hasta que la cuenta esté habilitada.
- * Pon `NEXT_PUBLIC_COMMERCE_ENABLED=true` en `.env.local` o en el host para activar checkout y portal.
+ * Pagos Stripe (suscripciones + créditos). Activado por defecto.
+ * Pon `NEXT_PUBLIC_COMMERCE_ENABLED=false` solo si quieres desactivar checkout, portal y compra de créditos.
  */
 export function isCommerceEnabled(): boolean {
-  return process.env.NEXT_PUBLIC_COMMERCE_ENABLED === "true";
+  return process.env.NEXT_PUBLIC_COMMERCE_ENABLED !== "false";
 }

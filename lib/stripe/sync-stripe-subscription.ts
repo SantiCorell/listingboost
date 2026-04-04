@@ -37,6 +37,16 @@ export function subscriptionGrantsPaidPlan(status: Stripe.Subscription.Status): 
   );
 }
 
+/** Prioriza metadata del checkout (targetPlan); si no, mapea por Price ID. Así Enterprise puede compartir precio con Pro+. */
+function planFromStripeSubscription(stripeSub: Stripe.Subscription): Plan {
+  const meta = stripeSub.metadata?.targetPlan;
+  if (meta === "PRO" || meta === "PRO_PLUS" || meta === "ENTERPRISE") {
+    return meta;
+  }
+  const priceId = stripeSub.items.data[0]?.price.id;
+  return planFromStripePriceId(priceId) ?? "PRO";
+}
+
 export async function syncStripeSubscriptionToDb(
   stripe: Stripe,
   subscriptionId: string,
@@ -46,7 +56,7 @@ export async function syncStripeSubscriptionToDb(
   const stripeSub = await stripe.subscriptions.retrieve(subscriptionId);
   const priceId = stripeSub.items.data[0]?.price.id;
   const plan: Plan = subscriptionGrantsPaidPlan(stripeSub.status)
-    ? (planFromStripePriceId(priceId) ?? "PRO")
+    ? planFromStripeSubscription(stripeSub)
     : "FREE";
 
   await prisma.user.update({

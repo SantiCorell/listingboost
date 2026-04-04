@@ -148,6 +148,21 @@ export function DashboardAccountHero({
               <strong className="text-foreground">Total disponible: {totalCreditsAvailable} créditos.</strong> Un boost
               gasta 1; un scan URL gasta {CREDIT_COST_URL_AUDIT}.
             </p>
+            {commerceEnabled && totalCreditsAvailable <= 3 ? (
+              <div className="mt-4 flex flex-col gap-2 rounded-xl border border-amber-500/40 bg-amber-500/[0.12] px-4 py-3 text-sm text-amber-950 dark:border-amber-500/35 dark:bg-amber-500/10 dark:text-amber-50 sm:flex-row sm:items-center sm:justify-between">
+                <span className="flex items-start gap-2">
+                  <Zap className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-300" aria-hidden />
+                  <span>
+                    <strong className="text-foreground">Casi sin créditos.</strong> Te quedan{" "}
+                    <strong className="tabular-nums">{totalCreditsAvailable}</strong> disponibles. Puedes recargar sin
+                    cambiar de plan.
+                  </span>
+                </span>
+                <Button asChild size="sm" variant="secondary" className="shrink-0 font-semibold shadow-sm">
+                  <Link href="/pricing/credits">Comprar créditos</Link>
+                </Button>
+              </div>
+            ) : null}
             <div className="mt-5 flex flex-wrap gap-2">
               <Button asChild size="sm" className="gap-1.5 shadow-md">
                 <Link href="/dashboard/product">
