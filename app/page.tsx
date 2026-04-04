@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { APP_NAME, ENGINE_NAME, ENGINE_PITCH } from "@/lib/constants";
+import { getPublicSiteUrl } from "@/lib/site-url";
 import { HeroProductMock } from "@/components/landing/hero-product-mock";
 import { ImpactMetricsChart } from "@/components/landing/impact-metrics-chart";
 import { TRUST_STATS } from "@/lib/social-proof";
@@ -28,8 +29,7 @@ import {
   Zap,
 } from "lucide-react";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
+const siteUrl = getPublicSiteUrl();
 
 const jsonLdGraph = [
   {

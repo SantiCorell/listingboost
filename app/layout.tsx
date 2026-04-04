@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { APP_NAME, APP_TAGLINE, ENGINE_NAME } from "@/lib/constants";
+import { getPublicSiteUrl } from "@/lib/site-url";
 import AppShell from "./app-shell";
 import "./globals.css";
 
@@ -16,8 +17,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
+const siteUrl = getPublicSiteUrl();
 
 const ogImage = {
   url: "/logo.png",
