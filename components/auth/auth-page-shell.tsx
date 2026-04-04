@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { BrandLogoLink } from "@/components/brand/brand-logo-link";
 
 /** Contenedor común login/registro: scroll cómodo, aire inferior y fondo suave. */
 export function AuthPageShell({
@@ -14,6 +15,9 @@ export function AuthPageShell({
     <div className="relative w-full flex-1 bg-gradient-to-b from-primary/[0.06] via-background to-muted/30">
       <div className="mx-auto w-full max-w-[min(100%,28rem)] px-4 py-8 sm:max-w-md sm:py-10 lg:max-w-lg">
         <header className="mb-6 text-center sm:mb-8">
+          <div className="mb-8 flex justify-center">
+            <BrandLogoLink variant="auth" />
+          </div>
           <h1 className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</h1>
           {subtitle ? <div className="mt-2 text-sm text-muted-foreground">{subtitle}</div> : null}
         </header>

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { APP_NAME, APP_TAGLINE, ENGINE_NAME } from "@/lib/constants";
+import { BrandLogoLink } from "@/components/brand/brand-logo-link";
 import { getPublicContactEmail } from "@/lib/contact";
 import { Separator } from "@/components/ui/separator";
-import { Zap } from "lucide-react";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -13,15 +13,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-3">
-            <Link href="/" className="inline-flex items-center gap-2.5 font-semibold tracking-tight">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/20 bg-gradient-to-br from-primary via-primary to-accent shadow-md shadow-primary/20">
-                <Zap className="h-[20px] w-[20px] text-primary-foreground" strokeWidth={2.35} />
-              </span>
-              <span className="text-lg">
-                <span className="text-foreground">Listing</span>
-                <span className="text-gradient-brand">Boost</span>
-              </span>
-            </Link>
+            <BrandLogoLink variant="footer" className="inline-flex" />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">{APP_TAGLINE}</p>
             <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/90">
               {ENGINE_NAME}

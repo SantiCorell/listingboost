@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { BrandLogoLink } from "@/components/brand/brand-logo-link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -85,6 +86,9 @@ function AuthErrorContent() {
 export default function AuthErrorPage() {
   return (
     <div className="mx-auto flex max-w-lg flex-col items-center justify-center px-4 py-16">
+      <div className="mb-8 flex justify-center">
+        <BrandLogoLink variant="header" className="flex-col items-center gap-2" />
+      </div>
       <Suspense fallback={<p className="text-sm text-muted-foreground">Cargando…</p>}>
         <AuthErrorContent />
       </Suspense>

@@ -47,12 +47,6 @@ const jsonLdGraph = [
       priceCurrency: "EUR",
       description: "Tier gratuito con límites mensuales transparentes",
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      ratingCount: "1840",
-      bestRating: "5",
-    },
   },
   {
     "@context": "https://schema.org",

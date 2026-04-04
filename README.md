@@ -10,6 +10,23 @@ SaaS **listing intelligence**: **boost multicanal** de fichas (Wallapop, eBay, S
 - (Opcional) [UploadThing](https://uploadthing.com/) para subida de imágenes
 - (Opcional) [Stripe](https://stripe.com/) para plan Pro
 
+## Git y Vercel (despliegues bloqueados por el autor)
+
+Si Vercel muestra *“The commit author does not have contributing access”*, no es un fallo del código: **el email del autor del commit** debe coincidir con una cuenta que Vercel/GitHub reconozca.
+
+1. En GitHub → **Settings → Emails**, mira qué direcciones están **verificadas** (o usa el formato `noreply` de GitHub).
+2. En tu máquina, alinea Git con esa misma dirección (los commits de este repo deben hacerse **tú** desde tu ordenador):
+
+```bash
+git config user.name "Tu nombre público en GitHub"
+git config user.email "el-mismo-email-verificado-en-github@..."
+```
+
+3. **Plan Hobby**: solo el **dueño** del proyecto/team en Vercel suele poder desplegar desde un repo privado colaborativo; si hace falta, invita al autor del commit en Vercel o usa el email de la cuenta dueña.
+4. Evita que otra herramienta (CI, otro PC) haga `git push` con un `user.email` distinto al de tu cuenta de GitHub conectada a Vercel.
+
+Si ya subiste commits con un email “equivocado”, puedes corregir **solo el último** (y luego `git push --force-with-lease` si eres el único en `main`) con `git commit --amend --reset-author --no-edit` tras ajustar `user.email`.
+
 ## Instalación
 
 ```bash

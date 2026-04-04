@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, History, PackageSearch, SearchCheck, Settings } from "lucide-react";
+import { BrandLogoLink } from "@/components/brand/brand-logo-link";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -38,7 +39,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         })}
       </nav>
       <aside className="hidden w-52 shrink-0 md:block">
-        <nav className="sticky top-24 space-y-1">
+        <div className="sticky top-24 space-y-5">
+          <BrandLogoLink variant="header" className="w-full flex-col items-start gap-2" />
+        <nav className="space-y-1">
           {links.map(({ href, label, icon: Icon }) => {
             const active =
               href === "/dashboard"
@@ -61,6 +64,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
+        </div>
       </aside>
       <div className="min-w-0 flex-1">{children}</div>
     </div>

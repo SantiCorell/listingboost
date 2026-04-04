@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { APP_NAME, APP_TAGLINE, ENGINE_NAME } from "@/lib/constants";
 import AppShell from "./app-shell";
@@ -19,6 +19,13 @@ const jetbrainsMono = JetBrains_Mono({
 const siteUrl =
   process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
 
+const ogImage = {
+  url: "/logo.png",
+  width: 512,
+  height: 512,
+  alt: `${APP_NAME} — listing intelligence, motor ListingBrain™`,
+} as const;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -31,8 +38,10 @@ export const metadata: Metadata = {
   creator: APP_NAME,
   publisher: APP_NAME,
   formatDetection: { email: false, address: false, telephone: false },
+  manifest: "/manifest.webmanifest",
   keywords: [
     "ListingBoost",
+    "ListingBrain",
     "SaaS listings",
     "optimizador marketplace",
     "SEO Wallapop",
@@ -42,6 +51,8 @@ export const metadata: Metadata = {
     "listing intelligence",
     "CTR listing",
     "JSON-LD producto",
+    "hashtags Instagram",
+    "ficha marketplace IA",
   ],
   openGraph: {
     type: "website",
@@ -51,16 +62,29 @@ export const metadata: Metadata = {
     title: `${APP_NAME} — infra de listings para equipos que escalan catálogo`,
     description:
       "Pipeline propietario: boost de ficha + scan URL en segundos. Diseñado para vendedores, agencias y marcas D2C.",
+    images: [ogImage],
   },
   twitter: {
     card: "summary_large_image",
     title: `${APP_NAME} — ship faster, rank smarter`,
     description:
       "Stack moderno para generar fichas y auditar URLs sin fricción. Free tier real; escala a Pro cuando el volumen lo pida.",
+    images: [ogImage.url],
+  },
+  icons: {
+    icon: [{ url: "/logo.png", type: "image/png", sizes: "any" }],
+    apple: [{ url: "/logo.png", sizes: "180x180", type: "image/png" }],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: siteUrl },
   category: "technology",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf5ff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1e1033" },
+  ],
 };
 
 /** Layout raíz síncrono: evita condiciones de carrera con CSS global en transiciones. */

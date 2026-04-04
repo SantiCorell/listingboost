@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import type { Plan } from "@prisma/client";
-import { APP_NAME } from "@/lib/constants";
+import { BrandLogoLink } from "@/components/brand/brand-logo-link";
 import { headerUpsell } from "@/lib/header-upsell";
 import { planLabel } from "@/lib/plans";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,6 @@ import {
   Crown,
   Sparkles,
   LineChart,
-  Zap,
   PackageSearch,
   Hash,
   Menu,
@@ -82,7 +81,8 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex w-[min(100vw-1rem,22rem)] flex-col overflow-y-auto">
-              <SheetHeader className="text-left">
+              <SheetHeader className="space-y-4 text-left">
+                <BrandLogoLink variant="sheet" onNavigate={() => setMobileOpen(false)} />
                 <SheetTitle className="text-base">Navegación</SheetTitle>
               </SheetHeader>
               <nav className="mt-6 flex flex-col gap-1 text-sm" aria-label="Principal">
@@ -234,25 +234,7 @@ export function SiteHeader() {
             </SheetContent>
           </Sheet>
 
-          <Link
-            href="/"
-            className="group flex min-w-0 shrink items-center gap-2.5 font-semibold tracking-tight transition-opacity hover:opacity-95"
-          >
-            <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary via-primary to-accent shadow-md shadow-primary/25 ring-1 ring-primary/15">
-              <Zap className="relative z-10 h-[18px] w-[18px] text-primary-foreground" strokeWidth={2.35} />
-              <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,white_0%,transparent_55%)] opacity-30" />
-            </span>
-            <span className="hidden min-w-0 sm:flex sm:flex-col sm:leading-none">
-              <span className="truncate text-[15px] tracking-[-0.02em]">
-                <span className="text-foreground">Listing</span>
-                <span className="text-gradient-brand">Boost</span>
-              </span>
-              <span className="mt-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-                listing intelligence
-              </span>
-            </span>
-            <span className="truncate font-semibold tracking-tight sm:hidden">{APP_NAME}</span>
-          </Link>
+          <BrandLogoLink variant="header" priority />
         </div>
 
         <nav className="hidden items-center gap-0.5 md:flex">
