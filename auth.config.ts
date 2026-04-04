@@ -1,5 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
-import { getSessionMaxAgeSeconds } from "@/lib/session-config";
+import { getSessionMaxAgeSeconds } from "./lib/session-config";
 
 const maxAge = getSessionMaxAgeSeconds();
 

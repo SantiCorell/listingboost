@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import { getAuthSecret } from "@/lib/auth-secret";
+import { getAuthSecret } from "./lib/auth-secret";
 import { authConfig, sessionOptions } from "./auth.config";
 
 const { auth } = NextAuth({
