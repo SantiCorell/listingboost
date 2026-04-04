@@ -2,6 +2,13 @@
   "name": "listing-boost",
   "version": "0.1.0",
   "private": true,
+  "browserslist": [
+    "chrome >= 92",
+    "edge >= 92",
+    "firefox >= 91",
+    "safari >= 15.4",
+    "not dead"
+  ],
   "scripts": {
     "clean": "node scripts/clean-next.cjs",
     "postinstall": "prisma generate",

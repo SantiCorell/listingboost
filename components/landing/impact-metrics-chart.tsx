@@ -70,8 +70,6 @@ export function ImpactMetricsChart() {
             d="M0,96 L40,90 L80,84 L120,74 L160,64 L200,52 L240,42 L280,32 L320,24 L360,16 L400,10 L400,104 L0,104 Z"
           />
           <path
-            className="chart-impact-line"
-            pathLength="1"
             fill="none"
             stroke="url(#impact-stroke)"
             strokeWidth="2.25"

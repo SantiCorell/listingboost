@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { isGoogleAuthConfigured } from "@/lib/auth/google-available";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
@@ -10,25 +9,17 @@ import { NavigationStyleReset } from "@/components/providers/navigation-style-re
 import { RouteStyleGuard } from "@/components/providers/route-style-guard";
 
 /**
- * Contenido que depende de sesión: fuera del layout raíz síncrono para que
- * html/body y el CSS global tengan un árbol estable en cada navegación.
+ * Sin `await auth()` aquí: la sesión la resuelve el cliente (`useSession` → /api/auth/session).
+ * Así el HTML de la página (LCP en home) no espera a Prisma/Auth en el servidor — mejora Lighthouse.
+ * Rutas protegidas siguen validando con `auth()` en sus propias páginas o middleware.
  */
-export default async function AppShell({ children }: { children: React.ReactNode }) {
-  let session = null;
-  try {
-    session = await auth();
-  } catch (e) {
-    const digest = typeof e === "object" && e !== null && "digest" in e ? String((e as { digest?: string }).digest) : "";
-    if (digest === "DYNAMIC_SERVER_USAGE") throw e;
-    console.error("[AppShell] auth() falló; se renderiza sin sesión.", e);
-  }
-
+export default function AppShell({ children }: { children: React.ReactNode }) {
   const googleAuthAvailable = isGoogleAuthConfigured();
 
   return (
     <>
       <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-      <AppProviders session={session}>
+      <AppProviders session={null}>
         <NavigationStyleReset />
         <RouteStyleGuard />
         <div className="flex min-h-screen flex-col">

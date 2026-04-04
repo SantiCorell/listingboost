@@ -111,22 +111,21 @@
     @apply rounded-2xl border border-white/40 bg-white/30 dark:border-white/5 dark:bg-black/20;
   }
 
-  .chart-impact-line {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: chart-draw-line 1.6s ease-out forwards 0.25s;
+  /* Sin stroke-dashoffset animado: no se compone en GPU y Lighthouse lo marca. Opacity sí. */
+  .chart-impact {
+    opacity: 0;
+    animation: chart-impact-fade 0.55s ease-out 0.15s forwards;
   }
 
-  @keyframes chart-draw-line {
+  @keyframes chart-impact-fade {
     to {
-      stroke-dashoffset: 0;
+      opacity: 1;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .chart-impact-line {
-      stroke-dasharray: none;
-      stroke-dashoffset: 0;
+    .chart-impact {
+      opacity: 1;
       animation: none;
     }
   }
