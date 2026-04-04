@@ -64,6 +64,10 @@ Los números incluidos calibran margen frente al coste típico de API; ajústalo
 
 Tras cambiar el enum `Plan` en Prisma: `npx prisma db push` (o migración).
 
+## Sesión e inactividad
+
+Por defecto la sesión (JWT) **caduca tras 15 minutos sin ninguna petición** que valide la cookie. Cada navegación o llamada a `/api/auth/session` **renueva** ese plazo. Puedes cambiar el valor con `AUTH_SESSION_MAX_AGE_SECONDS` (ver `.env.example`).
+
 ## Variables de entorno
 
 Copia de `.env.example`:

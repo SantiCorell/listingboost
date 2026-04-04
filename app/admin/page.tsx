@@ -59,14 +59,15 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-10">
-      <div>
+      <div className="rounded-2xl border border-border/80 bg-card/50 p-5 shadow-sm backdrop-blur-sm">
         <h1 className="text-2xl font-bold tracking-tight">Resumen operativo</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Usuarios = cuentas registradas. Tráfico = visitas a la web (incluye anónimos que aceptan cookies
-          analíticas), distinto del registro.
+        <p className="mt-2 text-sm text-muted-foreground">
+          <strong className="font-medium text-foreground">Usuarios</strong> = cuentas registradas.{" "}
+          <strong className="font-medium text-foreground">Tráfico</strong> = visitas reales (anónimos con
+          cookies analíticas aceptadas), no es lo mismo que un alta.
         </p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Los ingresos son estimaciones internas, no el extracto de Stripe.
+        <p className="mt-2 text-xs text-muted-foreground">
+          Los importes MRR son estimaciones internas; el dinero real viene del dashboard de Stripe.
         </p>
       </div>
 

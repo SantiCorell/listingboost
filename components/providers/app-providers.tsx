@@ -17,7 +17,7 @@ export function AppProviders({
   return (
     <SessionProvider
       session={session}
-      refetchInterval={120}
+      refetchInterval={60}
       refetchOnWindowFocus
     >
       <CookieConsentProvider>

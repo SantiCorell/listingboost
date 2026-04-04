@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+/** Si `next dev` va con Turbopack, no definir `webpack` evita el warning de Next. */
+const isTurbopackDev = process.argv.some((a) => a === "--turbopack" || a === "--turbo");
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -12,17 +15,20 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "4mb",
     },
   },
-  /**
-   * En macOS (iCloud, antivirus, carpetas sincronizadas) la caché persistente de webpack
-   * en dev a veces falla al renombrar *.pack.gz → ENOENT y deja .next a medias (sin routes-manifest).
-   * Desactivar caché en dev evita ese estado corrupto si usas `npm run dev:webpack`.
-   */
-  webpack: (config, { dev }) => {
-    if (dev) {
-      config.cache = false;
-    }
-    return config;
-  },
+  ...(isTurbopackDev
+    ? {}
+    : {
+        /**
+         * Solo con `next dev` (webpack). En macOS la caché persistente a veces corrompe `.next`.
+         * Con Turbopack este bloque no se aplica → sin warning.
+         */
+        webpack: (config: { cache?: boolean | object }, { dev }: { dev: boolean }) => {
+          if (dev) {
+            config.cache = false;
+          }
+          return config;
+        },
+      }),
 };
 
 export default nextConfig;
