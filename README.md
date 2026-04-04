@@ -24,25 +24,25 @@ npm run dev
 
 Abre [http://localhost:3000](http://localhost:3000). Regístrate, entra al dashboard y ejecuta un análisis.
 
-### Si `npm run dev` devuelve 500 o errores de `autoprefixer` / `fallback-build-manifest.json`
+### Si ves 500, `routes-manifest.json` ENOENT o fallos al renombrar `*.pack.gz` en `.next/cache`
 
-Suele ser **caché `.next` rota** o dependencias sin instalar. En la raíz del proyecto:
+Suele ser **caché de Next/webpack corrupta** (común en macOS con iCloud/antivirus) o dos procesos tocando `.next` a la vez. Para el servidor (`Ctrl+C`) y en la raíz:
 
 ```bash
-npm install
 npm run dev:clean
 ```
 
-O manualmente: para el servidor, borra la carpeta `.next` y vuelve a ejecutar `npm run dev`.
+Eso borra `.next` y `node_modules/.cache` y arranca **Turbopack** (`next dev --turbopack`). Si necesitas webpack clásico: `npm run dev:clean:webpack`.
 
 ## Scripts
 
 | Script | Descripción |
 |--------|-------------|
-| `npm run dev` | Desarrollo |
-| `npm run dev:clean` | Borra `.next` corrupto y arranca de nuevo |
-| `npm run clean` | Solo elimina la carpeta `.next` |
-| `npm run dev:turbo` | Desarrollo con Turbopack (experimental; puede fallar con CSS) |
+| `npm run dev` | Desarrollo con **Turbopack** (por defecto; más estable en local) |
+| `npm run dev:webpack` | Desarrollo con webpack (caché persistente desactivada en `next.config`) |
+| `npm run dev:clean` | Limpia cachés y arranca Turbopack |
+| `npm run dev:clean:webpack` | Limpia cachés y arranca webpack |
+| `npm run clean` | Borra `.next` y `node_modules/.cache` |
 | `npm run build` | Build de producción |
 | `npm run start` | Servidor tras `build` |
 | `npm run lint` | ESLint |
