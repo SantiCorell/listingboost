@@ -1,0 +1,19 @@
+# Postgres local para desarrollo cuando Supabase directo (IPv6) o el pooler del dashboard no conecta.
+# Uso: docker compose up -d
+# DATABASE_URL en .env.local:
+#   postgresql://postgres:postgres@127.0.0.1:5433/listingboost?schema=public
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: listingboost
+    ports:
+      - "5433:5432"
+    volumes:
+      - listingboost_pgdata:/var/lib/postgresql/data
+
+volumes:
+  listingboost_pgdata:
