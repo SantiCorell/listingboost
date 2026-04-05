@@ -1,4 +1,13 @@
-import type { ProductPlatformTarget } from "@prisma/client";
+/**
+ * Alineado con `enum ProductPlatformTarget` en prisma/schema.prisma.
+ * Definido aquí para no depender del cliente Prisma generado en este archivo.
+ */
+export type ProductSeoPlatformTarget =
+  | "WALLAPOP"
+  | "EBAY"
+  | "SHOPIFY"
+  | "GENERIC"
+  | "ALL";
 
 export function buildProductSeoSystemPrompt(): string {
   return `Eres un estratega senior de SEO ecommerce y marketplaces en España y LATAM.
@@ -12,7 +21,7 @@ El JSON debe cumplir el schema indicado en el mensaje de usuario.`;
 export function buildProductSeoUserPrompt(input: {
   description: string;
   imageContext: string;
-  platformTarget: ProductPlatformTarget | "ALL";
+  platformTarget: ProductSeoPlatformTarget;
   language: string;
   country: string;
   categoryHint?: string;
