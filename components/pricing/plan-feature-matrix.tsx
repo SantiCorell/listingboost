@@ -1,70 +1,180 @@
 import type { Plan } from "@prisma/client";
 import { Check, Minus } from "lucide-react";
-import { APP_NAME } from "@/lib/constants";
+import { APP_NAME, FREE_HISTORY_LIMIT } from "@/lib/constants";
 import { FEATURE_CREDITS } from "@/lib/feature-credits";
-import { PLAN_INCLUDED_ANALYSES } from "@/lib/plans";
+import { EXTRA_CREDIT_PRICE_EUR, PLAN_INCLUDED_ANALYSES, PLAN_PRICING_DISPLAY } from "@/lib/plans";
 import { cn } from "@/lib/utils";
 
-type Row = { feature: string; free: boolean | string; pro: boolean | string; proPlus: boolean | string };
+type CellVal = boolean | string;
 
-const rows: Row[] = [
+type FeatureRow = {
+  kind: "feature";
+  feature: string;
+  hint?: string;
+  free: CellVal;
+  pro: CellVal;
+  proPlus: CellVal;
+  enterprise: CellVal;
+};
+
+type SectionRow = { kind: "section"; title: string };
+
+const rows: (SectionRow | FeatureRow)[] = [
+  { kind: "section", title: "Cupo y precio" },
   {
+    kind: "feature",
+    feature: "Créditos incluidos / mes",
+    hint: "Unidades para boosts, scans, IA, etc.",
+    free: String(PLAN_INCLUDED_ANALYSES.FREE),
+    pro: String(PLAN_INCLUDED_ANALYSES.PRO),
+    proPlus: String(PLAN_INCLUDED_ANALYSES.PRO_PLUS),
+    enterprise: String(PLAN_INCLUDED_ANALYSES.ENTERPRISE),
+  },
+  {
+    kind: "feature",
+    feature: "Precio suscripción",
+    free: "0 €",
+    pro: PLAN_PRICING_DISPLAY.PRO.label,
+    proPlus: PLAN_PRICING_DISPLAY.PRO_PLUS.label,
+    enterprise: PLAN_PRICING_DISPLAY.ENTERPRISE.label,
+  },
+  {
+    kind: "feature",
+    feature: "Crédito extra (compra suelta)",
+    free: `${EXTRA_CREDIT_PRICE_EUR.FREE} €/u`,
+    pro: `${EXTRA_CREDIT_PRICE_EUR.PRO} €/u`,
+    proPlus: `${EXTRA_CREDIT_PRICE_EUR.PRO_PLUS} €/u`,
+    enterprise: `${EXTRA_CREDIT_PRICE_EUR.ENTERPRISE} €/u`,
+  },
+
+  { kind: "section", title: "Catálogo, URL y motor" },
+  {
+    kind: "feature",
     feature: "Boost multicanal (fichas marketplace)",
     free: true,
     pro: true,
     proPlus: true,
+    enterprise: true,
   },
   {
-    feature: "Scan SEO URL (motor + issues + score)",
+    kind: "feature",
+    feature: "Copia exportada sin pie de marca",
+    hint: "En Free el texto generado puede incluir referencia a ListingBoost.",
+    free: false,
+    pro: true,
+    proPlus: true,
+    enterprise: true,
+  },
+  {
+    kind: "feature",
+    feature: "Scan SEO de URL (motor + score + issues)",
     free: true,
     pro: true,
     proPlus: true,
+    enterprise: true,
   },
   {
-    feature: "Informe IA + PDF + comparativas avanzadas",
-    free: "Básico / con créditos",
-    pro: "Completo",
-    proPlus: "Completo + prioridad evolución",
-  },
-  {
+    kind: "feature",
     feature: "Arreglos 1‑clic (title / meta / H1)",
     free: true,
     pro: true,
     proPlus: true,
+    enterprise: true,
   },
   {
-    feature: "Generador de contenido (blog / producto)",
+    kind: "feature",
+    feature: "Generador SEO (blog / producto) + blog optimizer",
     free: true,
     pro: true,
     proPlus: true,
+    enterprise: true,
   },
   {
-    feature: "Blog optimizer (reescritura SEO)",
-    free: true,
-    pro: true,
-    proPlus: true,
+    kind: "feature",
+    feature: "Historial de trabajos guardados",
+    free: `Últimos ${FREE_HISTORY_LIMIT}`,
+    pro: "Completo",
+    proPlus: "Completo",
+    enterprise: "Completo",
   },
+
+  { kind: "section", title: "SEO Engine" },
   {
-    feature: "Comparativa vs competidor (dos URLs)",
+    kind: "feature",
+    feature: "Comparativa vs competidor (2 URLs)",
+    hint: `Cada ejecución consume ${FEATURE_CREDITS.COMPETITOR_COMPARE} créditos.`,
     free: false,
-    pro: true,
-    proPlus: true,
+    pro: `${FEATURE_CREDITS.COMPETITOR_COMPARE} cr / análisis`,
+    proPlus: `${FEATURE_CREDITS.COMPETITOR_COMPARE} cr / análisis`,
+    enterprise: `${FEATURE_CREDITS.COMPETITOR_COMPARE} cr / análisis`,
   },
   {
-    feature: "Seguimiento posiciones + histórico (cron)",
+    kind: "feature",
+    feature: "Monitoring SERP (cron + alertas)",
     free: false,
-    pro: true,
+    pro: "Semanal",
     proPlus: "Diario o semanal",
+    enterprise: "Diario o semanal",
   },
   {
-    feature: "Cupo mensual (unidades de crédito)",
-    free: String(PLAN_INCLUDED_ANALYSES.FREE),
-    pro: String(PLAN_INCLUDED_ANALYSES.PRO),
-    proPlus: String(PLAN_INCLUDED_ANALYSES.PRO_PLUS),
+    kind: "feature",
+    feature: "Informe SERP premium vs competidores",
+    hint: "Desde monitoring: crawl + datos SERP + IA.",
+    free: false,
+    pro: `${FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} cr / informe`,
+    proPlus: `${FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} cr / informe`,
+    enterprise: `${FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} cr / informe`,
+  },
+
+  { kind: "section", title: "PDF e informes" },
+  {
+    kind: "feature",
+    feature: "Auditoría URL: vista para imprimir (navegador)",
+    hint: "Desde el historial; no descarga PDF del servidor.",
+    free: "Sin crédito",
+    pro: "Sin crédito",
+    proPlus: "Sin crédito",
+    enterprise: "Sin crédito",
+  },
+  {
+    kind: "feature",
+    feature: "Auditoría URL: PDF descargable multipágina",
+    hint: "Listo para archivo o cliente; distinto de guardar desde «Imprimir».",
+    free: "1 crédito†",
+    pro: "1 crédito†",
+    proPlus: "1 crédito†",
+    enterprise: "1 crédito†",
+  },
+  {
+    kind: "feature",
+    feature: "Comparativa SEO: exportar a PDF",
+    free: "—",
+    pro: "1 crédito‡",
+    proPlus: "Incluido‡",
+    enterprise: "Incluido‡",
+  },
+
+  { kind: "section", title: "Escala y relación con el producto" },
+  {
+    kind: "feature",
+    feature: "Prioridad en evolución del roadmap",
+    free: false,
+    pro: true,
+    proPlus: true,
+    enterprise: true,
+  },
+  {
+    kind: "feature",
+    feature: "Condiciones comerciales y soporte prioritario",
+    hint: "Enterprise: contrato y volumen negociados.",
+    free: false,
+    pro: false,
+    proPlus: false,
+    enterprise: true,
   },
 ];
 
-function Cell({ v }: { v: boolean | string }) {
+function Cell({ v }: { v: CellVal }) {
   if (typeof v === "string") {
     return <span className="text-xs font-medium leading-snug text-foreground">{v}</span>;
   }
@@ -75,63 +185,139 @@ function Cell({ v }: { v: boolean | string }) {
   );
 }
 
+function planColumnClass(plan: Plan, col: "FREE" | "PRO" | "PRO_PLUS" | "ENTERPRISE"): string {
+  if (plan !== col) return "";
+  return "bg-primary/[0.08] ring-1 ring-inset ring-primary/15";
+}
+
 export function PlanFeatureMatrix({ currentPlan }: { currentPlan?: Plan }) {
+  const p = currentPlan ?? "FREE";
+
   return (
     <div className="overflow-x-auto rounded-2xl border border-border/80 bg-card/90 shadow-sm">
-      <table className="w-full min-w-[640px] border-collapse text-sm">
+      <table className="w-full min-w-[720px] border-collapse text-sm">
         <thead>
-          <tr className="border-b border-border bg-muted/40">
-            <th className="px-4 py-3 text-left font-semibold">Funcionalidad</th>
+          <tr className="border-b border-border bg-muted/50">
+            <th className="sticky left-0 z-[1] min-w-[200px] bg-muted/50 px-4 py-3 text-left font-semibold backdrop-blur-sm">
+              Funcionalidad
+            </th>
             <th
               className={cn(
-                "px-3 py-3 text-center font-semibold",
-                currentPlan === "FREE" && "bg-primary/10",
+                "px-2 py-3 text-center text-xs font-semibold uppercase tracking-wide sm:px-3 sm:text-sm sm:normal-case sm:tracking-normal",
+                planColumnClass(p, "FREE"),
               )}
             >
               Free
             </th>
             <th
               className={cn(
-                "px-3 py-3 text-center font-semibold",
-                currentPlan === "PRO" && "bg-primary/10",
+                "px-2 py-3 text-center text-xs font-semibold uppercase tracking-wide sm:px-3 sm:text-sm sm:normal-case sm:tracking-normal",
+                planColumnClass(p, "PRO"),
+                "bg-gradient-to-b from-primary/[0.12] to-transparent",
               )}
             >
-              Pro
+              <span className="block">Pro</span>
+              <span className="mt-0.5 hidden text-[10px] font-normal text-muted-foreground sm:block">
+                Ritmo semanal
+              </span>
             </th>
             <th
               className={cn(
-                "px-3 py-3 text-center font-semibold",
-                (currentPlan === "PRO_PLUS" || currentPlan === "ENTERPRISE") && "bg-primary/10",
+                "px-2 py-3 text-center text-xs font-semibold uppercase tracking-wide sm:px-3 sm:text-sm sm:normal-case sm:tracking-normal",
+                planColumnClass(p, "PRO_PLUS"),
               )}
             >
-              Pro+ / Growth
+              <span className="block">Pro+</span>
+              <span className="mt-0.5 hidden text-[10px] font-normal text-muted-foreground sm:block">
+                Volumen · diario
+              </span>
+            </th>
+            <th
+              className={cn(
+                "px-2 py-3 text-center text-xs font-semibold uppercase tracking-wide sm:px-3 sm:text-sm sm:normal-case sm:tracking-normal",
+                planColumnClass(p, "ENTERPRISE"),
+              )}
+            >
+              <span className="block">Enterprise</span>
+              <span className="mt-0.5 hidden text-[10px] font-normal text-muted-foreground sm:block">
+                A medida
+              </span>
             </th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.feature} className="border-b border-border/60 last:border-0">
-              <td className="px-4 py-3 text-muted-foreground">{row.feature}</td>
-              <td className="px-3 py-3 text-center align-top">
-                <Cell v={row.free} />
-              </td>
-              <td className="px-3 py-3 text-center align-top">
-                <Cell v={row.pro} />
-              </td>
-              <td className="px-3 py-3 text-center align-top">
-                <Cell v={row.proPlus} />
-              </td>
-            </tr>
-          ))}
+          {rows.map((row) => {
+            if (row.kind === "section") {
+              return (
+                <tr key={row.title} className="border-b border-border/50 bg-muted/25">
+                  <th
+                    colSpan={5}
+                    scope="colgroup"
+                    className="px-4 py-2.5 text-left text-[11px] font-bold uppercase tracking-wider text-muted-foreground"
+                  >
+                    {row.title}
+                  </th>
+                </tr>
+              );
+            }
+            return (
+              <tr
+                key={row.feature}
+                className="border-b border-border/50 transition-colors hover:bg-muted/15 last:border-0"
+              >
+                <th
+                  scope="row"
+                  className="sticky left-0 z-[1] max-w-[240px] bg-card/95 px-4 py-3 text-left align-top font-normal backdrop-blur-sm"
+                >
+                  <span className="text-foreground">{row.feature}</span>
+                  {row.hint ? (
+                    <span className="mt-1 block text-[11px] leading-snug text-muted-foreground">{row.hint}</span>
+                  ) : null}
+                </th>
+                <td className={cn("px-2 py-3 text-center align-top sm:px-3", planColumnClass(p, "FREE"))}>
+                  <Cell v={row.free} />
+                </td>
+                <td className={cn("bg-primary/[0.03] px-2 py-3 text-center align-top sm:px-3", planColumnClass(p, "PRO"))}>
+                  <Cell v={row.pro} />
+                </td>
+                <td className={cn("px-2 py-3 text-center align-top sm:px-3", planColumnClass(p, "PRO_PLUS"))}>
+                  <Cell v={row.proPlus} />
+                </td>
+                <td className={cn("px-2 py-3 text-center align-top sm:px-3", planColumnClass(p, "ENTERPRISE"))}>
+                  <Cell v={row.enterprise} />
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
-      <p className="border-t border-border/60 px-4 py-3 text-xs text-muted-foreground">
-        Free incluye el núcleo de {APP_NAME} con cupo reducido; Pro desbloquea{" "}
-        <strong className="text-foreground">monitoring SERP</strong> y mejor precio por crédito; Pro+ añade volumen
-        y cadencia diaria en monitoring.         El informe avanzado «vs competidores» en monitoring cuesta{" "}
-        <strong className="text-foreground">{FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos</strong> por ejecución
-        (crawl + IA). Todo lo que gasta créditos puede recargarse aparte.
-      </p>
+
+      <div
+        id="notas-precios-pdf"
+        className="space-y-3 border-t border-border/60 bg-muted/10 px-4 py-4 text-xs leading-relaxed text-muted-foreground"
+      >
+        <p>
+          <strong className="text-foreground">† PDF de auditoría URL:</strong> la{" "}
+          <strong className="text-foreground">vista para imprimir</strong> desde el historial{" "}
+          <strong className="text-foreground">no consume créditos</strong>. El{" "}
+          <strong className="text-foreground">PDF descargable multipágina</strong> (mismo contenido estructurado para
+          archivo o cliente) cuesta <strong className="text-foreground">1 crédito por exportación</strong> en todos los
+          planes, incluido Pro.
+        </p>
+        <p>
+          <strong className="text-foreground">‡ PDF de comparativa SEO:</strong> en{" "}
+          <strong className="text-foreground">Free y Pro</strong>, cada exportación a PDF cuesta{" "}
+          <strong className="text-foreground">1 crédito</strong>. En <strong className="text-foreground">Pro+</strong>{" "}
+          y <strong className="text-foreground">Enterprise</strong> ese PDF va{" "}
+          <strong className="text-foreground">incluido</strong> (sin cargo adicional en créditos).
+        </p>
+        <p>
+          El núcleo de <strong className="text-foreground">{APP_NAME}</strong> es el mismo en todos los planes: la
+          diferencia es cupo mensual, precio por crédito extra, límites de historial, acceso a SEO Engine (comparativa y
+          monitoring desde Pro), cadencia de monitoring y política de PDFs anteriores. El informe SERP premium cuesta{" "}
+          <strong className="text-foreground">{FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos</strong> por ejecución.
+        </p>
+      </div>
     </div>
   );
 }

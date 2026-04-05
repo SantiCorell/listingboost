@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckoutPlanButton } from "@/components/pricing/checkout-plan-button";
-import { APP_NAME, ENGINE_NAME } from "@/lib/constants";
+import { APP_NAME, ENGINE_NAME, FREE_HISTORY_LIMIT } from "@/lib/constants";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { TRUST_STATS } from "@/lib/social-proof";
 import { faqPageJsonLd } from "@/lib/seo-jsonld";
@@ -17,6 +17,7 @@ import {
   PLAN_PRICING_DISPLAY,
   planLabel,
 } from "@/lib/plans";
+import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import { getPublicContactEmail } from "@/lib/contact";
 import { CREDIT_COST_PRODUCT, CREDIT_COST_URL_AUDIT } from "@/lib/usage";
 import { Badge } from "@/components/ui/badge";
@@ -128,7 +129,8 @@ export default async function PricingPage() {
   const freePlanBullets = [
     `Hasta ${PLAN_INCLUDED_ANALYSES.FREE} análisis incluidos/mes`,
     "Boost de ficha + scan URL + SEO Engine (generador, blog optimizer) + hashtags",
-    "Historial limitado · marca de agua en export",
+    `Historial limitado (últimos ${FREE_HISTORY_LIMIT}) · copia de ficha con pie de marca`,
+    "Comparativa SEO y monitoring SERP: no incluidos (desde Pro)",
     commerceEnabled
       ? `Crédito extra: ${EXTRA_CREDIT_PRICE_EUR.FREE} €/u`
       : "Compra de créditos extra: próximamente",
@@ -231,8 +233,8 @@ export default async function PricingPage() {
                 </Badge>
                 {userPlan === "FREE" ? (
                   <>
-                    . <span className="text-primary">Sube a Pro</span> para más análisis, historial completo y
-                    quitar la marca de agua en export.
+                    . <span className="text-primary">Sube a Pro</span> para más análisis, historial completo, SEO Engine
+                    (comparativa + monitoring) y copias de ficha sin pie de marca.
                   </>
                 ) : userPlan === "PRO" ? (
                   <>
@@ -301,9 +303,11 @@ export default async function PricingPage() {
           <section className="mx-auto mt-20 max-w-5xl">
             <h2 className="text-center text-2xl font-bold sm:text-3xl">Qué desbloqueas en cada plan</h2>
             <p className="mx-auto mt-2 max-w-2xl text-center text-muted-foreground">
-              <strong className="text-foreground">Free</strong> incluye el núcleo (boost, scan, SEO Engine básico con
-              cupo reducido). <strong className="text-foreground">Pro</strong> añade monitoring SERP y mejor relación
-              €/crédito. <strong className="text-foreground">Pro+</strong> es para volumen y cadencia diaria.
+              <strong className="text-foreground">Free</strong> es el núcleo con cupo corto y sin comparativa ni
+              monitoring. <strong className="text-foreground">Pro</strong> desbloquea SEO Engine completo, historial
+              sin tope y mejor €/crédito. <strong className="text-foreground">Pro+</strong> sube volumen, cadencia
+              diaria en SERP y PDF de comparativa incluido. Las notas <strong className="text-foreground">† ‡</strong>{" "}
+              bajo la tabla detallan PDFs.
             </p>
             <div className="mt-8">
               <PlanFeatureMatrix currentPlan={userPlan} />
@@ -395,11 +399,11 @@ export default async function PricingPage() {
                 <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
                   <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
                     {[
-                      "Historial completo · sin marca de agua en export",
-                      "SEO Engine: comparativa competidor + monitoring SERP (cron)",
-                      `Créditos extra solo ${EXTRA_CREDIT_PRICE_EUR.PRO} €/u`,
-                      "Cancelación gestionada en Stripe",
-                      "Prioridad en evolución del producto",
+                      "Historial completo · copias de ficha sin pie de marca",
+                      `SEO Engine: comparativa (${FEATURE_CREDITS.COMPETITOR_COMPARE} cr/ejec.) + monitoring SERP semanal`,
+                      "Informes: imprimir vista sin crédito; PDF auditoría 1 cr† · PDF comparativa 1 cr‡",
+                      `Créditos extra ${EXTRA_CREDIT_PRICE_EUR.PRO} €/u`,
+                      "Cancelación en Stripe · prioridad en evolución del producto",
                     ].map((t) => (
                       <li key={t} className="flex gap-2">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -470,10 +474,10 @@ export default async function PricingPage() {
                 <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
                   <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
                     {[
-                      "Todo lo de Pro con más aire cada mes",
-                      "Monitoring en cadencia diaria (Pro+)",
-                      `Créditos al mejor precio: ${EXTRA_CREDIT_PRICE_EUR.PRO_PLUS} €/u`,
-                      "Menos fricción cuando el catálogo no para",
+                      "Todo lo de Pro con más cupo mensual",
+                      "Monitoring SERP en cadencia diaria o semanal",
+                      "PDF de comparativa SEO incluido (sin crédito extra ‡)",
+                      `Créditos extra al mejor precio: ${EXTRA_CREDIT_PRICE_EUR.PRO_PLUS} €/u`,
                     ].map((t) => (
                       <li key={t} className="flex gap-2">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -541,8 +545,8 @@ export default async function PricingPage() {
                   <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
                     {[
                       `Créditos extra ${EXTRA_CREDIT_PRICE_EUR.ENTERPRISE} €/u`,
-                      "Prioridad en soporte y acuerdos",
-                      "Integraciones y API en roadmap",
+                      "PDF de comparativa SEO incluido (misma política que Pro+ ‡)",
+                      "Prioridad en soporte, acuerdos e integraciones",
                     ].map((t) => (
                       <li key={t} className="flex gap-2">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
