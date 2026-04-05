@@ -51,16 +51,27 @@ export function SeoGapFinderClient() {
           language,
         }),
       });
-      const j = (await r.json()) as {
+      const raw = await r.text();
+      let j: {
         ok?: boolean;
         error?: string;
         output?: SeoGapFinderResult;
         creditsUsed?: number;
         cached?: boolean;
         reportId?: string;
-      };
+      } = {};
+      try {
+        j = raw ? (JSON.parse(raw) as typeof j) : {};
+      } catch {
+        setErr(
+          r.ok
+            ? "Respuesta del servidor no válida."
+            : `Error del servidor (${r.status}). Prueba de nuevo o revisa la consola del dev server.`,
+        );
+        return;
+      }
       if (!r.ok) {
-        setErr(j.error ?? "Error");
+        setErr(j.error ?? `Error ${r.status}`);
         return;
       }
       if (j.output) {
@@ -70,7 +81,7 @@ export function SeoGapFinderClient() {
         setReportId(j.reportId ?? null);
       }
     } catch {
-      setErr("Error de red");
+      setErr("No se pudo conectar. Comprueba tu red o que el servidor esté en marcha.");
     } finally {
       setLoading(false);
     }
