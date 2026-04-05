@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckoutPlanButton } from "@/components/pricing/checkout-plan-button";
+import { PricingPlanFeatureList } from "@/components/pricing/pricing-plan-feature-list";
 import { APP_NAME, ENGINE_NAME, FREE_HISTORY_LIMIT } from "@/lib/constants";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { TRUST_STATS } from "@/lib/social-proof";
@@ -30,7 +31,6 @@ import {
 } from "@/components/ui/accordion";
 import {
   ArrowRight,
-  Check,
   ChevronRight,
   Coins,
   CreditCard,
@@ -134,6 +134,30 @@ export default async function PricingPage() {
     commerceEnabled
       ? `Crédito extra: ${EXTRA_CREDIT_PRICE_EUR.FREE} €/u`
       : "Compra de créditos extra: próximamente",
+  ];
+
+  const proPlanBullets = [
+    "Historial completo · copias de ficha sin pie de marca",
+    `SEO Engine: comparativa (${FEATURE_CREDITS.COMPETITOR_COMPARE} cr/ejec.) + monitoring SERP semanal`,
+    "Informes: imprimir vista sin crédito; PDF auditoría 1 cr† · PDF comparativa 1 cr‡",
+    `Créditos extra ${EXTRA_CREDIT_PRICE_EUR.PRO} €/u`,
+    "Cancelación en Stripe · prioridad en evolución del producto",
+  ];
+
+  const proPlusPlanBullets = [
+    "Todo lo de Pro con más cupo mensual",
+    "Monitoring SERP en cadencia diaria o semanal",
+    "PDF de comparativa SEO incluido (sin crédito extra ‡)",
+    `Créditos extra al mejor precio: ${EXTRA_CREDIT_PRICE_EUR.PRO_PLUS} €/u`,
+  ];
+
+  const enterprisePlanBullets = [
+    "Sin tope mensual de créditos: boosts, scan URL, generador SEO, blog optimizer, hashtags, comparativa y monitoring SERP cuando lo necesites.",
+    "Informe SERP vs competidores premium sin descuento de cupo (en Pro/Pro+ consume créditos; aquí no).",
+    "PDF de comparativa SEO incluido; PDFs de auditoría y exports alineados a la tabla de funciones (§ † ‡) sin sorpresas.",
+    "Historial completo, copias sin pie de marca Free y créditos extra al precio Pro+ por si algún flujo legacy los requiere.",
+    "Uso profesional razonable: protegemos la plataforma frente a abuso; el detalle legal está en términos — tú te centras en vender.",
+    "Prioridad en soporte y roadmap de integraciones (API, webhooks, SSO) para escalar operaciones reales, no demos.",
   ];
 
   const proUnit = formatEurPerAnalysis(
@@ -349,21 +373,17 @@ export default async function PricingPage() {
                       0 €
                     </Badge>
                   </CardTitle>
-                  <CardDescription className="text-pretty text-base leading-relaxed break-words">
+                  <CardDescription className="text-pretty text-sm leading-relaxed break-words sm:text-base">
                     <strong className="text-foreground">Para probar en serio</strong>:{" "}
                     {PLAN_INCLUDED_ANALYSES.FREE} análisis/mes con el <strong className="text-foreground">mismo motor</strong>{" "}
                     que los planes de pago. Ideal si publicas poco o quieres validar antes de invertir un euro.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
-                  <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
-                    {freePlanBullets.map((t) => (
-                      <li key={t} className="flex gap-2">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
+                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
+                  <PricingPlanFeatureList
+                    items={freePlanBullets}
+                    summaryHint={`${PLAN_INCLUDED_ANALYSES.FREE} análisis/mes + herramientas`}
+                  />
                   {!session?.user ? (
                     <div className="mt-auto flex min-h-[6.5rem] flex-col justify-end gap-2 border-t border-transparent pt-2">
                       <Button asChild className={PRICING_CTA_CLASS} size="lg">
@@ -396,28 +416,19 @@ export default async function PricingPage() {
                     Pro
                     <Badge className="bg-primary text-base">{PLAN_PRICING_DISPLAY.PRO.label}</Badge>
                   </CardTitle>
-                  <CardDescription className="text-pretty text-base leading-relaxed break-words">
+                  <CardDescription className="text-pretty text-sm leading-relaxed break-words sm:text-base">
                     <strong className="text-foreground">{PLAN_INCLUDED_ANALYSES.PRO} análisis/mes</strong> — si los
                     exprimes, cada uno te sale desde <strong className="text-foreground">{proUnit} €</strong>. Pensado
                     para <strong className="text-foreground">vendedores y tiendas</strong> que publican cada semana y
                     notan el coste en horas, no solo en euros.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
-                  <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
-                    {[
-                      "Historial completo · copias de ficha sin pie de marca",
-                      `SEO Engine: comparativa (${FEATURE_CREDITS.COMPETITOR_COMPARE} cr/ejec.) + monitoring SERP semanal`,
-                      "Informes: imprimir vista sin crédito; PDF auditoría 1 cr† · PDF comparativa 1 cr‡",
-                      `Créditos extra ${EXTRA_CREDIT_PRICE_EUR.PRO} €/u`,
-                      "Cancelación en Stripe · prioridad en evolución del producto",
-                    ].map((t) => (
-                      <li key={t} className="flex gap-2">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
+                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
+                  <PricingPlanFeatureList
+                    items={proPlanBullets}
+                    defaultOpen
+                    summaryHint="Historial completo + SEO Engine + PDFs"
+                  />
                   {session?.user ? (
                     <div className="mt-auto min-h-[6.5rem] border-t border-transparent pt-2">
                       {commerceEnabled ? (
@@ -472,27 +483,18 @@ export default async function PricingPage() {
                       {PLAN_PRICING_DISPLAY.PRO_PLUS.label}
                     </Badge>
                   </CardTitle>
-                  <CardDescription className="text-pretty text-base leading-relaxed break-words">
+                  <CardDescription className="text-pretty text-sm leading-relaxed break-words sm:text-base">
                     <strong className="text-foreground">{PLAN_INCLUDED_ANALYSES.PRO_PLUS} análisis/mes</strong> — desde{" "}
                     <strong className="text-foreground">{proPlusUnit} €</strong> por análisis si usas todo el cupo.
                     Para <strong className="text-foreground">agencias y sellers con mucho SKU</strong> que no pueden
                     quedarse sin aire a mitad de mes.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
-                  <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
-                    {[
-                      "Todo lo de Pro con más cupo mensual",
-                      "Monitoring SERP en cadencia diaria o semanal",
-                      "PDF de comparativa SEO incluido (sin crédito extra ‡)",
-                      `Créditos extra al mejor precio: ${EXTRA_CREDIT_PRICE_EUR.PRO_PLUS} €/u`,
-                    ].map((t) => (
-                      <li key={t} className="flex gap-2">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
+                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
+                  <PricingPlanFeatureList
+                    items={proPlusPlanBullets}
+                    summaryHint="Más cupo + PDF comparativa incluido"
+                  />
                   {session?.user ? (
                     <div className="mt-auto min-h-[6.5rem] border-t border-transparent pt-2">
                       {commerceEnabled ? (
@@ -545,7 +547,7 @@ export default async function PricingPage() {
                       {PLAN_PRICING_DISPLAY.ENTERPRISE.label}
                     </Badge>
                   </CardTitle>
-                  <CardDescription className="text-pretty text-base leading-relaxed break-words">
+                  <CardDescription className="text-pretty text-sm leading-relaxed break-words sm:text-base">
                     Para <strong className="text-foreground">equipos y tiendas que viven del catálogo</strong>: un solo
                     precio fijo online (<strong className="text-foreground">100 €/mes</strong> en Stripe) y{" "}
                     <strong className="text-foreground">cupo ilimitado de créditos</strong> para todo lo que importa en
@@ -553,22 +555,11 @@ export default async function PricingPage() {
                     cada vez que lanzas campaña o subes 200 SKUs.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="relative mt-auto flex min-h-0 flex-1 flex-col gap-4">
-                  <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
-                    {[
-                      "Sin tope mensual de créditos: boosts, scan URL, generador SEO, blog optimizer, hashtags, comparativa y monitoring SERP cuando lo necesites.",
-                      "Informe SERP vs competidores premium sin descuento de cupo (en Pro/Pro+ consume créditos; aquí no).",
-                      "PDF de comparativa SEO incluido; PDFs de auditoría y exports alineados a la tabla de funciones (§ † ‡) sin sorpresas.",
-                      "Historial completo, copias sin pie de marca Free y créditos extra al precio Pro+ por si algún flujo legacy los requiere.",
-                      "Uso profesional razonable: protegemos la plataforma frente a abuso; el detalle legal está en términos — tú te centras en vender.",
-                      "Prioridad en soporte y roadmap de integraciones (API, webhooks, SSO) para escalar operaciones reales, no demos.",
-                    ].map((t) => (
-                      <li key={t} className="flex gap-2">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
+                <CardContent className="relative mt-auto flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
+                  <PricingPlanFeatureList
+                    items={enterprisePlanBullets}
+                    summaryHint="Cupo ilimitado + SERP premium sin cupo"
+                  />
                   <div className="mt-auto flex min-h-[6.5rem] flex-col justify-end gap-2 border-t border-transparent pt-2">
                     {session?.user && enterpriseStripeReady && commerceEnabled ? (
                       <CheckoutPlanButton plan="ENTERPRISE" className="shadow-md">
