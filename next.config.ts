@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
+    optimizePackageImports: ["lucide-react", "@radix-ui/react-accordion", "@radix-ui/react-dialog"],
     serverActions: {
       bodySizeLimit: "4mb",
     },

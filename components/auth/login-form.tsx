@@ -111,18 +111,6 @@ export function LoginForm({
             <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
               Misma cuenta que en Google.
             </p>
-            {!isModal ? (
-              <details className="rounded-lg border border-border/50 bg-muted/20 px-2 py-1.5 text-left">
-                <summary className="cursor-pointer text-[10px] font-medium text-muted-foreground">
-                  ¿Error «redirect_uri_mismatch» con Google?
-                </summary>
-                <p className="mt-2 text-[10px] leading-snug text-muted-foreground">
-                  En Vercel define <code className="font-mono">AUTH_URL</code> como tu URL pública (sin / final). En
-                  Google Cloud autoriza <code className="font-mono">/api/auth/callback/google</code> para ese dominio. Ver{" "}
-                  <code className="font-mono">.env.example</code>.
-                </p>
-              </details>
-            ) : null}
             <AuthOauthDivider label="Separador entre Google y email" />
             <p className="text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/90">
               o con email
