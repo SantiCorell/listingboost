@@ -4,6 +4,7 @@
  * Uso:
  *   npm run stripe:seed
  *   npm run stripe:seed:write   → imprime IDs y actualiza STRIPE_PRICE_ID_* en .env.local
+ *   npm run stripe:reset-catalog -- --dry-run | --confirm   → archiva productos «ListingBoost» viejos; luego seed:write
  *
  * Montos (EUR): Pro 29/mes, Pro+ 79/mes, Enterprise 100/mes.
  * Créditos extra (debe coincidir con lib/plans.ts EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR):
