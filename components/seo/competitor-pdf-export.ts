@@ -1,4 +1,5 @@
 import type { CompetitorCompareOutput } from "@/types/competitor-compare";
+import { getBrandMarkPngDataUrl } from "@/lib/pdf/brand-mark-png";
 
 const BRAND = { r: 109, g: 40, b: 217 };
 const BRAND_LIGHT = { r: 237, g: 233, b: 254 };
@@ -30,20 +31,7 @@ export async function downloadCompetitorComparePdfClient(
   const lh = 12;
   const lhTight = 11;
 
-  let logoData: string | null = null;
-  try {
-    const res = await fetch("/logo.png");
-    if (res.ok) {
-      const blob = await res.blob();
-      logoData = await new Promise<string | null>((resolve) => {
-        const r = new FileReader();
-        r.onloadend = () => resolve(typeof r.result === "string" ? r.result : null);
-        r.readAsDataURL(blob);
-      });
-    }
-  } catch {
-    logoData = null;
-  }
+  const logoData = await getBrandMarkPngDataUrl(72);
 
   function drawThinHeader() {
     doc.setFillColor(BRAND.r, BRAND.g, BRAND.b);

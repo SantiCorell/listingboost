@@ -366,40 +366,48 @@ export default async function PricingPage() {
             <div className="mt-10 grid auto-rows-fr gap-6 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
               {/* Free */}
               <Card className="flex h-full min-h-0 flex-col border-border/80 bg-card/95 shadow-sm">
-                <CardHeader className="pb-2">
+                <CardHeader className="pb-2 max-lg:pb-1.5">
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Free
                     <Badge variant="secondary" className="text-base font-bold">
                       0 €
                     </Badge>
                   </CardTitle>
-                  <CardDescription className="text-pretty text-sm leading-relaxed break-words sm:text-base">
+                  <CardDescription className="text-pretty text-sm leading-relaxed break-words max-lg:text-[13px] max-lg:leading-snug sm:text-base">
                     <strong className="text-foreground">Para probar en serio</strong>:{" "}
                     {PLAN_INCLUDED_ANALYSES.FREE} análisis/mes con el <strong className="text-foreground">mismo motor</strong>{" "}
                     que los planes de pago. Ideal si publicas poco o quieres validar antes de invertir un euro.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
-                  <PricingPlanFeatureList
-                    items={freePlanBullets}
-                    summaryHint={`${PLAN_INCLUDED_ANALYSES.FREE} análisis/mes + herramientas`}
-                  />
-                  {!session?.user ? (
-                    <div className="mt-auto flex min-h-[6.5rem] flex-col justify-end gap-2 border-t border-transparent pt-2">
-                      <Button asChild className={PRICING_CTA_CLASS} size="lg">
-                        <Link href="/register">Registrarse gratis</Link>
-                      </Button>
-                      <Button asChild variant="ghost" className="h-auto min-h-10 w-full whitespace-normal py-2 text-xs text-muted-foreground">
-                        <Link href="/login?callbackUrl=/pricing">Ya tengo cuenta</Link>
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="mt-auto min-h-[6.5rem] border-t border-transparent pt-2">
-                      <Button asChild variant="outline" className={PRICING_CTA_CLASS} size="lg">
-                        <Link href="/dashboard">Abrir panel</Link>
-                      </Button>
-                    </div>
-                  )}
+                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 max-lg:gap-2 lg:gap-4">
+                  <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
+                    {!session?.user ? (
+                      <div className="flex flex-col justify-end gap-2">
+                        <Button asChild className={PRICING_CTA_CLASS} size="lg">
+                          <Link href="/register">Registrarse gratis</Link>
+                        </Button>
+                        <Button
+                          asChild
+                          variant="ghost"
+                          className="h-auto min-h-10 w-full whitespace-normal py-2 text-xs text-muted-foreground"
+                        >
+                          <Link href="/login?callbackUrl=/pricing">Ya tengo cuenta</Link>
+                        </Button>
+                      </div>
+                    ) : (
+                      <div>
+                        <Button asChild variant="outline" className={PRICING_CTA_CLASS} size="lg">
+                          <Link href="/dashboard">Abrir panel</Link>
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                  <div className="order-2 min-h-0 flex-1 lg:order-1">
+                    <PricingPlanFeatureList
+                      items={freePlanBullets}
+                      summaryHint={`${PLAN_INCLUDED_ANALYSES.FREE} análisis/mes + herramientas`}
+                    />
+                  </div>
                 </CardContent>
               </Card>
 
@@ -411,44 +419,179 @@ export default async function PricingPage() {
                     Más elegido
                   </Badge>
                 </div>
-                <CardHeader className="pb-2 pt-6">
+                <CardHeader className="pb-2 pt-6 max-lg:pb-1.5 max-lg:pt-5">
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Pro
                     <Badge className="bg-primary text-base">{PLAN_PRICING_DISPLAY.PRO.label}</Badge>
                   </CardTitle>
-                  <CardDescription className="text-pretty text-sm leading-relaxed break-words sm:text-base">
+                  <CardDescription className="text-pretty text-sm leading-relaxed break-words max-lg:text-[13px] max-lg:leading-snug sm:text-base">
                     <strong className="text-foreground">{PLAN_INCLUDED_ANALYSES.PRO} análisis/mes</strong> — si los
                     exprimes, cada uno te sale desde <strong className="text-foreground">{proUnit} €</strong>. Pensado
                     para <strong className="text-foreground">vendedores y tiendas</strong> que publican cada semana y
                     notan el coste en horas, no solo en euros.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
-                  <PricingPlanFeatureList
-                    items={proPlanBullets}
-                    defaultOpen
-                    summaryHint="Historial completo + SEO Engine + PDFs"
-                  />
-                  {session?.user ? (
-                    <div className="mt-auto min-h-[6.5rem] border-t border-transparent pt-2">
-                      {commerceEnabled ? (
-                        <CheckoutPlanButton plan="PRO" className="shadow-md">
-                          Pasar a Pro — pagar con Stripe
+                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 max-lg:gap-2 lg:gap-4">
+                  <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
+                    {session?.user ? (
+                      <div>
+                        {commerceEnabled ? (
+                          <CheckoutPlanButton plan="PRO" className="shadow-md">
+                            Pasar a Pro — pagar con Stripe
+                          </CheckoutPlanButton>
+                        ) : (
+                          <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
+                            Contratación no disponible aún
+                          </Button>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col justify-end gap-2">
+                        {commerceEnabled ? (
+                          <>
+                            <Button asChild className={`${PRICING_CTA_CLASS} shadow-md`} size="lg">
+                              <Link href="/register">
+                                Registrarse
+                                <span className="block w-full text-[0.85em] font-normal opacity-90">y contratar Pro</span>
+                              </Link>
+                            </Button>
+                            <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
+                              <Link href="/login?callbackUrl=/pricing">
+                                Iniciar sesión
+                                <span className="block w-full text-[0.85em] font-normal opacity-90">y pagar con Stripe</span>
+                              </Link>
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
+                              Pro — próximamente
+                            </Button>
+                            <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
+                              <Link href="/register">Crear cuenta gratis (plan Free)</Link>
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="order-2 min-h-0 flex-1 lg:order-1">
+                    <PricingPlanFeatureList
+                      items={proPlanBullets}
+                      defaultOpen
+                      summaryHint="Historial completo + SEO Engine + PDFs"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Pro+ */}
+              <Card className="flex h-full min-h-0 flex-col border-primary/30 bg-card/95 shadow-lg">
+                <CardHeader className="pb-2 max-lg:pb-1.5">
+                  <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
+                    Pro+
+                    <Badge className="gap-1 bg-primary/90">
+                      <Sparkles className="h-3 w-3" />
+                      {PLAN_PRICING_DISPLAY.PRO_PLUS.label}
+                    </Badge>
+                  </CardTitle>
+                  <CardDescription className="text-pretty text-sm leading-relaxed break-words max-lg:text-[13px] max-lg:leading-snug sm:text-base">
+                    <strong className="text-foreground">{PLAN_INCLUDED_ANALYSES.PRO_PLUS} análisis/mes</strong> — desde{" "}
+                    <strong className="text-foreground">{proPlusUnit} €</strong> por análisis si usas todo el cupo.
+                    Para <strong className="text-foreground">agencias y sellers con mucho SKU</strong> que no pueden
+                    quedarse sin aire a mitad de mes.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 max-lg:gap-2 lg:gap-4">
+                  <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
+                    {session?.user ? (
+                      <div>
+                        {commerceEnabled ? (
+                          <CheckoutPlanButton plan="PRO_PLUS" variant="default">
+                            Contratar Pro+ ahora
+                          </CheckoutPlanButton>
+                        ) : (
+                          <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
+                            Contratación no disponible aún
+                          </Button>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col justify-end gap-2">
+                        {commerceEnabled ? (
+                          <>
+                            <Button asChild className={PRICING_CTA_CLASS} variant="secondary" size="lg">
+                              <Link href="/register">
+                                Registrarse
+                                <span className="block w-full text-[0.85em] font-normal opacity-90">y elegir Pro+</span>
+                              </Link>
+                            </Button>
+                            <Button
+                              asChild
+                              variant="outline"
+                              className="h-auto min-h-10 w-full whitespace-normal py-2 text-xs"
+                            >
+                              <Link href="/login?callbackUrl=/pricing">Ya tengo cuenta</Link>
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
+                              Pro+ — próximamente
+                            </Button>
+                            <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
+                              <Link href="/register">Crear cuenta gratis (plan Free)</Link>
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="order-2 min-h-0 flex-1 lg:order-1">
+                    <PricingPlanFeatureList
+                      items={proPlusPlanBullets}
+                      summaryHint="Más cupo + PDF comparativa incluido"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Enterprise */}
+              <Card className="relative flex h-full min-h-0 flex-col overflow-hidden border-2 border-violet-500/35 bg-gradient-to-b from-violet-500/[0.08] via-muted/20 to-card shadow-xl shadow-violet-500/10">
+                <div className="pointer-events-none absolute -right-16 top-0 h-32 w-32 rounded-full bg-violet-500/20 blur-2xl" />
+                <CardHeader className="relative pb-2 max-lg:pb-1.5">
+                  <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
+                    Enterprise
+                    <Badge variant="outline" className="gap-1 border-violet-500/40 bg-violet-500/10 text-violet-950 dark:text-violet-100">
+                      <Rocket className="h-3 w-3" />
+                      {PLAN_PRICING_DISPLAY.ENTERPRISE.label}
+                    </Badge>
+                  </CardTitle>
+                  <CardDescription className="text-pretty text-sm leading-relaxed break-words max-lg:text-[13px] max-lg:leading-snug sm:text-base">
+                    Para <strong className="text-foreground">equipos y tiendas que viven del catálogo</strong>: un solo
+                    precio fijo online (<strong className="text-foreground">100 €/mes</strong> en Stripe) y{" "}
+                    <strong className="text-foreground">cupo ilimitado de créditos</strong> para todo lo que importa en
+                    venta — boosts, scans, SEO Engine, informes SERP premium y PDFs — sin estar pendiente del contador
+                    cada vez que lanzas campaña o subes 200 SKUs.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="relative mt-auto flex min-h-0 flex-1 flex-col gap-3 max-lg:gap-2 lg:gap-4">
+                  <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
+                    <div className="flex flex-col justify-end gap-2">
+                      {session?.user && enterpriseStripeReady && commerceEnabled ? (
+                        <CheckoutPlanButton plan="ENTERPRISE" className="shadow-md">
+                          Contratar Enterprise — 100 €/mes
                         </CheckoutPlanButton>
-                      ) : (
-                        <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
-                          Contratación no disponible aún
+                      ) : session?.user && enterpriseStripeReady && !commerceEnabled ? (
+                        <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`}>
+                          Enterprise online — próximamente
                         </Button>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="mt-auto flex min-h-[6.5rem] flex-col justify-end gap-2 border-t border-transparent pt-2">
-                      {commerceEnabled ? (
+                      ) : !session?.user && commerceEnabled && enterpriseStripeReady ? (
                         <>
                           <Button asChild className={`${PRICING_CTA_CLASS} shadow-md`} size="lg">
                             <Link href="/register">
                               Registrarse
-                              <span className="block w-full text-[0.85em] font-normal opacity-90">y contratar Pro</span>
+                              <span className="block w-full text-[0.85em] font-normal opacity-90">y contratar Enterprise</span>
                             </Link>
                           </Button>
                           <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
@@ -458,138 +601,21 @@ export default async function PricingPage() {
                             </Link>
                           </Button>
                         </>
-                      ) : (
-                        <>
-                          <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
-                            Pro — próximamente
-                          </Button>
-                          <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
-                            <Link href="/register">Crear cuenta gratis (plan Free)</Link>
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Pro+ */}
-              <Card className="flex h-full min-h-0 flex-col border-primary/30 bg-card/95 shadow-lg">
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
-                    Pro+
-                    <Badge className="gap-1 bg-primary/90">
-                      <Sparkles className="h-3 w-3" />
-                      {PLAN_PRICING_DISPLAY.PRO_PLUS.label}
-                    </Badge>
-                  </CardTitle>
-                  <CardDescription className="text-pretty text-sm leading-relaxed break-words sm:text-base">
-                    <strong className="text-foreground">{PLAN_INCLUDED_ANALYSES.PRO_PLUS} análisis/mes</strong> — desde{" "}
-                    <strong className="text-foreground">{proPlusUnit} €</strong> por análisis si usas todo el cupo.
-                    Para <strong className="text-foreground">agencias y sellers con mucho SKU</strong> que no pueden
-                    quedarse sin aire a mitad de mes.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
-                  <PricingPlanFeatureList
-                    items={proPlusPlanBullets}
-                    summaryHint="Más cupo + PDF comparativa incluido"
-                  />
-                  {session?.user ? (
-                    <div className="mt-auto min-h-[6.5rem] border-t border-transparent pt-2">
-                      {commerceEnabled ? (
-                        <CheckoutPlanButton plan="PRO_PLUS" variant="default">
-                          Contratar Pro+ ahora
-                        </CheckoutPlanButton>
-                      ) : (
-                        <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
-                          Contratación no disponible aún
-                        </Button>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="mt-auto flex min-h-[6.5rem] flex-col justify-end gap-2 border-t border-transparent pt-2">
-                      {commerceEnabled ? (
-                        <>
-                          <Button asChild className={PRICING_CTA_CLASS} variant="secondary" size="lg">
-                            <Link href="/register">
-                              Registrarse
-                              <span className="block w-full text-[0.85em] font-normal opacity-90">y elegir Pro+</span>
-                            </Link>
-                          </Button>
-                          <Button asChild variant="outline" className="h-auto min-h-10 w-full whitespace-normal py-2 text-xs">
-                            <Link href="/login?callbackUrl=/pricing">Ya tengo cuenta</Link>
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
-                            Pro+ — próximamente
-                          </Button>
-                          <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
-                            <Link href="/register">Crear cuenta gratis (plan Free)</Link>
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Enterprise */}
-              <Card className="relative flex h-full min-h-0 flex-col overflow-hidden border-2 border-violet-500/35 bg-gradient-to-b from-violet-500/[0.08] via-muted/20 to-card shadow-xl shadow-violet-500/10">
-                <div className="pointer-events-none absolute -right-16 top-0 h-32 w-32 rounded-full bg-violet-500/20 blur-2xl" />
-                <CardHeader className="relative pb-2">
-                  <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
-                    Enterprise
-                    <Badge variant="outline" className="gap-1 border-violet-500/40 bg-violet-500/10 text-violet-950 dark:text-violet-100">
-                      <Rocket className="h-3 w-3" />
-                      {PLAN_PRICING_DISPLAY.ENTERPRISE.label}
-                    </Badge>
-                  </CardTitle>
-                  <CardDescription className="text-pretty text-sm leading-relaxed break-words sm:text-base">
-                    Para <strong className="text-foreground">equipos y tiendas que viven del catálogo</strong>: un solo
-                    precio fijo online (<strong className="text-foreground">100 €/mes</strong> en Stripe) y{" "}
-                    <strong className="text-foreground">cupo ilimitado de créditos</strong> para todo lo que importa en
-                    venta — boosts, scans, SEO Engine, informes SERP premium y PDFs — sin estar pendiente del contador
-                    cada vez que lanzas campaña o subes 200 SKUs.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="relative mt-auto flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
-                  <PricingPlanFeatureList
-                    items={enterprisePlanBullets}
-                    summaryHint="Cupo ilimitado + SERP premium sin cupo"
-                  />
-                  <div className="mt-auto flex min-h-[6.5rem] flex-col justify-end gap-2 border-t border-transparent pt-2">
-                    {session?.user && enterpriseStripeReady && commerceEnabled ? (
-                      <CheckoutPlanButton plan="ENTERPRISE" className="shadow-md">
-                        Contratar Enterprise — 100 €/mes
-                      </CheckoutPlanButton>
-                    ) : session?.user && enterpriseStripeReady && !commerceEnabled ? (
-                      <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`}>
-                        Enterprise online — próximamente
+                      ) : null}
+                      <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
+                        <a
+                          href={`mailto:${getPublicContactEmail()}?subject=${encodeURIComponent(`Enterprise ${APP_NAME}`)}`}
+                        >
+                          Pedir propuesta personalizada
+                        </a>
                       </Button>
-                    ) : !session?.user && commerceEnabled && enterpriseStripeReady ? (
-                      <>
-                        <Button asChild className={`${PRICING_CTA_CLASS} shadow-md`} size="lg">
-                          <Link href="/register">
-                            Registrarse
-                            <span className="block w-full text-[0.85em] font-normal opacity-90">y contratar Enterprise</span>
-                          </Link>
-                        </Button>
-                        <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
-                          <Link href="/login?callbackUrl=/pricing">
-                            Iniciar sesión
-                            <span className="block w-full text-[0.85em] font-normal opacity-90">y pagar con Stripe</span>
-                          </Link>
-                        </Button>
-                      </>
-                    ) : null}
-                    <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
-                      <a href={`mailto:${getPublicContactEmail()}?subject=${encodeURIComponent(`Enterprise ${APP_NAME}`)}`}>
-                        Pedir propuesta personalizada
-                      </a>
-                    </Button>
+                    </div>
+                  </div>
+                  <div className="order-2 min-h-0 flex-1 lg:order-1">
+                    <PricingPlanFeatureList
+                      items={enterprisePlanBullets}
+                      summaryHint="Cupo ilimitado + SERP premium sin cupo"
+                    />
                   </div>
                 </CardContent>
               </Card>

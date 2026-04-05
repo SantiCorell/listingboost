@@ -1,4 +1,5 @@
 import type { UrlAuditLlmOutput } from "@/types/url-audit";
+import { getBrandMarkPngDataUrl } from "@/lib/pdf/brand-mark-png";
 
 type AuditLike = {
   modules?: { creditsCharged?: number; includeFullLlm?: boolean; includeSitemap?: boolean };
@@ -53,20 +54,7 @@ export async function downloadUrlAuditPdfClient(output: unknown, filenameBase: s
   const lh = 12;
   const lhTight = 11;
 
-  let logoData: string | null = null;
-  try {
-    const res = await fetch("/logo.png");
-    if (res.ok) {
-      const blob = await res.blob();
-      logoData = await new Promise<string | null>((resolve) => {
-        const r = new FileReader();
-        r.onloadend = () => resolve(typeof r.result === "string" ? r.result : null);
-        r.readAsDataURL(blob);
-      });
-    }
-  } catch {
-    logoData = null;
-  }
+  const logoData = await getBrandMarkPngDataUrl(72);
 
   function drawThinHeader() {
     doc.setFillColor(BRAND.r, BRAND.g, BRAND.b);

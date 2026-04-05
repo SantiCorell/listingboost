@@ -18,7 +18,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { FolderOpen, Loader2, Sparkles } from "lucide-react";
+import { FolderOpen, Loader2, Zap } from "lucide-react";
 import { FEATURE_CREDITS } from "@/lib/feature-credits";
 
 export function SerpCompetitorInsightDialog({
@@ -66,7 +66,7 @@ export function SerpCompetitorInsightDialog({
         <DialogHeader className="shrink-0 border-b border-border/60 bg-gradient-to-r from-violet-500/10 via-sky-500/8 to-transparent px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))] text-left sm:px-6 sm:pt-4">
           <div className="flex flex-wrap items-center gap-2 pr-10 sm:pr-0">
             <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/12 text-primary">
-              <Sparkles className="h-4 w-4" />
+              <Zap className="h-4 w-4" aria-hidden />
             </span>
             <div className="min-w-0">
               <DialogTitle className="text-lg">Informe SERP vs competidores</DialogTitle>
@@ -142,6 +142,7 @@ export function SerpCompetitorInsightDialog({
                 con enlace al informe (no adjuntamos PDF).
               </div>
               <SerpInsightReportView
+                hideBrandRail
                 data={data}
                 keyword={keyword}
                 pageUrl={pageUrl}

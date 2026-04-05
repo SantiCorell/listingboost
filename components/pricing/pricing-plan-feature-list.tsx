@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type PricingPlanFeatureListProps = {
   items: string[];
-  /** Estado inicial en móvil (p. ej. abrir Pro para conversión). */
+  /** En desktop (lg+), abrir la lista al montar. En móvil siempre empieza cerrada para acortar la card. */
   defaultOpen?: boolean;
   summaryHint?: string;
   className?: string;
@@ -18,9 +18,20 @@ export function PricingPlanFeatureList({
   summaryHint,
   className,
 }: PricingPlanFeatureListProps) {
-  const [expanded, setExpanded] = useState(defaultOpen);
+  const [expanded, setExpanded] = useState(false);
   const count = items.length;
   const hint = summaryHint ?? `${count} ventajas incluidas`;
+
+  useEffect(() => {
+    if (!defaultOpen || typeof window === "undefined") return;
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const apply = () => {
+      if (mq.matches) setExpanded(true);
+    };
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, [defaultOpen]);
 
   const list = (extraClass: string) => (
     <ul
@@ -45,7 +56,7 @@ export function PricingPlanFeatureList({
       <div className="overflow-hidden rounded-xl border border-border/70 bg-muted/25 lg:hidden">
         <button
           type="button"
-          className="flex w-full cursor-pointer items-center justify-between gap-2 px-3 py-3 text-left text-sm font-semibold text-foreground outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="flex w-full cursor-pointer items-center justify-between gap-2 px-3 py-2.5 text-left text-sm font-semibold text-foreground outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-expanded={expanded}
           onClick={() => setExpanded((v) => !v)}
         >

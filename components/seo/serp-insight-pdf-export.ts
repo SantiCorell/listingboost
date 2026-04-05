@@ -1,6 +1,7 @@
 import type { jsPDF } from "jspdf";
 import type { SerpCompetitorInsightOutput } from "@/types/serp-competitor-insight";
 import { APP_NAME } from "@/lib/constants";
+import { getBrandMarkPngDataUrl } from "@/lib/pdf/brand-mark-png";
 
 const BRAND = { r: 109, g: 40, b: 217 };
 const BRAND_LIGHT = { r: 237, g: 233, b: 254 };
@@ -46,20 +47,7 @@ export async function downloadSerpInsightPdfClient(
   const maxW = pageW - margin * 2;
   let y = margin;
 
-  let logoData: string | null = null;
-  try {
-    const res = await fetch("/logo.png");
-    if (res.ok) {
-      const blob = await res.blob();
-      logoData = await new Promise<string | null>((resolve) => {
-        const r = new FileReader();
-        r.onloadend = () => resolve(typeof r.result === "string" ? r.result : null);
-        r.readAsDataURL(blob);
-      });
-    }
-  } catch {
-    logoData = null;
-  }
+  const logoData = await getBrandMarkPngDataUrl(64);
 
   const drawFooter = (pageIndex: number, total: number) => {
     doc.setFontSize(8);

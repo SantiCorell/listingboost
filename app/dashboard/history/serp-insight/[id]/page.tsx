@@ -66,8 +66,10 @@ export default async function SerpInsightHistoryDetailPage({
       </div>
 
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Informe SERP vs competidores</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <h1 className="sr-only">
+          Informe SERP vs competidores · {row.keyword}
+        </h1>
+        <p className="text-sm text-muted-foreground">
           {formatDate(row.createdAt)}
           {row.creditsUsed > 0 ? ` · ${row.creditsUsed} créditos al generar` : " · Sin descuento de cupo en tu plan"}
         </p>

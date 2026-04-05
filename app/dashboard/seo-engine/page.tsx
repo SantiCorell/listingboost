@@ -8,7 +8,7 @@ import { hasUnlimitedMonthlyCredits, isPaidPlan, isProPlusOrHigher } from "@/lib
 import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import { SeoEngineWorkbench } from "@/components/seo/seo-engine-workbench";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Zap } from "lucide-react";
 
 export const metadata = {
   title: "SEO Engine",
@@ -50,7 +50,7 @@ export default async function SeoEnginePage({
         </Button>
         <div className="flex flex-wrap items-start gap-3">
           <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/12 text-primary">
-            <Sparkles className="h-5 w-5" />
+            <Zap className="h-5 w-5" aria-hidden />
           </span>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">SEO Growth Engine</h1>

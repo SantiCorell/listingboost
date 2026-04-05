@@ -159,31 +159,31 @@ export function SeoEngineWorkbench({
         setCompetitorBundle(null);
       }}
     >
-      <TabsList className="grid w-full grid-cols-2 gap-1 rounded-xl border border-border/60 bg-muted/30 p-1 shadow-sm sm:grid-cols-4">
+      <TabsList className="flex h-auto w-full max-w-full flex-nowrap gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain rounded-xl border border-border/60 bg-muted/30 p-1 shadow-sm [scrollbar-width:thin] sm:grid sm:grid-cols-4 sm:overflow-x-visible">
         <TabsTrigger
           value="content"
-          className="gap-1 rounded-lg py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-600 data-[state=active]:to-purple-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:py-2 sm:text-sm"
+          className="shrink-0 gap-1 whitespace-nowrap rounded-lg px-3 py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-600 data-[state=active]:to-purple-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:min-w-0 sm:flex-1 sm:px-2 sm:py-2 sm:text-sm"
         >
           <FileText className="h-3.5 w-3.5 shrink-0" />
           Contenido
         </TabsTrigger>
         <TabsTrigger
           value="blog"
-          className="gap-1 rounded-lg py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-teal-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:py-2 sm:text-sm"
+          className="shrink-0 gap-1 whitespace-nowrap rounded-lg px-3 py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-teal-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:min-w-0 sm:flex-1 sm:px-2 sm:py-2 sm:text-sm"
         >
           <PenLine className="h-3.5 w-3.5 shrink-0" />
           Blog
         </TabsTrigger>
         <TabsTrigger
           value="competitor"
-          className="gap-1 rounded-lg py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-orange-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:py-2 sm:text-sm"
+          className="shrink-0 gap-1 whitespace-nowrap rounded-lg px-3 py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-orange-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:min-w-0 sm:flex-1 sm:px-2 sm:py-2 sm:text-sm"
         >
           <GitCompare className="h-3.5 w-3.5 shrink-0" />
           Competidor
         </TabsTrigger>
         <TabsTrigger
           value="monitor"
-          className="gap-1 rounded-lg py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-600 data-[state=active]:to-indigo-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:py-2 sm:text-sm"
+          className="shrink-0 gap-1 whitespace-nowrap rounded-lg px-3 py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-600 data-[state=active]:to-indigo-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:min-w-0 sm:flex-1 sm:px-2 sm:py-2 sm:text-sm"
         >
           <LineChart className="h-3.5 w-3.5 shrink-0" />
           Monitor

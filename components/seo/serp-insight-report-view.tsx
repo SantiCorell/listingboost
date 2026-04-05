@@ -1,4 +1,5 @@
 import type { SerpCompetitorInsightOutput } from "@/types/serp-competitor-insight";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -8,10 +9,10 @@ import {
   Lightbulb,
   ListOrdered,
   Scale,
-  Sparkles,
   Target,
   Timer,
   Users,
+  Zap,
 } from "lucide-react";
 
 function phaseBadgeClass(phase: string) {
@@ -27,15 +28,34 @@ export function SerpInsightReportView({
   keyword,
   pageUrl,
   positionLabel,
+  /** Ocultar cabecera de marca si ya hay chrome (p. ej. diálogo a pantalla completa). */
+  hideBrandRail = false,
 }: {
   data: SerpCompetitorInsightOutput;
   keyword: string;
   pageUrl: string;
   /** Ej. "Posición ~9" o "Sin posición en el tramo analizado" */
   positionLabel?: string | null;
+  hideBrandRail?: boolean;
 }) {
   return (
     <div className="space-y-6">
+      {!hideBrandRail ? (
+        <div className="flex items-center gap-3 rounded-xl border border-violet-200/70 bg-gradient-to-r from-violet-100/90 to-purple-50/70 px-4 py-3 dark:border-violet-500/30 dark:from-violet-950/50 dark:to-purple-950/30">
+          <Image
+            src="/icon.svg"
+            alt=""
+            width={40}
+            height={40}
+            className="h-10 w-10 shrink-0 rounded-lg shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+          />
+          <div className="min-w-0">
+            <p className="text-sm font-bold tracking-tight text-foreground">ListingBoost</p>
+            <p className="text-xs text-muted-foreground">Informe SERP vs competidores</p>
+          </div>
+        </div>
+      ) : null}
+
       {(keyword || pageUrl || positionLabel) && (
         <div className="rounded-xl border border-border/60 bg-muted/20 px-4 py-3 text-sm">
           {keyword ? (
@@ -200,7 +220,7 @@ export function SerpInsightReportView({
       </section>
 
       <p className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30 p-3 text-xs text-muted-foreground">
-        <Sparkles className="mb-1 inline h-3.5 w-3.5 text-primary" aria-hidden /> {data.honestDisclaimer}
+        <Zap className="mb-1 inline h-3.5 w-3.5 text-primary" aria-hidden /> {data.honestDisclaimer}
       </p>
     </div>
   );
