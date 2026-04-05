@@ -82,7 +82,7 @@ export async function downloadCompetitorComparePdfClient(
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(MUTED.r, MUTED.g, MUTED.b);
-    doc.text("Comparativa SEO vs competidor", logoData ? margin + 44 : margin, 68);
+    doc.text("Comparativa SEO ampliada vs competidor", logoData ? margin + 44 : margin, 68);
     y = 100;
     doc.setFontSize(9);
     doc.setTextColor(MUTED.r, MUTED.g, MUTED.b);
@@ -103,7 +103,7 @@ export async function downloadCompetitorComparePdfClient(
     y += size + 6;
     doc.setDrawColor(BRAND.r, BRAND.g, BRAND.b);
     doc.setLineWidth(0.75);
-    doc.line(margin, y - 4, margin + Math.min(220, doc.getTextWidth(t) + 12), y - 4);
+    doc.line(margin, y - 4, margin + Math.min(280, doc.getTextWidth(t) + 12), y - 4);
     y += 10;
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
@@ -145,18 +145,41 @@ export async function downloadCompetitorComparePdfClient(
     doc.setFont("helvetica", "normal");
   };
 
-  const bulletBlock = (title: string, items: string[], icon: "dot" | "arrow") => {
+  const bulletBlock = (title: string, items: string[], icon: "dot" | "arrow" | "num") => {
     heading(title, 11.5);
-    const prefix = icon === "arrow" ? "→ " : "• ";
-    for (const item of items) {
+    items.forEach((item, idx) => {
+      const prefix =
+        icon === "arrow" ? "→ " : icon === "num" ? `${idx + 1}. ` : "• ";
       const lines = doc.splitTextToSize(`${prefix}${item}`, maxW - 10);
       for (const line of lines) {
         ensureSpace(lh);
         doc.text(line, margin + (icon === "arrow" ? 4 : 8), y);
         y += lh;
       }
-    }
+    });
     y += 8;
+  };
+
+  const metricsTable = (d: CompetitorCompareOutput) => {
+    heading("Métricas (crawl)", 12);
+    const ma = d.metricsA;
+    const mb = d.metricsB;
+    const rows: string[] = [
+      `Palabras — A: ${ma.words} | B: ${mb.words}`,
+      `Caracteres — A: ${ma.chars} | B: ${mb.chars}`,
+      `H2 / H3 — A: ${ma.h2Count}/${ma.h3Count} | B: ${mb.h2Count}/${mb.h3Count}`,
+      `Enlaces int. — A: ${ma.internalLinks} | B: ${mb.internalLinks}`,
+      `Enlaces ext. — A: ${ma.externalLinks} | B: ${mb.externalLinks}`,
+      `Imágenes sin alt — A: ${ma.imagesMissingAlt} | B: ${mb.imagesMissingAlt}`,
+      `JSON-LD A: ${ma.schemaTypes.join(", ") || "—"}`,
+      `JSON-LD B: ${mb.schemaTypes.join(", ") || "—"}`,
+    ];
+    if (d.wordDiffPctBvsA != null) {
+      rows.push(`Δ palabras B vs A: ${d.wordDiffPctBvsA >= 0 ? "+" : ""}${d.wordDiffPctBvsA}%`);
+    }
+    for (const row of rows) {
+      paragraph(row);
+    }
   };
 
   drawCover();
@@ -164,21 +187,36 @@ export async function downloadCompetitorComparePdfClient(
   urlBox("Tu página (A)", urlA);
   urlBox("Competidor (B)", urlB);
 
+  metricsTable(data);
+
   heading("Resumen ejecutivo", 12);
-  paragraph(data.summary);
+  paragraph(data.executiveSummary);
 
-  heading("Volumen y contenido", 12);
-  paragraph(data.lengthComparison);
+  heading("Contenido, volumen y profundidad", 12);
+  paragraph(data.deepDiveContent);
 
-  bulletBlock("Keywords que B trabaja y tú podrías reforzar", data.missingKeywordsForA, "dot");
-  bulletBlock("Huecos estructurales detectados", data.structuralGaps, "dot");
-  bulletBlock("Plan de acción recomendado para tu URL", data.actionItemsForA, "arrow");
+  heading("Perfil del sitio A", 12);
+  paragraph(data.siteAProfile);
+
+  heading("Perfil del sitio B", 12);
+  paragraph(data.siteBProfile);
+
+  heading("Cara a cara", 12);
+  paragraph(data.headToHead);
+
+  heading("Visibilidad y E-E-A-T (observable)", 12);
+  paragraph(data.serpEeatInsight);
+
+  bulletBlock("Prioridades tácticas", data.tacticalPriorities, "num");
+  bulletBlock("Keywords y temas a reforzar en A", data.missingKeywordsForA, "dot");
+  bulletBlock("Huecos frente al competidor", data.structuralGaps, "dot");
+  bulletBlock("Plan de acción recomendado para A", data.actionItemsForA, "arrow");
 
   ensureSpace(36);
   doc.setFontSize(8);
   doc.setTextColor(MUTED.r, MUTED.g, MUTED.b);
   doc.text(
-    "Informe generado por ListingBoost · Los datos son orientativos; revisa siempre en tu CMS.",
+    "Informe generado por ListingBoost · Métricas del crawl en tiempo real; narrativa orientativa.",
     margin,
     pageH - 32,
   );

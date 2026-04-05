@@ -32,6 +32,8 @@ export async function deepseekChatJson(params: {
   operation: string;
   timeoutMs?: number;
   model?: string;
+  /** Límite de tokens de salida (p. ej. informes largos en JSON). */
+  maxTokens?: number;
 }): Promise<{ ok: true; json: unknown } | { ok: false; error: string }> {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) {
@@ -63,6 +65,7 @@ export async function deepseekChatJson(params: {
         messages: params.messages,
         stream: false,
         response_format: { type: "json_object" },
+        ...(params.maxTokens != null ? { max_tokens: params.maxTokens } : {}),
       }),
     });
 
