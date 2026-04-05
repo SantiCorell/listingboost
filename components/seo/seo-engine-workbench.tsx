@@ -29,6 +29,7 @@ type EngineTab = (typeof VALID_DEFAULT_TABS)[number];
 
 export function SeoEngineWorkbench({
   defaultTab = "content",
+  defaultContentKeyword,
   monitoringLocked,
   competitorLocked,
   allowDailyMonitoring,
@@ -37,6 +38,8 @@ export function SeoEngineWorkbench({
 }: {
   /** P.ej. `?tab=monitor` desde Historial. */
   defaultTab?: EngineTab;
+  /** P.ej. `?kw=` desde SEO Gap Finder → pre-rellena el generador de contenido. */
+  defaultContentKeyword?: string;
   monitoringLocked: boolean;
   competitorLocked: boolean;
   /** Cadencia diaria solo Pro+ (Growth). */
@@ -205,6 +208,7 @@ export function SeoEngineWorkbench({
           </CardHeader>
           <CardContent className="space-y-6 pt-6">
             <ContentForm
+              initialKeyword={defaultContentKeyword}
               loading={loading === "/api/seo/content"}
               onSubmit={(keyword, type, country) => void postContent(keyword, type, country)}
             />
@@ -340,13 +344,19 @@ export function SeoEngineWorkbench({
 }
 
 function ContentForm({
+  initialKeyword,
   onSubmit,
   loading,
 }: {
+  initialKeyword?: string;
   onSubmit: (keyword: string, type: "blog" | "product", country?: string) => void;
   loading: boolean;
 }) {
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState(initialKeyword?.trim() ?? "");
+
+  useEffect(() => {
+    if (initialKeyword?.trim()) setKeyword(initialKeyword.trim());
+  }, [initialKeyword]);
   const [type, setType] = useState<"blog" | "product">("blog");
   const [country, setCountry] = useState("España");
 

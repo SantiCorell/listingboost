@@ -54,7 +54,8 @@ function findHostInOrganic(
   return null;
 }
 
-function buildSearchUrl(params: {
+/** URL de SerpAPI Google (engine=google). Exportado para snapshot / otras features. */
+export function buildGoogleSerpSearchUrl(params: {
   apiKey: string;
   query: string;
   start: number;
@@ -140,7 +141,7 @@ export async function fetchOrganicPosition(params: {
   try {
     for (let page = 0; page < maxPages; page++) {
       const start = page * 10;
-      const url = buildSearchUrl({
+      const url = buildGoogleSerpSearchUrl({
         apiKey,
         query,
         start,
@@ -286,7 +287,7 @@ export async function fetchOrganicResultsThroughRank(params: {
   try {
     for (let page = 0; page < pagesToFetch; page++) {
       const start = page * 10;
-      const url = buildSearchUrl({
+      const url = buildGoogleSerpSearchUrl({
         apiKey,
         query,
         start,

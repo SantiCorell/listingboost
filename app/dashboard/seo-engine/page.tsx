@@ -19,13 +19,14 @@ const VALID_TABS = ["content", "blog", "competitor", "monitor"] as const;
 export default async function SeoEnginePage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string }>;
+  searchParams: Promise<{ tab?: string; kw?: string }>;
 }) {
   const sp = await searchParams;
   const tabParam = sp.tab?.toLowerCase();
   const defaultTab = VALID_TABS.includes(tabParam as (typeof VALID_TABS)[number])
     ? (tabParam as (typeof VALID_TABS)[number])
     : "content";
+  const defaultContentKeyword = typeof sp.kw === "string" ? sp.kw.trim() : "";
 
   const session = await auth();
   if (!session?.user?.id) redirect("/login?callbackUrl=/dashboard/seo-engine");
@@ -76,6 +77,7 @@ export default async function SeoEnginePage({
 
       <SeoEngineWorkbench
         defaultTab={defaultTab}
+        defaultContentKeyword={defaultContentKeyword || undefined}
         monitoringLocked={!isAdmin && !hasSeoMonitoring(plan)}
         competitorLocked={!isAdmin && !isPaidPlan(plan)}
         allowDailyMonitoring={isAdmin || hasGrowthAutomation(plan)}

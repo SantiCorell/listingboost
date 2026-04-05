@@ -127,6 +127,16 @@ const rows: (SectionRow | FeatureRow)[] = [
     proPlus: `${FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} cr / informe`,
     enterprise: "Incluido §",
   },
+  {
+    kind: "feature",
+    feature: "SEO Gap Finder AI",
+    hint:
+      "SERP real (SerpAPI) + crawl de competidores + oportunidades priorizadas con acciones y URLs sugeridas. Caché 24 h.",
+    free: false,
+    pro: false,
+    proPlus: `${FEATURE_CREDITS.SEO_GAP_FINDER} cr / informe`,
+    enterprise: "Incluido §",
+  },
 
   { kind: "section", title: "PDF e informes" },
   {

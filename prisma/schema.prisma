@@ -100,6 +100,7 @@ model User {
   competitorAnalyses        CompetitorAnalysis[]
   contentGenerations        ContentGeneration[]
   serpCompetitorInsightReports SerpCompetitorInsightReport[]
+  seoGapReports                 SeoGapReport[]
 }
 
 /** Token de un solo uso para restablecer contraseña (email). */
@@ -350,6 +351,26 @@ model SerpCompetitorInsightReport {
 
   @@index([userId, createdAt])
   @@index([monitoringId, createdAt])
+}
+
+/** SEO Gap Finder AI: SERP real + crawl competidores + oportunidades priorizadas (Pro+ / Enterprise). */
+model SeoGapReport {
+  id          String   @id @default(cuid())
+  userId      String
+  keyword     String
+  domain      String?
+  country     String   @default("es")
+  language    String   @default("es")
+  creditsUsed Int      @default(0)
+  /** Dedupe de caché 24h por usuario (hash keyword+domain+gl+hl). */
+  cacheKey    String?
+  outputJson  Json
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, cacheKey])
 }
 
 model SeoMonitoringSnapshot {

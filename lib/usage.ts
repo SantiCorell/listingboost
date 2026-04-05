@@ -27,6 +27,7 @@ export function creditCostForUsageKind(kind: string): number {
   if (kind === "competitor_compare_pdf") return FEATURE_CREDITS.COMPETITOR_PDF_EXPORT;
   if (kind === "serp_competitor_insight") return FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT;
   if (kind === "serp_insight_pdf") return FEATURE_CREDITS.SERP_INSIGHT_PDF_EXPORT;
+  if (kind === "seo_gap_finder") return FEATURE_CREDITS.SEO_GAP_FINDER;
   return CREDIT_COST_PRODUCT;
 }
 

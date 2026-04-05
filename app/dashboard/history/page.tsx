@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CreditsUpsellBanner } from "@/components/pricing/credits-upsell-banner";
 import { FREE_HISTORY_LIMIT } from "@/lib/constants";
-import { BarChart3, ChevronRight, LineChart, Lock } from "lucide-react";
+import { BarChart3, ChevronRight, LineChart, Lock, ScanSearch } from "lucide-react";
 
 export default async function HistoryPage() {
   const session = await auth();
@@ -21,7 +21,7 @@ export default async function HistoryPage() {
   const take = historyTake(user.plan, session.user.role, session.user.email);
   const freeListCap = take ?? FREE_HISTORY_LIMIT;
 
-  const [products, audits, monitorings, serpInsightReports] = await Promise.all([
+  const [products, audits, monitorings, serpInsightReports, seoGapReports] = await Promise.all([
     prisma.productAnalysis.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
@@ -57,6 +57,20 @@ export default async function HistoryPage() {
         createdAt: true,
       },
     }),
+    prisma.seoGapReport.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: take ?? 200,
+      select: {
+        id: true,
+        keyword: true,
+        domain: true,
+        country: true,
+        language: true,
+        creditsUsed: true,
+        createdAt: true,
+      },
+    }),
   ]);
 
   const canOpen = canOpenSavedStudy(user.plan, session.user.role, session.user.email);
@@ -70,7 +84,7 @@ export default async function HistoryPage() {
           <p className="text-sm text-muted-foreground">
             {user.plan === "FREE"
               ? `Últimos ${freeListCap} elementos en Free. Los estudios guardados se abren con Pro.`
-              : "Historial completo: boosts, auditorías URL, informes SERP premium y seguimientos."}
+              : "Historial completo: boosts, auditorías URL, informes SERP premium, SEO Gap AI y seguimientos."}
           </p>
         </div>
         {user.plan === "FREE" ? (
@@ -163,6 +177,64 @@ export default async function HistoryPage() {
                   <span className="text-xs text-muted-foreground">
                     {formatDate(u.createdAt)} · {u.pageType}
                   </span>
+                  <Badge variant="outline" className="gap-1 text-[10px]">
+                    <Lock className="h-3 w-3" />
+                    Pro
+                  </Badge>
+                </div>
+              ),
+            )
+          )}
+        </CardContent>
+      </Card>
+
+      <Card id="seo-gap-informes" className="scroll-mt-24">
+        <CardHeader>
+          <CardTitle className="text-base">SEO Gap Finder AI</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Informes guardados desde{" "}
+            <Link href="/dashboard/seo-gap" className="font-medium text-primary hover:underline">
+              SEO Gap AI
+            </Link>{" "}
+            (Pro+ / Enterprise). Incluyen gráficos, resumen ejecutivo y oportunidades priorizadas.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {seoGapReports.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Aún no hay informes.{" "}
+              <Link href="/dashboard/seo-gap" className="font-medium text-primary hover:underline">
+                Generar uno
+              </Link>
+              .
+            </p>
+          ) : (
+            seoGapReports.map((r) =>
+              canOpen ? (
+                <Link
+                  key={r.id}
+                  href={`/dashboard/seo-gap/${r.id}`}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/50 px-3 py-3 text-sm transition-colors hover:border-primary/40 hover:bg-muted/40"
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    <ScanSearch className="h-4 w-4 shrink-0 text-violet-600" aria-hidden />
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-medium text-foreground">«{r.keyword}»</span>
+                      <span className="block text-xs text-muted-foreground">
+                        {r.domain ?? "sin dominio propio"} · {r.country}/{r.language}
+                        {r.creditsUsed > 0 ? ` · ${r.creditsUsed} cr` : " · caché / sin cargo"}
+                      </span>
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-xs text-muted-foreground">{formatDate(r.createdAt)}</span>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                </Link>
+              ) : (
+                <div
+                  key={r.id}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/50 bg-muted/20 px-3 py-3 text-sm"
+                >
+                  <span className="text-muted-foreground">«{r.keyword}»</span>
                   <Badge variant="outline" className="gap-1 text-[10px]">
                     <Lock className="h-3 w-3" />
                     Pro

@@ -10,6 +10,11 @@ export function hasGrowthAutomation(plan: Plan): boolean {
   return plan === "PRO_PLUS" || plan === "ENTERPRISE";
 }
 
+/** SEO Gap Finder AI (SerpAPI + crawl + oportunidades): solo Pro+ y Enterprise. */
+export function hasSeoGapFinder(plan: Plan): boolean {
+  return plan === "PRO_PLUS" || plan === "ENTERPRISE";
+}
+
 export function monitoringCadenceOptions(plan: Plan): { value: string; label: string }[] {
   const base = [{ value: "weekly", label: "Semanal" }];
   if (hasGrowthAutomation(plan)) {

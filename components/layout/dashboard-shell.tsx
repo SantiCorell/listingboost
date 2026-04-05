@@ -3,18 +3,33 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
-import { Coins, LayoutDashboard, History, PackageSearch, SearchCheck, Settings, Sparkles } from "lucide-react";
+import {
+  Coins,
+  LayoutDashboard,
+  History,
+  PackageSearch,
+  ScanSearch,
+  SearchCheck,
+  Settings,
+  Sparkles,
+} from "lucide-react";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { BrandLogoLink } from "@/components/brand/brand-logo-link";
 import { cn } from "@/lib/utils";
 
 type DashLink = { href: string; label: string; icon: LucideIcon };
 
-const toolLinks: readonly DashLink[] = [
+const toolLinksBase: readonly DashLink[] = [
   { href: "/dashboard/product", label: "Boost ficha", icon: PackageSearch },
   { href: "/dashboard/audit", label: "Scan URL", icon: SearchCheck },
   { href: "/dashboard/seo-engine", label: "SEO Engine", icon: Sparkles },
 ];
+
+const seoGapLink: DashLink = {
+  href: "/dashboard/seo-gap",
+  label: "SEO Gap AI",
+  icon: ScanSearch,
+};
 
 function accountLinks(): DashLink[] {
   const credits: DashLink[] = isCommerceEnabled()
@@ -68,9 +83,17 @@ function NavLinkButton({
   );
 }
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+export function DashboardShell({
+  children,
+  showSeoGapFinder = false,
+}: {
+  children: React.ReactNode;
+  /** Pro+ / Enterprise / admin: enlace a SEO Gap Finder AI. */
+  showSeoGapFinder?: boolean;
+}) {
   const pathname = usePathname();
   const secondary = accountLinks();
+  const toolLinks: readonly DashLink[] = showSeoGapFinder ? [...toolLinksBase, seoGapLink] : toolLinksBase;
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 md:flex-row">

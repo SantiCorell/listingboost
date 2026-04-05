@@ -21,4 +21,9 @@ export const FEATURE_CREDITS = {
   SERP_COMPETITOR_INSIGHT: 8,
   /** Export PDF informe SERP premium ya guardado (misma lógica que auditoría URL). */
   SERP_INSIGHT_PDF_EXPORT: 1,
+  /**
+   * SEO Gap Finder AI: SERP real + hasta ~7 competidores scrapeados + análisis diferencial opcional
+   * con dominio propio + informe accionable (DeepSeek).
+   */
+  SEO_GAP_FINDER: 10,
 } as const;

@@ -156,13 +156,14 @@ export default async function PricingPage() {
 
   const proPlusPlanBullets = [
     "Todo lo de Pro con más cupo mensual",
+    `SEO Gap Finder AI: SERP real + competidores + informe accionable (${FEATURE_CREDITS.SEO_GAP_FINDER} cr / ejecución)`,
     "Monitoring SERP en cadencia diaria o semanal",
     "PDF de comparativa SEO incluido (sin crédito extra ‡)",
     `Créditos extra al mejor precio: ${EXTRA_CREDIT_PRICE_EUR.PRO_PLUS} €/u`,
   ];
 
   const enterprisePlanBullets = [
-    "Sin tope mensual de créditos: boosts, scan URL, generador SEO, blog optimizer, hashtags, comparativa y monitoring SERP cuando lo necesites.",
+    "Sin tope mensual de créditos: boosts, scan URL, generador SEO, blog optimizer, hashtags, comparativa, monitoring SERP y SEO Gap Finder AI cuando lo necesites.",
     "Informe SERP vs competidores premium sin descuento de cupo (en Pro/Pro+ consume créditos; aquí no).",
     "PDF de comparativa SEO incluido; PDFs de auditoría y exports alineados a la tabla de funciones (§ † ‡) sin sorpresas.",
     "Historial completo, copias sin pie de marca Free y créditos extra al precio Pro+ por si algún flujo legacy los requiere.",
