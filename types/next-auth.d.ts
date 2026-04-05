@@ -26,5 +26,7 @@ declare module "next-auth/jwt" {
     role?: UserRole;
     /** Sincronizado desde Prisma para reflejar cambios en Ajustes. */
     name?: string | null;
+    /** epoch ms — última lectura de user en BD (anti saturación del pool). */
+    userDbAt?: number;
   }
 }

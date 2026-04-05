@@ -2,7 +2,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Supabase "direct" (db.*.supabase.co:5432) a veces falla sin IPv6; usa Session pooler del dashboard si Prisma da P1001.
+// Producción (Supabase): usa pooler en modo TRANSACCIÓN + ?pgbouncer=true&connection_limit=1 en DATABASE_URL
+// (ver .env.example). Opcional: DIRECT_URL en .env solo si usas `prisma migrate` con directUrl en schema.
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

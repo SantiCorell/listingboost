@@ -31,16 +31,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return true;
     },
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, user, trigger }) => {
       if (user?.id) {
         token.id = user.id;
         token.sub = user.id;
         if (user.name !== undefined && user.name !== null) {
           token.name = user.name;
         }
+        token.userDbAt = 0;
       }
       const id = (token.id as string | undefined) ?? (token.sub as string | undefined);
       if (!id) return token;
+
+      const refreshMs = Number(process.env.AUTH_JWT_USER_REFRESH_MS ?? "90000");
+      const now = Date.now();
+      const lastDb = (token.userDbAt as number | undefined) ?? 0;
+      const mustRefreshFromDb =
+        trigger === "update" ||
+        !token.plan ||
+        !token.role ||
+        now - lastDb >= refreshMs;
+
+      if (!mustRefreshFromDb) {
+        return token;
+      }
 
       try {
         const row = await prisma.user.findUnique({
@@ -52,6 +66,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.role = row.role as UserRole;
           token.name = row.name;
         }
+        token.userDbAt = now;
       } catch (e) {
         console.error("[auth] jwt prisma.user.findUnique:", e);
       }

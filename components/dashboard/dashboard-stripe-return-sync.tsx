@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -9,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 export function DashboardStripeReturnSync() {
   const sp = useSearchParams();
   const router = useRouter();
+  const { update: updateSession } = useSession();
   const lastProcessed = useRef<string | null>(null);
   const [banner, setBanner] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
 
@@ -44,6 +46,7 @@ export function DashboardStripeReturnSync() {
           });
           return;
         }
+        void updateSession();
         const j = (await r.json()) as {
           ok?: boolean;
           alreadyFulfilled?: boolean;
@@ -68,7 +71,7 @@ export function DashboardStripeReturnSync() {
         });
       }
     })();
-  }, [sp, router]);
+  }, [sp, router, updateSession]);
 
   if (!banner) return null;
   return (

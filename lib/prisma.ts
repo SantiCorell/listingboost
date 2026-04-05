@@ -1,6 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+/**
+ * Un solo PrismaClient por proceso (obligatorio en serverless / Vercel).
+ * Antes solo se guardaba en global en desarrollo → en prod cada recarga del módulo
+ * podía crear otro cliente y agotar el pool de Supabase (MaxClientsInSessionMode).
+ */
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined };
 
 export const prisma =
   globalForPrisma.prisma ??
@@ -11,4 +16,4 @@ export const prisma =
         : ["error"],
   });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+globalForPrisma.prisma = prisma;
