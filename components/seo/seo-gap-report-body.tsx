@@ -10,9 +10,9 @@ import {
   SeoGapIntentChart,
   SeoGapLevelChart,
   SeoGapDemandChart,
-  SeoGapClusterMini,
   DEMAND_LABEL,
 } from "@/components/seo/seo-gap-charts";
+import { SeoGapClusterPanel } from "@/components/seo/seo-gap-cluster-panel";
 import { SeoGapCockpitInteractive } from "@/components/seo/seo-gap-cockpit-interactive";
 import { formatMonthlyVolumeEs } from "@/lib/seo/format-search-volume";
 import type { SeoGapFinderResult, SeoGapOpportunity } from "@/types/seo-gap-finder";
@@ -45,14 +45,14 @@ function OpportunityCard({ o }: { o: SeoGapOpportunity }) {
             <span>·</span>
             <span className="tabular-nums">score {o.score}</span>
             <span>·</span>
-            <span className="tabular-nums" title="Estimación orientativa (IA + SERP)">
-              ~{formatMonthlyVolumeEs(o.monthlyVolumeEstimate)}/mes
-            </span>
+                <span className="tabular-nums" title="Estimación orientativa de búsquedas mensuales en Google">
+                  ~{formatMonthlyVolumeEs(o.monthlyVolumeEstimate)}/mes
+                </span>
             {o.trendsInterest != null ? (
               <>
                 <span>·</span>
-                <span className="tabular-nums" title="Google Trends relativo (SerpAPI)">
-                  Trends {o.trendsInterest}
+                <span className="tabular-nums" title="Interés relativo en Google Trends (últimos meses)">
+                  Interés {o.trendsInterest}
                 </span>
               </>
             ) : null}
@@ -143,11 +143,7 @@ export function SeoGapReportBody({
             trendsDataPoints={meta.trendsDataPoints}
           />
 
-          <div className="grid gap-4 lg:grid-cols-3">
-            <div className="lg:col-span-3">
-              <SeoGapClusterMini opportunities={opportunities} />
-            </div>
-          </div>
+          <SeoGapClusterPanel opportunities={opportunities} />
         </div>
       </section>
 

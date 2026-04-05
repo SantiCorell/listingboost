@@ -94,12 +94,12 @@ export function SeoGapFinderClient() {
           <AccordionContent className="pb-4 text-sm leading-relaxed text-muted-foreground">
             <ol className="list-inside list-decimal space-y-2">
               <li>
-                Consultamos <strong className="text-foreground">Google en vivo</strong> (SerpAPI) con tu keyword,
-                país e idioma: top orgánicos, búsquedas relacionadas y People Also Ask.
+                Consultamos <strong className="text-foreground">Google en tiempo real</strong> con tu keyword, país e
+                idioma: resultados orgánicos, búsquedas relacionadas y “People also ask”.
               </li>
               <li>
-                <strong className="text-foreground">Rastreamos hasta 7 URLs</strong> de la SERP: H1, H2, meta y
-                términos frecuentes para ver qué está funcionando.
+                <strong className="text-foreground">Analizamos hasta 7 páginas</strong> que aparecen en los primeros
+                resultados: H1, H2, meta y términos frecuentes para ver qué está funcionando.
               </li>
               <li>
                 Si indicas <strong className="text-foreground">dominio propio</strong>, analizamos tu home y

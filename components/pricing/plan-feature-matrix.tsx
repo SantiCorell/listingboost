@@ -131,7 +131,7 @@ const rows: (SectionRow | FeatureRow)[] = [
     kind: "feature",
     feature: "SEO Gap Finder AI",
     hint:
-      "SERP real (SerpAPI) + crawl de competidores + oportunidades priorizadas con acciones y URLs sugeridas. Caché 24 h.",
+      "Datos de Google en vivo, lectura de competidores y oportunidades priorizadas con acciones y URLs sugeridas. Misma consulta en 24 h sin coste extra.",
     free: false,
     pro: false,
     proPlus: `${FEATURE_CREDITS.SEO_GAP_FINDER} cr / informe`,

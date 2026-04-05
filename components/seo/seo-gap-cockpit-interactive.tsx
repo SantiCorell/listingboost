@@ -41,9 +41,11 @@ export function SeoGapCockpitInteractive({
     <div className="space-y-4">
       <SeoGapBubbleMapInteractive opportunities={opportunities} />
       <p className="text-center text-[10px] leading-relaxed text-slate-500">
-        Volumen mensual = estimación IA para el país del informe · Interés Trends = escala relativa 0–100 (últimos meses,
-        SerpAPI){trendsDataPoints != null && trendsDataPoints > 0 ? ` · ${trendsDataPoints} keywords con dato Trends` : ""}
-        . No sustituye Google Keyword Planner.
+        Volumen mensual = estimación orientativa para tu mercado (búsqueda en Google); si el modelo no fija cifra, usamos
+        una banda coherente con la demanda (nicho / long-tail / medio / cabeza). Interés = escala relativa 0–100 (Google
+        Trends, ventana reciente)
+        {trendsDataPoints != null && trendsDataPoints > 0 ? ` · ${trendsDataPoints} términos con serie de tendencia` : ""}. Las
+        cifras son guías de priorización, no un sustituto del planificador de palabras clave de Google.
       </p>
       <SeoGapRankedTable opportunities={opportunities} />
     </div>

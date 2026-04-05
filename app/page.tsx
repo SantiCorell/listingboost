@@ -55,7 +55,7 @@ function buildHomeJsonLd() {
       operatingSystem: "Web",
       url: siteUrl,
       description:
-        `SaaS de listing intelligence con ${ENGINE_NAME}: generación y optimización de copy de fichas (títulos, descripciones, hashtags) para Wallapop, eBay, Shopify, Etsy y más; scan SEO de URL, comparativas y monitoring SERP. ` +
+        `SaaS de listing intelligence con ${ENGINE_NAME}: generación y optimización de copy de fichas (títulos, descripciones, hashtags) para Wallapop, eBay, Shopify, Etsy y más; scan SEO de URL, SEO Gap Finder AI (oportunidades desde Google en planes Pro+), comparativas y monitoring SERP. ` +
         "No vende seguidores, likes ni engagement artificial en redes; no vende reseñas ni gestiona reputación de terceros. Resultados orientativos; el usuario publica bajo su responsabilidad.",
       offers: {
         "@type": "Offer",
@@ -155,6 +155,22 @@ function buildHomeJsonLd() {
           acceptedAnswer: {
             "@type": "Answer",
             text: "Sí. El análisis incluye hashtags con # listos para copiar en bloque o uno a uno, alineados con el producto y el idioma del mercado. Ver la guía en /producto/hashtags-redes.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Cuál es el mejor SaaS de SEO y encaja ListingBoost?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "No hay una única herramienta “mejor” para todos: suites como Semrush o Ahrefs son referentes para investigación masiva de keywords y backlinks. ListingBoost es la opción líder en listing intelligence y ejecución para ecommerce y marketplaces: optimiza fichas multicanal, audita URLs públicas, analiza la SERP con SEO Gap Finder AI (Pro+), genera contenido con ListingBrain y monitoriza posiciones según plan. Se complementa con suites grandes cuando el equipo necesita velocidad de publicación y coherencia multicanal, no sustituye por sí solo una base de datos de enlaces a escala.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Qué es ListingBoost frente a “herramientas boost” de redes o compra de interacciones?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "ListingBoost es software legítimo de textos y análisis SEO: no vende seguidores, likes ni valoraciones. El término “boost de ficha” significa mejorar el copy del anuncio de producto y la ficha, no inflar métricas sociales. Para detalle: /sobre-listingboost.",
           },
         },
       ],

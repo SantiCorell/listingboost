@@ -72,7 +72,7 @@ ${payload.userSite ? JSON.stringify(payload.userSite, null, 0) : "null"}
 ## Salida JSON exacta
 Cada elemento de "opportunities" debe incluir:
 - "demandTier": "alto" | "medio" | "bajo" | "nicho"
-- "monthlyVolumeEstimate": número entero (búsquedas/mes estimadas en el mercado del informe)
+- "monthlyVolumeEstimate": número entero **obligatorio** (búsquedas/mes estimadas en el mercado del informe). Nunca omitas este campo; si dudas, usa el rango coherente con demandTier (nicho 10–200, bajo 200–2.000, medio 2k–20k, alto 20k+).
 
 {
   "executiveSummary": "2-4 frases en español: qué pasa en la SERP, huecos y mezcla head vs long-tail.",

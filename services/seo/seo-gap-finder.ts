@@ -12,6 +12,10 @@ import {
   seoGapLlmOutputSchema,
   type SeoGapFinderResult,
 } from "@/types/seo-gap-finder";
+import {
+  attachTrendsFuzzy,
+  fillMissingMonthlyVolumes,
+} from "@/lib/seo/seo-gap-fill-metrics";
 
 function normalizeDomainInput(domain: string | null | undefined): string | null {
   if (!domain?.trim()) return null;
@@ -211,9 +215,11 @@ export async function runSeoGapFinder(params: {
     return { ok: false, error: "El motor devolvió un formato inesperado. Reintenta en unos minutos." };
   }
 
-  let opportunities = [...parsed.data.opportunities].sort((a, b) => b.score - a.score);
+  let opportunities = fillMissingMonthlyVolumes(
+    [...parsed.data.opportunities].sort((a, b) => b.score - a.score),
+  );
 
-  const trendKeywords = [...new Set(opportunities.map((o) => o.keyword.trim()).filter(Boolean))].slice(0, 15);
+  const trendKeywords = [...new Set(opportunities.map((o) => o.keyword.trim()).filter(Boolean))].slice(0, 25);
   const trendsMap = await fetchGoogleTrendsInterestLastPeriod({
     keywords: trendKeywords,
     hl: language,
@@ -228,6 +234,9 @@ export async function runSeoGapFinder(params: {
       trendsInterest: ti ?? o.trendsInterest,
     };
   });
+  opportunities = attachTrendsFuzzy(opportunities, trendsMap);
+
+  const trendsResolved = opportunities.filter((o) => o.trendsInterest != null).length;
 
   const data: SeoGapFinderResult = {
     executiveSummary: parsed.data.executiveSummary,
@@ -242,7 +251,7 @@ export async function runSeoGapFinder(params: {
       crawlWarnings,
       userSiteKeywordsSample,
       generatedAt: new Date().toISOString(),
-      trendsDataPoints: trendsMap.size,
+      trendsDataPoints: trendsResolved,
     },
   };
 

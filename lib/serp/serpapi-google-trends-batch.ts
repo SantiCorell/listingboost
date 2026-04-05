@@ -68,12 +68,22 @@ export async function fetchGoogleTrendsInterestLastPeriod(params: {
       if (!res.ok || data.error) continue;
 
       const timeline = data.interest_over_time?.timeline_data ?? [];
-      const last = timeline[timeline.length - 1];
-      for (const v of last?.values ?? []) {
-        const query = typeof v.query === "string" ? v.query.trim() : "";
-        const val = v.extracted_value;
-        if (!query || typeof val !== "number") continue;
-        result.set(normalizeKey(query), val);
+      /** Por query: últimos puntos temporal (media de hasta 3) para suavizar y cubrir timelines incompletos */
+      const acc = new Map<string, number[]>();
+      for (const point of timeline) {
+        for (const v of point.values ?? []) {
+          const query = typeof v.query === "string" ? v.query.trim() : "";
+          const val = v.extracted_value;
+          if (!query || typeof val !== "number") continue;
+          if (!acc.has(query)) acc.set(query, []);
+          acc.get(query)!.push(val);
+        }
+      }
+      for (const [query, vals] of acc) {
+        if (vals.length === 0) continue;
+        const slice = vals.slice(-3);
+        const avg = Math.round(slice.reduce((a, b) => a + b, 0) / slice.length);
+        result.set(normalizeKey(query), avg);
       }
     } catch {
       /* ignore chunk */

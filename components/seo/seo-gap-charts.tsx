@@ -392,41 +392,4 @@ export function SeoGapScoreBars({ opportunities }: { opportunities: SeoGapOpport
   );
 }
 
-export function SeoGapClusterMini({ opportunities }: { opportunities: SeoGapOpportunity[] }) {
-  const counts = new Map<string, number>();
-  for (const o of opportunities) {
-    counts.set(o.cluster, (counts.get(o.cluster) ?? 0) + 1);
-  }
-  const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
-  const max = Math.max(1, ...sorted.map(([, n]) => n));
-  const w = 400;
-  const rowH = 22;
-  const h = sorted.length * rowH + 16;
-
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-inner">
-      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">Clusters de contenido</p>
-      <svg viewBox={`0 0 ${w} ${h}`} className="w-full" role="img">
-        <title>Temas por frecuencia</title>
-        {sorted.map(([label, n], i) => {
-          const y = i * rowH + 10;
-          const bw = Math.round((n / max) * (w - 120));
-          const lab = label.length > 22 ? `${label.slice(0, 20)}…` : label;
-          return (
-            <g key={label}>
-              <text x={0} y={y + 14} className="fill-slate-100 text-[10px] font-medium">
-                {lab}
-              </text>
-              <rect x={108} y={y + 2} width={bw} height={14} rx={4} className="fill-violet-400/60" />
-              <text x={108 + bw + 4} y={y + 13} className="fill-slate-400 text-[9px] tabular-nums">
-                {n}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
-
 export { DEMAND_LABEL };
