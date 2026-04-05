@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { APP_NAME, ENGINE_NAME, ENGINE_PITCH } from "@/lib/constants";
+import { organizationSameAsUrls } from "@/lib/legal/site-legal";
 import { getPublicSiteUrl } from "@/lib/site-url";
 import { HeroProductMock } from "@/components/landing/hero-product-mock";
 import { ImpactMetricsChart } from "@/components/landing/impact-metrics-chart";
@@ -31,103 +32,126 @@ import {
 
 const siteUrl = getPublicSiteUrl();
 
-const jsonLdGraph = [
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: APP_NAME,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    url: siteUrl,
-    description:
-      "SaaS de listing intelligence: boost multicanal para marketplaces y scan SEO de URL. Motor propietario ListingBrain™. Hashtags para redes incluidos.",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "EUR",
-      description: "Tier gratuito con límites mensuales transparentes",
-    },
-  },
-  {
+function buildHomeJsonLd() {
+  const sameAs = organizationSameAsUrls();
+  const org: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: APP_NAME,
     url: siteUrl,
     logo: `${siteUrl}/icon.svg`,
     description:
-      "Infra de producto para equipos que viven del catálogo: fichas que rankean + inteligencia on-page en URL.",
-    sameAs: [],
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: APP_NAME,
-    url: siteUrl,
-    description:
-      "Pipeline moderno para generar listings, hashtags y auditar URLs sin fricción. Free tier real; escala cuando el volumen lo exija.",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${siteUrl}/register`,
+      `${APP_NAME} es un SaaS (software web) de listing intelligence: ayuda a escribir y optimizar textos de anuncios de producto para marketplaces y tiendas, con motor ${ENGINE_NAME}, y a auditar URLs. ` +
+      "No es un servicio de compra de reseñas, no vende reseñas en Google ni Trustpilot, y no promete manipular rankings.",
+  };
+  if (sameAs.length) org.sameAs = sameAs;
+
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: APP_NAME,
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      url: siteUrl,
+      description:
+        `SaaS de listing intelligence con ${ENGINE_NAME}: generación y optimización de copy de fichas (títulos, descripciones, hashtags) para Wallapop, eBay, Shopify, Etsy y más; scan SEO de URL. ` +
+        "No vende reseñas ni gestiona reputación de terceros. Resultados orientativos; el usuario publica bajo su responsabilidad y las normas de cada plataforma.",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "EUR",
+        description: "Tier gratuito con límites mensuales transparentes",
       },
-      "query-input": "required name=search_term_string",
     },
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `¿Qué es ${APP_NAME}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `${APP_NAME} es la capa SaaS sobre ${ENGINE_NAME}: optimiza fichas para Wallapop, eBay, Shopify y más, genera hashtags listos para redes y escanea URLs con scoring accionable.`,
+    org,
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: APP_NAME,
+      url: siteUrl,
+      description:
+        "Software para generar y optimizar listings, hashtags y auditar URLs. Desambiguación: ‘boost de ficha’ = mejorar texto del anuncio, no inflar valoraciones. Free tier real; escala cuando el volumen lo exija.",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${siteUrl}/register`,
         },
+        "query-input": "required name=search_term_string",
       },
-      {
-        "@type": "Question",
-        name: "¿Necesito tarjeta para empezar?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "No. Crea cuenta, prueba con cupos mensuales claros y sube a Pro cuando el throughput lo merezca.",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: `¿Qué es ${APP_NAME}?`,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: `${APP_NAME} es la capa SaaS sobre ${ENGINE_NAME}: optimiza fichas para Wallapop, eBay, Shopify y más, genera hashtags listos para redes y escanea URLs con scoring accionable.`,
+          },
         },
-      },
-      {
-        "@type": "Question",
-        name: "¿Sirve para equipos y ecommerce?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Sí. Desde autónomos hasta squads que gestionan miles de SKUs en varios canales.",
+        {
+          "@type": "Question",
+          name: `¿${APP_NAME} vende o compra reseñas (Google, Trustpilot, etc.)?`,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: `No. ${APP_NAME} no es un servicio de reputación ni de reseñas: no vende, compra ni gestiona valoraciones en plataformas de terceros. El producto se centra en texto de anuncios, hashtags y auditoría SEO de URLs.`,
+          },
         },
-      },
-      {
-        "@type": "Question",
-        name: "¿Dónde está explicado cada módulo del producto?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "En el centro de producto (/producto) y en páginas dedicadas: boost de ficha multicanal, scan SEO de URL y hashtags para redes. Cada URL incluye guías y FAQ en schema.org para buscadores y asistentes.",
+        {
+          "@type": "Question",
+          name: `¿${APP_NAME} garantiza posiciones en Google o en marketplaces?`,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "No garantizamos posicionamiento ni ventas. Las sugerencias son orientativas; debes revisarlas y cumplir las políticas de cada canal.",
+          },
         },
-      },
-      {
-        "@type": "Question",
-        name: "¿ListingBoost genera hashtags para Instagram o TikTok?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Sí. El análisis incluye hashtags con # listos para copiar en bloque o uno a uno, alineados con el producto y el idioma del mercado. Ver la guía en /producto/hashtags-redes.",
+        {
+          "@type": "Question",
+          name: "¿Necesito tarjeta para empezar?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "No. Crea cuenta, prueba con cupos mensuales claros y sube a Pro cuando el throughput lo merezca.",
+          },
         },
-      },
-    ],
-  },
-];
+        {
+          "@type": "Question",
+          name: "¿Sirve para equipos y ecommerce?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Sí. Desde autónomos hasta squads que gestionan miles de SKUs en varios canales.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Dónde está explicado cada módulo del producto?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "En el centro de producto (/producto) y en páginas dedicadas: boost de ficha multicanal, scan SEO de URL y hashtags para redes. Cada URL incluye guías y FAQ en schema.org para buscadores y asistentes.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿ListingBoost genera hashtags para Instagram o TikTok?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Sí. El análisis incluye hashtags con # listos para copiar en bloque o uno a uno, alineados con el producto y el idioma del mercado. Ver la guía en /producto/hashtags-redes.",
+          },
+        },
+      ],
+    },
+  ];
+}
 
 export default function HomePage() {
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdGraph) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildHomeJsonLd()) }}
       />
       <div className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-tech-radial" />
@@ -160,6 +184,16 @@ export default function HomePage() {
                   hashtags listos para Instagram y TikTok
                 </strong>
                 , scan SEO de URL y boost de ficha en segundos — para equipos que escalan catálogo sin fricción.
+              </p>
+              <p className="mt-3 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground">
+                <Shield className="mr-1.5 inline-block h-4 w-4 shrink-0 text-primary" aria-hidden />
+                <strong className="text-foreground">Transparencia:</strong> somos{" "}
+                <strong className="text-foreground">software para texto de anuncios</strong>, no un servicio de reseñas.
+                No vendemos valoraciones en Google ni Trustpilot.{" "}
+                <Link href="/sobre-listingboost" className="font-medium text-primary underline-offset-4 hover:underline">
+                  Qué es y qué no es
+                </Link>
+                .
               </p>
 
               {/* Bloque alto impacto: promesa + prueba social implícita + CTA */}
@@ -566,6 +600,20 @@ export default function HomePage() {
                 <AccordionContent>
                   Porque une scoring verificable con recomendaciones accionables vía {ENGINE_NAME} — pensado
                   para que inviertas menos tiempo y captures más valor por listing.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="5">
+                <AccordionTrigger>¿Vendéis reseñas o gestionáis reputación?</AccordionTrigger>
+                <AccordionContent>
+                  No. {APP_NAME} no vende ni compra reseñas en Google, Trustpilot ni en ningún sitio. “Boost de ficha”
+                  significa mejorar el texto del anuncio (título, descripción, hashtags), no inflar valoraciones.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="6">
+                <AccordionTrigger>¿Garantizáis subir en Google o en Wallapop?</AccordionTrigger>
+                <AccordionContent>
+                  No garantizamos posiciones ni ventas. Te damos copy y auditorías accionables; tú publicas cumpliendo las
+                  normas de cada plataforma.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

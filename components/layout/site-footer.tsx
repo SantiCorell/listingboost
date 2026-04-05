@@ -61,6 +61,11 @@ export function SiteFooter() {
         </Link>
       </li>
       <li>
+        <Link href="/sobre-listingboost" className="transition-colors hover:text-foreground">
+          Sobre {APP_NAME}
+        </Link>
+      </li>
+      <li>
         <Link href="/contacto" className="transition-colors hover:text-foreground">
           Contacto
         </Link>

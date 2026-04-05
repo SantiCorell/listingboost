@@ -48,6 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       { path: "/terminos", priority: 0.35, changeFrequency: "yearly" },
       { path: "/privacidad", priority: 0.35, changeFrequency: "yearly" },
       { path: "/cookies", priority: 0.3, changeFrequency: "yearly" },
+      { path: "/sobre-listingboost", priority: 0.55, changeFrequency: "monthly" },
     ];
 
   return paths.map(({ path, priority, changeFrequency }) => ({
