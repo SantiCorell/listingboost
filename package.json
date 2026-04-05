@@ -30,6 +30,7 @@
     "db:docker-down": "docker compose down",
     "stripe:seed": "dotenv -e .env.local -- node scripts/stripe-seed-catalog.cjs",
     "stripe:seed:write": "dotenv -e .env.local -- node scripts/stripe-seed-catalog.cjs --write-env-local",
+    "stripe:verify": "dotenv -e .env.local -- node scripts/stripe-verify-env.cjs",
     "stripe:seed-test": "npm run stripe:seed"
   },
   "dependencies": {

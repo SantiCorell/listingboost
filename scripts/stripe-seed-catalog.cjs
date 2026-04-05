@@ -66,14 +66,36 @@ async function findOrCreatePrice(stripe, { productName, unitAmount, recurring })
     }
     return pr.type === "one_time" && pr.unit_amount === unitAmount && pr.currency === "eur";
   });
-  if (match) return match.id;
+  if (match) return { priceId: match.id, productId: product.id };
   const created = await stripe.prices.create({
     product: product.id,
     unit_amount: unitAmount,
     currency: "eur",
     ...(recurring ? { recurring: { interval: "month", interval_count: 1 } } : {}),
   });
-  return created.id;
+  return { priceId: created.id, productId: product.id };
+}
+
+/**
+ * Créditos extra: un solo importe activo por producto. Archiva otros one_time activos (p. ej. antiguos 2 € en Free).
+ */
+async function findOrCreateCreditPrice(stripe, productName, unitAmount) {
+  const { priceId, productId } = await findOrCreatePrice(stripe, {
+    productName,
+    unitAmount,
+    recurring: false,
+  });
+  const prices = await stripe.prices.list({ product: productId, limit: 100, active: true });
+  for (const pr of prices.data) {
+    if (pr.type !== "one_time" || pr.currency !== "eur") continue;
+    if (pr.id === priceId) continue;
+    if (pr.unit_amount === unitAmount) continue;
+    await stripe.prices.update(pr.id, { active: false });
+    console.warn(
+      `  ⚠️  Precio archivado en «${productName}»: ${pr.id} (${pr.unit_amount} céntimos). Activo: ${priceId} (${unitAmount} céntimos).`,
+    );
+  }
+  return priceId;
 }
 
 function writePriceIdsToEnvLocal(ids) {
@@ -129,42 +151,42 @@ async function main() {
   const stripe = new Stripe(key, { apiVersion: API_VERSION });
   const s = productSuffix(mode);
 
-  const pro = await findOrCreatePrice(stripe, {
+  const pro = (await findOrCreatePrice(stripe, {
     productName: `ListingBoost — Pro${s}`,
     unitAmount: 2900,
     recurring: true,
-  });
-  const proPlus = await findOrCreatePrice(stripe, {
+  })).priceId;
+  const proPlus = (await findOrCreatePrice(stripe, {
     productName: `ListingBoost — Pro+${s}`,
     unitAmount: 7900,
     recurring: true,
-  });
-  const enterprise = await findOrCreatePrice(stripe, {
+  })).priceId;
+  const enterprise = (await findOrCreatePrice(stripe, {
     productName: `ListingBoost — Enterprise${s}`,
     unitAmount: 10000,
     recurring: true,
-  });
+  })).priceId;
 
-  const creditFree = await findOrCreatePrice(stripe, {
-    productName: `ListingBoost — Crédito extra (plan Free · 1,00 €/ud)${s}`,
-    unitAmount: 100,
-    recurring: false,
-  });
-  const creditPro = await findOrCreatePrice(stripe, {
-    productName: `ListingBoost — Crédito extra (plan Pro · 0,70 €/ud)${s}`,
-    unitAmount: 70,
-    recurring: false,
-  });
-  const creditProPlus = await findOrCreatePrice(stripe, {
-    productName: `ListingBoost — Crédito extra (plan Pro+ · 0,50 €/ud)${s}`,
-    unitAmount: 50,
-    recurring: false,
-  });
-  const creditEnterprise = await findOrCreatePrice(stripe, {
-    productName: `ListingBoost — Crédito extra (plan Enterprise · 0,50 €/ud)${s}`,
-    unitAmount: 50,
-    recurring: false,
-  });
+  const creditFree = await findOrCreateCreditPrice(
+    stripe,
+    `ListingBoost — Crédito extra (plan Free · 1,00 €/ud)${s}`,
+    100,
+  );
+  const creditPro = await findOrCreateCreditPrice(
+    stripe,
+    `ListingBoost — Crédito extra (plan Pro · 0,70 €/ud)${s}`,
+    70,
+  );
+  const creditProPlus = await findOrCreateCreditPrice(
+    stripe,
+    `ListingBoost — Crédito extra (plan Pro+ · 0,50 €/ud)${s}`,
+    50,
+  );
+  const creditEnterprise = await findOrCreateCreditPrice(
+    stripe,
+    `ListingBoost — Crédito extra (plan Enterprise · 0,50 €/ud)${s}`,
+    50,
+  );
 
   const ids = {
     STRIPE_PRICE_ID_PRO: pro,
@@ -184,6 +206,10 @@ async function main() {
     "\nWebhook:\n" +
       "  · Test local: stripe listen --forward-to localhost:3000/api/webhooks/stripe → whsec_…\n" +
       "  · Producción: Dashboard Stripe (modo Live) → Webhooks → endpoint → signing secret\n",
+  );
+  console.log(
+    "Comprueba importes: npm run stripe:verify\n" +
+      "Pega STRIPE_PRICE_ID_* en Vercel (mismo modo Live/Test que la clave) y redeploy.\n",
   );
 
   if (writeEnv) {

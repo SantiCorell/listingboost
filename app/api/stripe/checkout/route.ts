@@ -196,9 +196,13 @@ export async function POST(req: Request) {
           "[stripe checkout credits] unit_amount mismatch",
           { priceId, stripeCents: priceObj.unit_amount, expectedCents: unitCents, plan: user.plan },
         );
+        const freeHint =
+          user.plan === "FREE"
+            ? " Suele pasar si STRIPE_PRICE_ID_CREDIT_FREE en Vercel apunta a un precio antiguo de 2 € o al producto «Crédito análisis» en lugar de «Crédito extra (plan Free · 1,00 €/ud)»."
+            : "";
         return NextResponse.json(
           {
-            error: `Configuración de Stripe desactualizada: el precio del plan ${planLabel(user.plan)} no coincide con la app (${unitCents} céntimos vs ${priceObj.unit_amount}). En el Dashboard de Stripe crea un Price nuevo o ejecuta «npm run stripe:seed:write» y actualiza STRIPE_PRICE_ID_CREDIT_* en Vercel.`,
+            error: `El Price de Stripe (${priceObj.unit_amount} céntimos) no coincide con la app (${unitCents} céntimos) para ${planLabel(user.plan)}.${freeHint} En Stripe (modo Live), copia el Price ID correcto o ejecuta «npm run stripe:seed:write» con tu clave live y «npm run stripe:verify»; luego actualiza STRIPE_PRICE_ID_CREDIT_* en Vercel y redeploy.`,
           },
           { status: 500 },
         );
