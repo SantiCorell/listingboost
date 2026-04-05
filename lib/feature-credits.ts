@@ -14,4 +14,9 @@ export const FEATURE_CREDITS = {
   COMPETITOR_COMPARE: 5,
   /** Export PDF comparativa (Free y Pro: 1 cr; Pro+ / Enterprise: 0 en cobro). */
   COMPETITOR_PDF_EXPORT: 1,
+  /**
+   * Informe SERP premium: quién está por encima, por qué pueden rankear mejor y plan por fases
+   * (crawl + SerpAPI + LLM). Mayor coste que una comparativa manual entre dos URLs.
+   */
+  SERP_COMPETITOR_INSIGHT: 12,
 } as const;

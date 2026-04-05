@@ -1,6 +1,7 @@
 import type { Plan } from "@prisma/client";
 import { Check, Minus } from "lucide-react";
 import { APP_NAME } from "@/lib/constants";
+import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import { PLAN_INCLUDED_ANALYSES } from "@/lib/plans";
 import { cn } from "@/lib/utils";
 
@@ -127,7 +128,9 @@ export function PlanFeatureMatrix({ currentPlan }: { currentPlan?: Plan }) {
       <p className="border-t border-border/60 px-4 py-3 text-xs text-muted-foreground">
         Free incluye el núcleo de {APP_NAME} con cupo reducido; Pro desbloquea{" "}
         <strong className="text-foreground">monitoring SERP</strong> y mejor precio por crédito; Pro+ añade volumen
-        y cadencia diaria en monitoring. Todo lo que gasta créditos puede recargarse aparte.
+        y cadencia diaria en monitoring.         El informe avanzado «vs competidores» en monitoring cuesta{" "}
+        <strong className="text-foreground">{FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos</strong> por ejecución
+        (crawl + IA). Todo lo que gasta créditos puede recargarse aparte.
       </p>
     </div>
   );

@@ -9,7 +9,7 @@ import {
   snapshotsChronological,
   type SnapshotPoint,
 } from "@/lib/serp/monitoring-display";
-import { Loader2, RefreshCw, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { Loader2, RefreshCw, Sparkles, TrendingDown, TrendingUp, Minus } from "lucide-react";
 
 export type SerpMonitoringCardProps = {
   url: string;
@@ -22,6 +22,10 @@ export type SerpMonitoringCardProps = {
   running: boolean;
   onRefresh: () => void;
   onRemove: () => void;
+  /** Informe premium vs URLs por encima en la SERP (créditos). */
+  insightCreditCost?: number;
+  insightLoading?: boolean;
+  onInsight?: () => void;
 };
 
 /** Serie temporal: mejor ranking (nº más bajo) arriba del gráfico. */
@@ -106,6 +110,9 @@ export function SerpMonitoringCard({
   running,
   onRefresh,
   onRemove,
+  insightCreditCost,
+  insightLoading,
+  onInsight,
 }: SerpMonitoringCardProps) {
   const ordered = snapshotsChronological(snapshots);
   const withPosition = ordered.filter((s) => s.position != null && s.position > 0);
@@ -210,21 +217,40 @@ export function SerpMonitoringCard({
             </div>
           ) : null}
 
-          <div className="flex flex-wrap justify-center gap-2 sm:justify-end">
-            <Button
-              type="button"
-              variant="default"
-              size="sm"
-              className="gap-1.5 bg-gradient-to-r from-violet-600 to-purple-600 shadow-sm hover:from-violet-500 hover:to-purple-500"
-              disabled={running}
-              onClick={onRefresh}
-            >
-              {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
-              Comprobar ahora
-            </Button>
-            <Button type="button" variant="outline" size="sm" onClick={onRemove}>
-              Quitar
-            </Button>
+          <div className="flex flex-col items-stretch gap-2 sm:items-end">
+            <div className="flex flex-wrap justify-center gap-2 sm:justify-end">
+              <Button
+                type="button"
+                variant="default"
+                size="sm"
+                className="gap-1.5 bg-gradient-to-r from-violet-600 to-purple-600 shadow-sm hover:from-violet-500 hover:to-purple-500"
+                disabled={running}
+                onClick={onRefresh}
+              >
+                {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+                Comprobar ahora
+              </Button>
+              <Button type="button" variant="outline" size="sm" onClick={onRemove}>
+                Quitar
+              </Button>
+            </div>
+            {onInsight != null && insightCreditCost != null ? (
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="gap-1.5 border border-amber-400/40 bg-gradient-to-r from-amber-500/15 to-orange-500/10 font-semibold text-amber-950 shadow-sm hover:from-amber-500/25 hover:to-orange-500/15 dark:border-amber-400/25 dark:text-amber-50"
+                disabled={running || insightLoading}
+                onClick={onInsight}
+              >
+                {insightLoading ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="h-3.5 w-3.5" />
+                )}
+                Informe vs competidores ({insightCreditCost} cr)
+              </Button>
+            ) : null}
           </div>
         </div>
       </div>

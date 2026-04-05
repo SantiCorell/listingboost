@@ -8,9 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, LineChart, FileText, GitCompare, PenLine, RefreshCw } from "lucide-react";
+import { Loader2, LineChart, FileText, GitCompare, PenLine } from "lucide-react";
 import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import { SerpMonitoringCard } from "@/components/seo/serp-monitoring-card";
+import { SerpCompetitorInsightDialog } from "@/components/seo/serp-competitor-insight-dialog";
+import type { SerpCompetitorInsightOutput } from "@/types/serp-competitor-insight";
 import { ContentGeneratorResult } from "@/components/seo/content-generator-result";
 import { BlogOptimizerResult } from "@/components/seo/blog-optimizer-result";
 import { CompetitorCompareResult } from "@/components/seo/competitor-compare-result";
@@ -495,6 +497,14 @@ function MonitoringPanel({ allowDaily }: { allowDaily: boolean }) {
   const [cadence, setCadence] = useState("weekly");
   const [monitorErr, setMonitorErr] = useState<string | null>(null);
   const [runningId, setRunningId] = useState<string | null>(null);
+  const [insightOpen, setInsightOpen] = useState(false);
+  const [insightData, setInsightData] = useState<SerpCompetitorInsightOutput | null>(null);
+  const [insightMeta, setInsightMeta] = useState<{
+    url: string;
+    keyword: string;
+    credits: number;
+  } | null>(null);
+  const [insightLoadingId, setInsightLoadingId] = useState<string | null>(null);
 
   function mapMonitoringItems(
     raw: Array<{
@@ -568,7 +578,9 @@ function MonitoringPanel({ allowDaily }: { allowDaily: boolean }) {
         <CardDescription>
           Posición orgánica actual, <strong className="text-foreground">cambio vs la lectura anterior</strong> (↑ mejora,
           ↓ baja) y <strong className="text-foreground">gráfico de evolución</strong> con cada comprobación. Google
-          España; la primera lectura suele tardar unos segundos.
+          España; la primera lectura suele tardar unos segundos. Opcional:{" "}
+          <strong className="text-foreground">informe vs competidores</strong> (crawl + IA) por{" "}
+          {FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos — plan de acción por fases y tiempos orientativos.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 pt-6">
@@ -660,6 +672,41 @@ function MonitoringPanel({ allowDaily }: { allowDaily: boolean }) {
                 lastRunAt={m.lastRunAt}
                 snapshots={m.snapshots}
                 running={runningId === m.id}
+                insightCreditCost={FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT}
+                insightLoading={insightLoadingId === m.id}
+                onInsight={async () => {
+                  setInsightLoadingId(m.id);
+                  setMonitorErr(null);
+                  try {
+                    const r = await fetch("/api/monitoring/insight", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ id: m.id }),
+                    });
+                    const j = (await r.json()) as {
+                      error?: string;
+                      output?: SerpCompetitorInsightOutput;
+                      creditsUsed?: number;
+                    };
+                    if (!r.ok) {
+                      setMonitorErr(j.error ?? "No se pudo generar el informe");
+                      return;
+                    }
+                    if (j.output) {
+                      setInsightData(j.output);
+                      setInsightMeta({
+                        url: m.url,
+                        keyword: m.keyword,
+                        credits: j.creditsUsed ?? FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT,
+                      });
+                      setInsightOpen(true);
+                    }
+                  } catch {
+                    setMonitorErr("Error de red");
+                  } finally {
+                    setInsightLoadingId(null);
+                  }
+                }}
                 onRefresh={async () => {
                   setRunningId(m.id);
                   try {
@@ -689,6 +736,14 @@ function MonitoringPanel({ allowDaily }: { allowDaily: boolean }) {
             ))}
           </ul>
         )}
+        <SerpCompetitorInsightDialog
+          open={insightOpen}
+          onOpenChange={setInsightOpen}
+          data={insightData}
+          keyword={insightMeta?.keyword ?? ""}
+          pageUrl={insightMeta?.url ?? ""}
+          creditsUsed={insightMeta?.credits ?? FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT}
+        />
       </CardContent>
     </Card>
   );

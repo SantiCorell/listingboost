@@ -16,7 +16,7 @@ function normalizeHost(h: string): string {
   return h.replace(/^www\./, "").toLowerCase();
 }
 
-type SerpOrganic = { link?: string; position?: number; title?: string };
+type SerpOrganic = { link?: string; position?: number; title?: string; snippet?: string };
 type SerpJson = {
   organic_results?: SerpOrganic[];
   error?: string;
@@ -206,6 +206,129 @@ export async function fetchOrganicPosition(params: {
   } catch (e) {
     return {
       position: null,
+      note: e instanceof Error ? e.message : "Error al llamar a SerpAPI",
+    };
+  }
+}
+
+/** Resultado orgánico SerpAPI con posición estable. */
+export type OrganicSerpResult = {
+  position: number;
+  link: string;
+  title?: string;
+  snippet?: string;
+};
+
+function organicPageToHits(organic: SerpOrganic[], pageStart: number): OrganicSerpResult[] {
+  const out: OrganicSerpResult[] = [];
+  for (let i = 0; i < (organic?.length ?? 0); i++) {
+    const r = organic[i]!;
+    const link = r.link ?? "";
+    if (!link) continue;
+    const pos =
+      typeof r.position === "number" && r.position > 0 ? r.position : pageStart + i + 1;
+    out.push({
+      position: pos,
+      link,
+      title: r.title,
+      snippet: r.snippet,
+    });
+  }
+  return out;
+}
+
+/**
+ * Descarga resultados orgánicos hasta cubrir al menos `throughPosition` (p. ej. si tu URL va en el 9, throughPosition=8 para ver quién está encima).
+ * Máximo `maxPages` páginas SerpAPI (coste acotado).
+ */
+export async function fetchOrganicResultsThroughRank(params: {
+  keyword: string;
+  /** Incluir resultados con posición <= este número (típ. tuPos - 1; si no estás en SERP, usa 10). */
+  throughPosition: number;
+  googleDomain?: string;
+  hl?: string;
+  gl?: string;
+  location?: string;
+  maxPages?: number;
+}): Promise<{ results: OrganicSerpResult[]; note?: string }> {
+  const apiKey = process.env.SERPAPI_API_KEY?.trim();
+  if (!apiKey) {
+    return { results: [], note: "Falta SERPAPI_API_KEY en el servidor." };
+  }
+
+  const googleDomain = params.googleDomain ?? process.env.SERPAPI_GOOGLE_DOMAIN?.trim() ?? "google.es";
+  const hl = params.hl ?? process.env.SERPAPI_HL?.trim() ?? "es";
+  const gl = params.gl ?? process.env.SERPAPI_GL?.trim() ?? "es";
+  const location =
+    params.location?.trim() ||
+    process.env.SERPAPI_LOCATION?.trim() ||
+    undefined;
+
+  const capPages = Math.min(
+    10,
+    Math.max(1, params.maxPages ?? 6),
+  );
+  const need = Math.max(1, Math.min(100, Math.floor(params.throughPosition)));
+  const pagesToFetch = Math.min(capPages, Math.max(1, Math.ceil(need / 10)));
+
+  const device = (process.env.SERPAPI_DEVICE === "mobile" ? "mobile" : "desktop") as
+    | "desktop"
+    | "mobile"
+    | "tablet";
+
+  const query = params.keyword.trim();
+  if (!query) {
+    return { results: [], note: "Keyword vacía." };
+  }
+
+  const byPosition = new Map<number, OrganicSerpResult>();
+
+  try {
+    for (let page = 0; page < pagesToFetch; page++) {
+      const start = page * 10;
+      const url = buildSearchUrl({
+        apiKey,
+        query,
+        start,
+        googleDomain,
+        hl,
+        gl,
+        location,
+        device,
+      });
+
+      const res = await fetch(url, { cache: "no-store", next: { revalidate: 0 } });
+      const data = (await res.json()) as SerpJson;
+
+      if (!res.ok) {
+        return { results: [...byPosition.values()].sort((a, b) => a.position - b.position), note: serpErrorMessage(data, res.status) };
+      }
+      if (data.error) {
+        return { results: [...byPosition.values()].sort((a, b) => a.position - b.position), note: data.error };
+      }
+
+      const organic = data.organic_results ?? [];
+      const hits = organicPageToHits(organic, start);
+      for (const h of hits) {
+        if (!byPosition.has(h.position)) byPosition.set(h.position, h);
+      }
+
+      if (data.search_information?.organic_results_state === "Fully empty") {
+        break;
+      }
+      if (organic.length < 10) {
+        break;
+      }
+      if (page < pagesToFetch - 1) {
+        await sleep(SLEEP_MS_BETWEEN_PAGES);
+      }
+    }
+
+    const results = [...byPosition.values()].sort((a, b) => a.position - b.position);
+    return { results };
+  } catch (e) {
+    return {
+      results: [],
       note: e instanceof Error ? e.message : "Error al llamar a SerpAPI",
     };
   }
