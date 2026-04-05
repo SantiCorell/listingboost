@@ -12,6 +12,7 @@ const metaSchema = z.object({
   userSiteKeywordsSample: z.array(z.string()).optional(),
   serpError: z.string().optional(),
   generatedAt: z.string(),
+  trendsDataPoints: z.number().optional(),
 });
 
 const fullSchema = seoGapLlmOutputSchema.extend({ meta: metaSchema });

@@ -16,6 +16,7 @@ Reglas:
 - "title": título H1/meta sugerido orientado a CTR (50–65 caracteres ideal).
 - "action": una frase imperativa (ej. "Crear landing de captación", "Publicar guía + FAQ").
 - "cluster": nombre corto del tema (ej. "Valoración", "Jubilación", "Deuda").
+- "monthlyVolumeEstimate" (obligatorio, entero ≥ 0): tu **mejor estimación** de búsquedas mensuales medias en Google para ese país/idioma (gl/hl del informe). Usa el orden de magnitud realista: nicho extremo 10–200; long-tail 200–2.000; medio 2k–20k; cabeza 20k+. Si dudas, subestima ligeramente. No inventes cifras absurdas (evita millones salvo keywords masivas obvias).
 - Si hay sitio de usuario: prioriza gaps frente a competidores.
 - Si NO hay dominio de usuario, detecta huecos en la SERP (preguntas mal respondidas, intenciones mezcladas, ausencia de guías).`;
 }
@@ -69,7 +70,9 @@ ${JSON.stringify(payload.competitors, null, 0)}
 ${payload.userSite ? JSON.stringify(payload.userSite, null, 0) : "null"}
 
 ## Salida JSON exacta
-Cada elemento de "opportunities" debe incluir "demandTier": "alto" | "medio" | "bajo" | "nicho".
+Cada elemento de "opportunities" debe incluir:
+- "demandTier": "alto" | "medio" | "bajo" | "nicho"
+- "monthlyVolumeEstimate": número entero (búsquedas/mes estimadas en el mercado del informe)
 
 {
   "executiveSummary": "2-4 frases en español: qué pasa en la SERP, huecos y mezcla head vs long-tail.",

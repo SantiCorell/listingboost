@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { fetchGoogleSerpSnapshot } from "@/lib/serp/serpapi-google-snapshot";
+import { fetchGoogleTrendsInterestLastPeriod } from "@/lib/serp/serpapi-google-trends-batch";
 import { fetchAndParseUrl } from "@/services/url/crawler";
 import { topWordFrequency } from "@/lib/seo/simple-word-frequency";
 import { deepseekChatJson } from "@/services/llm/deepseek";
@@ -210,7 +211,23 @@ export async function runSeoGapFinder(params: {
     return { ok: false, error: "El motor devolvió un formato inesperado. Reintenta en unos minutos." };
   }
 
-  const opportunities = [...parsed.data.opportunities].sort((a, b) => b.score - a.score);
+  let opportunities = [...parsed.data.opportunities].sort((a, b) => b.score - a.score);
+
+  const trendKeywords = [...new Set(opportunities.map((o) => o.keyword.trim()).filter(Boolean))].slice(0, 15);
+  const trendsMap = await fetchGoogleTrendsInterestLastPeriod({
+    keywords: trendKeywords,
+    hl: language,
+    geo: country.toUpperCase(),
+  });
+
+  opportunities = opportunities.map((o) => {
+    const nk = o.keyword.trim().toLowerCase();
+    const ti = trendsMap.get(nk);
+    return {
+      ...o,
+      trendsInterest: ti ?? o.trendsInterest,
+    };
+  });
 
   const data: SeoGapFinderResult = {
     executiveSummary: parsed.data.executiveSummary,
@@ -225,6 +242,7 @@ export async function runSeoGapFinder(params: {
       crawlWarnings,
       userSiteKeywordsSample,
       generatedAt: new Date().toISOString(),
+      trendsDataPoints: trendsMap.size,
     },
   };
 

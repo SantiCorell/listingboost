@@ -10,11 +10,11 @@ import {
   SeoGapIntentChart,
   SeoGapLevelChart,
   SeoGapDemandChart,
-  SeoGapBubbleMap,
-  SeoGapScoreBars,
   SeoGapClusterMini,
   DEMAND_LABEL,
 } from "@/components/seo/seo-gap-charts";
+import { SeoGapCockpitInteractive } from "@/components/seo/seo-gap-cockpit-interactive";
+import { formatMonthlyVolumeEs } from "@/lib/seo/format-search-volume";
 import type { SeoGapFinderResult, SeoGapOpportunity } from "@/types/seo-gap-finder";
 import { isLongTailGem } from "@/types/seo-gap-finder";
 import { ArrowRight, Gem, LayoutGrid } from "lucide-react";
@@ -44,6 +44,18 @@ function OpportunityCard({ o }: { o: SeoGapOpportunity }) {
             <span className="capitalize">{o.type}</span>
             <span>·</span>
             <span className="tabular-nums">score {o.score}</span>
+            <span>·</span>
+            <span className="tabular-nums" title="Estimación orientativa (IA + SERP)">
+              ~{formatMonthlyVolumeEs(o.monthlyVolumeEstimate)}/mes
+            </span>
+            {o.trendsInterest != null ? (
+              <>
+                <span>·</span>
+                <span className="tabular-nums" title="Google Trends relativo (SerpAPI)">
+                  Trends {o.trendsInterest}
+                </span>
+              </>
+            ) : null}
           </p>
         </div>
         <div className="flex flex-wrap justify-end gap-1">
@@ -126,13 +138,15 @@ export function SeoGapReportBody({
             <SeoGapDemandChart opportunities={opportunities} />
           </div>
 
-          <SeoGapBubbleMap opportunities={opportunities} />
+          <SeoGapCockpitInteractive
+            opportunities={opportunities}
+            trendsDataPoints={meta.trendsDataPoints}
+          />
 
           <div className="grid gap-4 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <SeoGapScoreBars opportunities={opportunities} />
+            <div className="lg:col-span-3">
+              <SeoGapClusterMini opportunities={opportunities} />
             </div>
-            <SeoGapClusterMini opportunities={opportunities} />
           </div>
         </div>
       </section>
