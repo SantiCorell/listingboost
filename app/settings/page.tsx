@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfileForm } from "@/components/settings/profile-form";
+import { ChangePasswordForm } from "@/components/settings/change-password-form";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -18,8 +19,11 @@ export default async function SettingsPage() {
       accountKind: true,
       profileType: true,
       plan: true,
+      passwordHash: true,
     },
   });
+
+  const hasPassword = Boolean(user.passwordHash);
 
   const stripeCustomer = await prisma.subscription.findFirst({
     where: { userId: session.user.id, stripeCustomerId: { not: null } },
@@ -42,9 +46,42 @@ export default async function SettingsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ProfileForm user={user} hasStripeCustomer={Boolean(stripeCustomer?.stripeCustomerId)} />
+          <ProfileForm
+            user={{
+              name: user.name,
+              email: user.email,
+              companyName: user.companyName,
+              phone: user.phone,
+              accountKind: user.accountKind,
+              profileType: user.profileType,
+              plan: user.plan,
+            }}
+            hasStripeCustomer={Boolean(stripeCustomer?.stripeCustomerId)}
+          />
         </CardContent>
       </Card>
+
+      {hasPassword ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Contraseña</CardTitle>
+            <CardDescription>Cambia la contraseña que usas con tu email (no aplica a «Iniciar sesión con Google»).</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChangePasswordForm />
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-dashed">
+          <CardHeader>
+            <CardTitle className="text-base">Contraseña</CardTitle>
+            <CardDescription>
+              Entras con Google (u otro proveedor) sin contraseña en ListingBoost. Si necesitas también acceso con
+              email y contraseña, contacta con soporte.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      )}
     </div>
   );
 }

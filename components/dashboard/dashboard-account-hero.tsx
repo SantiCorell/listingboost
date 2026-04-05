@@ -105,6 +105,14 @@ export function DashboardAccountHero({
             <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
               Como admin no aplican límites de consumo; el contador del plan es solo informativo.
             </p>
+            {commerceEnabled ? (
+              <Link
+                href="/pricing/credits#historial-pagos"
+                className="mt-3 block text-[11px] font-medium text-primary underline-offset-4 hover:underline"
+              >
+                Pagos y recibos
+              </Link>
+            ) : null}
           </div>
         </div>
       </section>
@@ -240,9 +248,17 @@ export function DashboardAccountHero({
             </div>
             <p className="mt-1 text-2xl font-bold tabular-nums tracking-tight">{bonusCreditsRemaining}</p>
             {commerceEnabled ? (
-              <Button asChild size="sm" className="mt-3 w-full font-semibold shadow-sm">
-                <Link href="/pricing/credits">+ Comprar créditos</Link>
-              </Button>
+              <>
+                <Button asChild size="sm" className="mt-3 w-full font-semibold shadow-sm">
+                  <Link href="/pricing/credits">+ Comprar créditos</Link>
+                </Button>
+                <Link
+                  href="/pricing/credits#historial-pagos"
+                  className="mt-2 block text-center text-[11px] font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  Pagos y recibos
+                </Link>
+              </>
             ) : (
               <p className="mt-3 text-[11px] leading-snug text-muted-foreground">
                 Compra de créditos cuando activemos pagos.

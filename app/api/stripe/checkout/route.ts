@@ -9,7 +9,17 @@ import {
   stripePriceIdForSubscription,
   type SubscriptionCheckoutPlan,
 } from "@/lib/stripe/plan-mapping";
-import { planLabel } from "@/lib/plans";
+import { APP_NAME } from "@/lib/constants";
+import {
+  creditPacksAvailableForPlan,
+  getFreeCreditPack,
+} from "@/lib/credit-packs";
+import {
+  extraCreditUnitAmountCents,
+  formatEurUnitsFromCents,
+  planLabel,
+  totalExtraCreditsAmountCents,
+} from "@/lib/plans";
 import {
   stripeCheckoutCommonParams,
   stripeCheckoutPaymentMethodTypes,
@@ -89,14 +99,82 @@ export async function POST(req: Request) {
   });
 
   if (type === "credits") {
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: session.user.id },
+    });
+
+    const packId =
+      typeof body.pack === "string" && body.pack.trim().length > 0
+        ? body.pack.trim()
+        : null;
+
+    if (packId) {
+      if (!creditPacksAvailableForPlan(user.plan)) {
+        return NextResponse.json(
+          { error: "Los packs con descuento solo están disponibles en el plan Free." },
+          { status: 400 },
+        );
+      }
+      const pack = getFreeCreditPack(packId);
+      if (!pack) {
+        return NextResponse.json({ error: "Pack de créditos no válido." }, { status: 400 });
+      }
+
+      const totalEur = formatEurUnitsFromCents(pack.totalCents);
+      try {
+        const checkoutSession = await stripe.checkout.sessions.create({
+          mode: "payment",
+          payment_method_types: stripeCheckoutPaymentMethodTypes,
+          ...stripeCheckoutCommonParams,
+          customer: existing?.stripeCustomerId ?? undefined,
+          customer_email: existing?.stripeCustomerId
+            ? undefined
+            : (session.user.email ?? undefined),
+          line_items: [
+            {
+              price_data: {
+                currency: "eur",
+                unit_amount: pack.totalCents,
+                product_data: {
+                  name: `${APP_NAME} · ${pack.label}`,
+                  description: `${pack.credits} créditos · Plan Free · −${pack.discountPercent}% vs comprar sueltos`,
+                },
+              },
+              quantity: 1,
+            },
+          ],
+          custom_text: {
+            submit: {
+              message: `Pack ${pack.credits} créditos por ${totalEur} € (ahorro aprox. ${pack.discountPercent}% vs ${formatEurUnitsFromCents(pack.listTotalCents)} € al precio unitario). Se acreditan en ${APP_NAME} al completar el pago.`,
+            },
+          },
+          success_url: `${base}/dashboard?credits=ok&session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${base}/pricing/credits`,
+          metadata: {
+            userId: session.user.id,
+            checkoutType: "credits",
+            credits: String(pack.credits),
+            creditPlan: user.plan,
+            packId: pack.id,
+            totalAmountCents: String(pack.totalCents),
+            listAmountCents: String(pack.listTotalCents),
+          },
+        });
+        return NextResponse.json({ url: checkoutSession.url });
+      } catch (e) {
+        console.error("[stripe checkout credits pack]", e);
+        return NextResponse.json(
+          { error: stripeHttpMessage(e, "Error al crear el pago en Stripe.") },
+          { status: 502 },
+        );
+      }
+    }
+
     const qtyRaw = Number(body.quantity);
     const quantity = Number.isFinite(qtyRaw)
       ? Math.min(500, Math.max(1, Math.floor(qtyRaw)))
       : 1;
 
-    const user = await prisma.user.findUniqueOrThrow({
-      where: { id: session.user.id },
-    });
     const priceId = stripePriceIdForCreditPurchase(user.plan);
     if (!priceId) {
       console.error("[stripe checkout credits] falta price id para plan", user.plan);
@@ -108,7 +186,35 @@ export async function POST(req: Request) {
       );
     }
 
+    const unitCents = extraCreditUnitAmountCents(user.plan);
     try {
+      const priceObj = await stripe.prices.retrieve(priceId);
+      if (priceObj.unit_amount != null && priceObj.unit_amount !== unitCents) {
+        console.error(
+          "[stripe checkout credits] unit_amount mismatch",
+          { priceId, stripeCents: priceObj.unit_amount, expectedCents: unitCents, plan: user.plan },
+        );
+        return NextResponse.json(
+          {
+            error: `Configuración de Stripe desactualizada: el precio del plan ${planLabel(user.plan)} no coincide con la app (${unitCents} céntimos vs ${priceObj.unit_amount}). En el Dashboard de Stripe crea un Price nuevo o ejecuta «npm run stripe:seed:write» y actualiza STRIPE_PRICE_ID_CREDIT_* en Vercel.`,
+          },
+          { status: 500 },
+        );
+      }
+    } catch (e) {
+      console.error("[stripe checkout credits] retrieve price", e);
+      return NextResponse.json(
+        { error: stripeHttpMessage(e, "No se pudo validar el precio en Stripe.") },
+        { status: 502 },
+      );
+    }
+
+    try {
+      const totalCents = totalExtraCreditsAmountCents(user.plan, quantity);
+      const planName = planLabel(user.plan);
+      const totalEur = formatEurUnitsFromCents(totalCents);
+      const unitEur = formatEurUnitsFromCents(unitCents);
+
       const checkoutSession = await stripe.checkout.sessions.create({
         mode: "payment",
         payment_method_types: stripeCheckoutPaymentMethodTypes,
@@ -123,6 +229,11 @@ export async function POST(req: Request) {
             quantity,
           },
         ],
+        custom_text: {
+          submit: {
+            message: `${quantity} crédito${quantity === 1 ? "" : "s"} × ${unitEur} € (${planName}) = ${totalEur} €. Se acreditan en ${APP_NAME} al completar el pago.`,
+          },
+        },
         success_url: `${base}/dashboard?credits=ok&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${base}/pricing/credits`,
         metadata: {
@@ -130,6 +241,8 @@ export async function POST(req: Request) {
           checkoutType: "credits",
           credits: String(quantity),
           creditPlan: user.plan,
+          unitAmountCents: String(unitCents),
+          totalAmountCents: String(totalCents),
         },
       });
       return NextResponse.json({ url: checkoutSession.url });

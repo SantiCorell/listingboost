@@ -92,6 +92,22 @@ model User {
   siteVisits    SiteVisit[]
   backgroundJobs BackgroundJob[]
   stripeCheckoutFulfillments StripeCheckoutFulfillment[]
+  billingInvoiceRequests    BillingInvoiceRequest[]
+  passwordResetTokens       PasswordResetToken[]
+}
+
+/** Token de un solo uso para restablecer contraseña (email). */
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 /** Cola ligera: boost de ficha en segundo plano (planes de pago). */
@@ -167,11 +183,35 @@ model StripeCheckoutFulfillment {
   checkoutSessionId String   @id
   userId            String
   kind              String
+  /** Créditos añadidos en esta sesión (compra de créditos). */
+  creditsAdded      Int      @default(0)
+  /** Total cobrado según Stripe (centimos), ej. amount_total. */
+  amountTotalCents  Int?
+  currency          String?  @db.VarChar(8)
   createdAt         DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([userId, createdAt])
+}
+
+/** Solicitud de factura con datos fiscales (procesamiento manual o integración futura). */
+model BillingInvoiceRequest {
+  id                String   @id @default(cuid())
+  userId            String
+  userEmail         String?
+  checkoutSessionId String?
+  legalName         String
+  taxId             String
+  address           String   @db.Text
+  notes             String?  @db.Text
+  status            String   @default("pending")
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }
 
 model ProductAnalysis {

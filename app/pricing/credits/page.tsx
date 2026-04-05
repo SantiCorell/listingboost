@@ -3,13 +3,15 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { isCommerceEnabled } from "@/lib/commerce";
-import { EXTRA_CREDIT_PRICE_EUR, planLabel } from "@/lib/plans";
+import { EXTRA_CREDIT_PRICE_EUR, extraCreditUnitAmountCents, planLabel } from "@/lib/plans";
 import type { Plan } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { BuyCreditsButton } from "@/components/pricing/buy-credits-button";
 import { Button } from "@/components/ui/button";
 import { CREDIT_COST_PRODUCT, CREDIT_COST_URL_AUDIT } from "@/lib/usage";
 import { ArrowLeft, Coins, Sparkles, Zap } from "lucide-react";
+import { CreditsPaymentHistory } from "@/components/credits/credits-payment-history";
+import { InvoiceRequestForm } from "@/components/credits/invoice-request-form";
 
 export const metadata = {
   title: "Comprar créditos extra",
@@ -38,7 +40,6 @@ export default async function BuyCreditsPage({
   const initialQty =
     Number.isFinite(qtyRaw) ? Math.min(500, Math.max(1, Math.floor(qtyRaw))) : undefined;
 
-  const priceLabel = `${EXTRA_CREDIT_PRICE_EUR[user.plan]} €`;
   const planName = planLabel(user.plan);
   const allPlans: Plan[] = ["FREE", "PRO", "PRO_PLUS", "ENTERPRISE"];
   const eurPerCredit = parseFloat(EXTRA_CREDIT_PRICE_EUR[user.plan].replace(",", ".")) || 0;
@@ -78,7 +79,7 @@ export default async function BuyCreditsPage({
           <Badge className="bg-background/80 text-sm font-semibold shadow-sm">Plan {planName}</Badge>
           <Badge variant="secondary" className="gap-1 font-mono text-xs">
             <Zap className="h-3 w-3" />
-            Tu tarifa: {priceLabel}/crédito
+            Tu tarifa: {EXTRA_CREDIT_PRICE_EUR[user.plan]} €/crédito
           </Badge>
         </div>
 
@@ -99,9 +100,9 @@ export default async function BuyCreditsPage({
             </li>
           </ul>
           <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-            Con tu tarifa actual ({priceLabel}/crédito), un scan URL completo son{" "}
+            Con tu tarifa actual ({EXTRA_CREDIT_PRICE_EUR[user.plan]} €/crédito), un scan URL completo son{" "}
             <strong className="text-foreground">{scanUrlEur} €</strong> en créditos (
-            {CREDIT_COST_URL_AUDIT} × {priceLabel}).
+            {CREDIT_COST_URL_AUDIT} × {EXTRA_CREDIT_PRICE_EUR[user.plan]} €).
           </p>
         </div>
 
@@ -123,8 +124,10 @@ export default async function BuyCreditsPage({
         <div className="mt-8">
           {commerceEnabled ? (
             <BuyCreditsButton
-              priceLabel={priceLabel}
+              priceLabel={EXTRA_CREDIT_PRICE_EUR[user.plan]}
               planName={planName}
+              unitPriceCents={extraCreditUnitAmountCents(user.plan)}
+              plan={user.plan}
               initialQuantity={initialQty}
             />
           ) : (
@@ -139,6 +142,11 @@ export default async function BuyCreditsPage({
             </div>
           )}
         </div>
+      </div>
+
+      <div id="historial-pagos" className="relative mt-10 space-y-10 scroll-mt-24">
+        <CreditsPaymentHistory />
+        {commerceEnabled ? <InvoiceRequestForm /> : null}
       </div>
 
       <p className="relative mt-8 text-center text-sm text-muted-foreground">

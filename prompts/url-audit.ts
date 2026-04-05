@@ -44,7 +44,12 @@ TAREA:
 8) Sugerencias de conversión (CRO) básicas para ecommerce si aplica.
 9) prioritizedActions: 8-12 acciones ordenadas por impacto/esfuerzo.
 10) interlinkingIdeas: 5-10 ideas de enlaces internos ancla+sugerencia de destino.
-11) gscStyle: objeto con estimaciones tipo panel de rendimiento (ver system): disclaimer obligatorio en ese objeto,
+11) detailedRecommendations: 6-10 objetos de nivel "consultoría" (no genéricos). Cada uno:
+    "title" (título corto del hallazgo),
+    "problem" (qué ves mal hoy en la página, 1-3 frases),
+    "proposedChange" (qué texto/elemento sustituir o añadir, con ejemplos concretos),
+    "howToImplement" (pasos prácticos: CMS, plantilla, prioridad, 2-5 frases).
+12) gscStyle: objeto con estimaciones tipo panel de rendimiento (ver system): disclaimer obligatorio en ese objeto,
     healthVsSimilarPagesPercent (0-100), ctrHeadroomPercent (margen de mejora de CTR estimado 0-100),
     impressionPotential "baja"|"media"|"alta", positionBandGuess (ej. "11-20"), queriesToTarget (5-12 strings),
     technicalNotes opcional.
@@ -65,6 +70,14 @@ FORMATO DE SALIDA JSON EXACTO:
   "conversionSuggestions": string[],
   "prioritizedActions": string[],
   "interlinkingIdeas": string[],
+  "detailedRecommendations": [
+    {
+      "title": string,
+      "problem": string,
+      "proposedChange": string,
+      "howToImplement": string
+    }
+  ],
   "gscStyle": {
     "disclaimer": string,
     "healthVsSimilarPagesPercent"?: number,

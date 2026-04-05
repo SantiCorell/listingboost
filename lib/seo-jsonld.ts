@@ -27,3 +27,35 @@ export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
     })),
   };
 }
+
+export function blogArticleJsonLd(input: {
+  headline: string;
+  description: string;
+  url: string;
+  datePublished: string;
+  dateModified?: string;
+  authorName: string;
+  keywords?: string[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: input.headline,
+    description: input.description,
+    url: input.url,
+    datePublished: input.datePublished,
+    dateModified: input.dateModified ?? input.datePublished,
+    author: {
+      "@type": "Organization",
+      name: input.authorName,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: input.authorName,
+    },
+    ...(input.keywords?.length
+      ? { keywords: input.keywords.join(", ") }
+      : {}),
+    inLanguage: "es-ES",
+  };
+}

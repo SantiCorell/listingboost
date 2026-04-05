@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { ProductLandingFaq } from "@/components/producto/product-landing-faq";
 import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo-jsonld";
 import { ArrowRight, CheckCircle2, LineChart } from "lucide-react";
+import {
+  CREDIT_URL_AUDIT_BASE,
+  CREDIT_URL_AUDIT_LLM,
+  CREDIT_URL_AUDIT_PDF,
+  CREDIT_URL_AUDIT_SITEMAP,
+} from "@/lib/url-audit/credits-config";
+import { URL_AUDIT_DOCS } from "@/lib/url-audit/doc-links";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
 
@@ -114,6 +121,61 @@ export default function ScanSeoUrlPage() {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section className="mt-14 space-y-5" id="presets">
+          <h2 className="text-2xl font-bold">Niveles de análisis (presets)</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            En el panel eliges cuánta profundidad necesitas. Así pagas solo por el alcance real: técnico rápido, informe
+            redactado con IA o visión ampliada con sitemaps. Para decidir con criterio de negocio, lee también el{" "}
+            <Link href={URL_AUDIT_DOCS.blogAuditVsBoost} className="font-medium text-primary underline-offset-4 hover:underline">
+              artículo del blog
+            </Link>{" "}
+            sobre auditar una URL frente a crear contenido nuevo con ListingBoost.
+          </p>
+          <div className="overflow-hidden rounded-2xl border border-border/80 bg-card/60">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-border/80 bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
+                  <th className="px-4 py-3 font-semibold">Preset</th>
+                  <th className="px-4 py-3 font-semibold">Incluye</th>
+                  <th className="px-4 py-3 font-semibold tabular-nums">Créditos</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/60 text-muted-foreground">
+                <tr>
+                  <td className="px-4 py-3 font-medium text-foreground">Esencial</td>
+                  <td className="px-4 py-3">
+                    Crawl, score, issues y quick wins técnicos. Sin bloque largo de IA.
+                  </td>
+                  <td className="px-4 py-3 tabular-nums font-semibold text-foreground">{CREDIT_URL_AUDIT_BASE}</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-medium text-foreground">Estándar</td>
+                  <td className="px-4 py-3">
+                    Esencial + informe con IA (título/meta sugeridos, FAQs, prioridades de impacto).
+                  </td>
+                  <td className="px-4 py-3 tabular-nums font-semibold text-foreground">
+                    {CREDIT_URL_AUDIT_BASE + CREDIT_URL_AUDIT_LLM}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-medium text-foreground">Completo</td>
+                  <td className="px-4 py-3">
+                    Estándar + inventario de sitemaps del dominio (contexto de rastreo).
+                  </td>
+                  <td className="px-4 py-3 tabular-nums font-semibold text-foreground">
+                    {CREDIT_URL_AUDIT_BASE + CREDIT_URL_AUDIT_LLM + CREDIT_URL_AUDIT_SITEMAP}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            <strong className="text-foreground">PDF del informe</strong>: una vez guardado el análisis, puedes exportar
+            a PDF por <strong className="text-foreground">{CREDIT_URL_AUDIT_PDF} crédito</strong> adicional (mismo flujo
+            en el panel).
+          </p>
         </section>
 
         <section className="mt-14 space-y-4">

@@ -50,11 +50,13 @@ export function DashboardStripeReturnSync() {
           credits?: number;
         };
         if (creditsOk) {
+          const n = j.credits ?? 0;
+          const plural = n === 1 ? "crédito" : "créditos";
           setBanner({
             kind: "ok",
             text: j.alreadyFulfilled
-              ? "Créditos ya registrados."
-              : `Pago correcto: +${j.credits ?? 0} crédito${(j.credits ?? 0) === 1 ? "" : "s"}.`,
+              ? `Pago confirmado: +${n} ${plural} (ya estaban aplicados en tu cuenta).`
+              : `Pago correcto: +${n} ${plural}.`,
           });
         } else {
           setBanner({ kind: "ok", text: "Suscripción activada. Gracias por confiar en nosotros." });

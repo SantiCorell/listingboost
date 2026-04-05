@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getPublicSiteUrl } from "@/lib/site-url";
+import { BLOG_POSTS } from "@/lib/blog/registry";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getPublicSiteUrl();
@@ -9,6 +10,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "weekly" | "monthly" | "yearly";
   }[] = [
       { path: "", priority: 1, changeFrequency: "weekly" },
+      { path: "/blog", priority: 0.82, changeFrequency: "weekly" },
+      ...BLOG_POSTS.map((p) => ({
+        path: `/blog/${p.slug}` as const,
+        priority: 0.72,
+        changeFrequency: "monthly" as const,
+      })),
       { path: "/producto", priority: 0.95, changeFrequency: "weekly" },
       { path: "/producto/boost-de-ficha", priority: 0.9, changeFrequency: "weekly" },
       { path: "/producto/scan-seo-url", priority: 0.9, changeFrequency: "weekly" },

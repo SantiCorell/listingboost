@@ -31,6 +31,17 @@ export const urlAuditLlmSchema = z.object({
   conversionSuggestions: z.array(z.string()),
   prioritizedActions: z.array(z.string()),
   interlinkingIdeas: z.array(z.string()),
+  /** Plan de consultoría: qué está mal, qué sustituir y cómo implementarlo (PDF + UI). */
+  detailedRecommendations: z
+    .array(
+      z.object({
+        title: z.string(),
+        problem: z.string().optional(),
+        proposedChange: z.string(),
+        howToImplement: z.string(),
+      }),
+    )
+    .optional(),
   gscStyle: urlAuditGscStyleSchema.optional(),
 });
 

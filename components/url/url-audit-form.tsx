@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +32,8 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, LineChart, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { UrlAuditDocLinks } from "@/components/url/url-audit-doc-links";
+import { URL_AUDIT_DOCS } from "@/lib/url-audit/doc-links";
 
 const schema = z.object({
   url: z.string().url(),
@@ -53,19 +56,19 @@ const PRESETS: {
   {
     id: "essential",
     label: "Esencial",
-    desc: `Crawl + puntuación + issues (${CREDIT_URL_AUDIT_BASE} cr). Sin informe largo de IA.`,
+    desc: `Auditoría técnica: crawl, puntuación global y lista de issues priorizados (${CREDIT_URL_AUDIT_BASE} cr). Ideal para validar rápido una URL sin bloque largo de IA.`,
     credits: totalCreditsForUrlAudit(modulesFromPreset("essential")),
   },
   {
     id: "standard",
     label: "Estándar",
-    desc: `Esencial + informe IA completo (title, meta, FAQs, prioridades) (+${CREDIT_URL_AUDIT_LLM} cr).`,
+    desc: `Todo lo esencial + informe redactado con IA: título/meta sugeridos, FAQs orientativas y prioridades de impacto (+${CREDIT_URL_AUDIT_LLM} cr). El equilibrio habitual para fichas y landings.`,
     credits: totalCreditsForUrlAudit(modulesFromPreset("standard")),
   },
   {
     id: "complete",
     label: "Completo",
-    desc: `Estándar + inventario de sitemaps del dominio (+${CREDIT_URL_AUDIT_SITEMAP} cr).`,
+    desc: `Todo lo estándar + inventario de sitemaps detectados en el dominio para contexto de rastreo (+${CREDIT_URL_AUDIT_SITEMAP} cr). Recomendado cuando quieres visión SEO más amplia del sitio.`,
     credits: totalCreditsForUrlAudit(modulesFromPreset("complete")),
   },
 ];
@@ -141,24 +144,50 @@ export function UrlAuditForm() {
       ) : null}
 
       <Card className="border-border/80 shadow-sm">
-        <CardHeader>
-          <CardTitle className="flex flex-wrap items-center gap-2">
-            <LineChart className="h-5 w-5 text-primary" />
-            Scan SEO de URL
-            <Badge variant="secondary" className="font-mono text-xs font-semibold">
-              desde {CREDIT_URL_AUDIT_BASE} créditos
-            </Badge>
-          </CardTitle>
-          <CardDescription>
-            Elige el alcance: <strong>Esencial</strong> solo técnico; <strong>Estándar</strong> añade informe con IA;{" "}
-            <strong>Completo</strong> suma inventario de sitemaps. El PDF del informe cuesta{" "}
-            <strong>1 crédito</strong> aparte (tras el análisis).
-          </CardDescription>
+        <CardHeader className="space-y-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <CardTitle className="flex flex-wrap items-center gap-2">
+                <LineChart className="h-5 w-5 text-primary" />
+                Configurar análisis
+                <Badge variant="secondary" className="font-mono text-xs font-semibold">
+                  desde {CREDIT_URL_AUDIT_BASE} créditos
+                </Badge>
+              </CardTitle>
+              <CardDescription className="mt-2 max-w-2xl text-pretty">
+                Selecciona el <strong className="text-foreground">preset</strong> según profundidad: técnico puro,
+                informe con IA o análisis ampliado con sitemaps. La documentación enlazada abajo te ayuda a decidir sin
+                adivinar.
+              </CardDescription>
+            </div>
+            <div className="shrink-0 rounded-lg border border-border/60 bg-muted/20 px-3 py-2 sm:max-w-[220px]">
+              <UrlAuditDocLinks compact />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-3">
-              <Label className="text-sm font-semibold">Preset</Label>
+              <div>
+                <Label className="text-sm font-semibold">Alcance (preset)</Label>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Tres niveles fijos o personaliza módulos. ¿Dudas? Sigue la{" "}
+                  <Link
+                    href={URL_AUDIT_DOCS.productPresets}
+                    className="font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    guía del producto
+                  </Link>{" "}
+                  o el{" "}
+                  <Link
+                    href={URL_AUDIT_DOCS.blogAuditVsBoost}
+                    className="font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    artículo del blog
+                  </Link>{" "}
+                  sobre cuándo auditar frente a generar contenido nuevo.
+                </p>
+              </div>
               <div className="grid gap-3 sm:grid-cols-3">
                 {PRESETS.map((p) => (
                   <button

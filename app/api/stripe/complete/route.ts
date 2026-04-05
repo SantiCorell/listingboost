@@ -3,6 +3,10 @@ import { getStripe } from "@/services/stripe/client";
 import { syncStripeSubscriptionToDb } from "@/lib/stripe/sync-stripe-subscription";
 import { fulfillCreditsCheckoutOnce } from "@/lib/stripe/fulfill-credits-once";
 import { ensureStripeCustomerRecord } from "@/lib/stripe/ensure-customer-record";
+import {
+  amountFromCheckoutSession,
+  resolveCreditsPurchasedFromCheckoutSession,
+} from "@/lib/stripe/resolve-credits-from-session";
 
 export const runtime = "nodejs";
 
@@ -47,20 +51,26 @@ export async function POST(req: Request) {
     typeof cs.customer === "string" ? cs.customer : cs.customer?.id ?? null;
 
   if (cs.metadata?.checkoutType === "credits") {
-    let credits = parseInt(cs.metadata.credits ?? "0", 10);
-    const q = cs.line_items?.data[0]?.quantity;
-    if (typeof q === "number" && q >= 1) {
-      credits = Math.min(500, q);
+    const credits = resolveCreditsPurchasedFromCheckoutSession(cs);
+    const { amountTotalCents, currency } = amountFromCheckoutSession(cs);
+    if (credits < 1) {
+      return Response.json({ ok: false, reason: "no_credits_in_session" }, { status: 400 });
     }
     const { added } = await fulfillCreditsCheckoutOnce({
       checkoutSessionId: sessionId,
       userId: session.user.id,
       credits,
+      amountTotalCents,
+      currency,
     });
     if (customerId) {
       await ensureStripeCustomerRecord(session.user.id, customerId);
     }
-    return Response.json({ ok: true, credits: added ? credits : 0, alreadyFulfilled: !added });
+    return Response.json({
+      ok: true,
+      credits,
+      alreadyFulfilled: !added,
+    });
   }
 
   if (cs.mode === "subscription" && typeof cs.subscription === "string") {

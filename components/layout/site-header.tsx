@@ -132,6 +132,13 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                   Sitio
                 </p>
                 <Link
+                  href="/blog"
+                  className="rounded-lg px-3 py-2.5 font-medium hover:bg-accent"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Blog
+                </Link>
+                <Link
                   href="/pricing"
                   className="rounded-lg px-3 py-2.5 font-medium hover:bg-accent"
                   onClick={() => setMobileOpen(false)}
@@ -368,6 +375,9 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" asChild>
+            <Link href="/blog">Blog</Link>
+          </Button>
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" asChild>
             <Link href="/pricing">Precios</Link>
           </Button>

@@ -41,6 +41,7 @@ export function LoginForm({
   const params = useSearchParams();
   const callbackUrl = callbackUrlProp ?? params.get("callbackUrl") ?? "/dashboard";
   const justRegistered = params.get("registered") === "1";
+  const passwordResetOk = params.get("reset") === "1";
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const isModal = variant === "modal";
@@ -98,6 +99,11 @@ export function LoginForm({
             Cuenta creada. Entra con email o con Google.
           </p>
         ) : null}
+        {passwordResetOk && !isModal ? (
+          <p className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-3 py-2.5 text-center text-sm text-emerald-900 dark:text-emerald-50">
+            Contraseña actualizada. Entra con tu email y la nueva contraseña.
+          </p>
+        ) : null}
 
         {googleAuthAvailable ? (
           <div className="space-y-2">
@@ -150,6 +156,13 @@ export function LoginForm({
           <Button type="submit" className="h-12 w-full text-base font-semibold" size="lg" disabled={loading}>
             {loading ? <Loader2 className="animate-spin" /> : "Iniciar sesión"}
           </Button>
+          {!isModal ? (
+            <p className="text-center text-sm">
+              <Link href="/forgot-password" className="font-medium text-primary hover:underline">
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </p>
+          ) : null}
           {!isModal ? (
             <p className="text-center text-sm text-muted-foreground">
               ¿No tienes cuenta?{" "}

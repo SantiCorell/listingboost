@@ -94,7 +94,12 @@ export function ProfileForm({ user, hasStripeCustomer }: Props) {
             {user.email ?? "—"}
           </p>
           <p className="text-xs text-muted-foreground">
-            El email de acceso lo gestiona tu proveedor de inicio de sesión; no se puede cambiar aquí.
+            El email no se puede cambiar aquí. Si entras con Google, usa siempre ese botón. Si usas contraseña y la
+            olvidaste:{" "}
+            <Link href="/forgot-password" className="font-medium text-primary hover:underline">
+              recuperar contraseña
+            </Link>
+            .
           </p>
         </div>
 

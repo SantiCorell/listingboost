@@ -5,6 +5,10 @@ import { getStripe } from "@/services/stripe/client";
 import { syncStripeSubscriptionToDb } from "@/lib/stripe/sync-stripe-subscription";
 import { fulfillCreditsCheckoutOnce } from "@/lib/stripe/fulfill-credits-once";
 import { ensureStripeCustomerRecord } from "@/lib/stripe/ensure-customer-record";
+import {
+  amountFromCheckoutSession,
+  resolveCreditsPurchasedFromCheckoutSession,
+} from "@/lib/stripe/resolve-credits-from-session";
 
 export const runtime = "nodejs";
 
@@ -54,23 +58,23 @@ export async function POST(req: Request) {
       if (!userId) break;
 
       if (s.metadata?.checkoutType === "credits") {
-        let credits = parseInt(s.metadata.credits ?? "0", 10);
+        let sessionFull = s;
         try {
-          const expanded = await stripe.checkout.sessions.retrieve(s.id, {
+          sessionFull = await stripe.checkout.sessions.retrieve(s.id, {
             expand: ["line_items"],
           });
-          const q = expanded.line_items?.data[0]?.quantity;
-          if (typeof q === "number" && q >= 1) {
-            credits = Math.min(500, q);
-          }
         } catch (e) {
-          console.error("[stripe webhook] credits line_items", e);
+          console.error("[stripe webhook] retrieve session for credits", e);
         }
+        const credits = resolveCreditsPurchasedFromCheckoutSession(sessionFull);
+        const { amountTotalCents, currency } = amountFromCheckoutSession(sessionFull);
         if (credits > 0) {
           await fulfillCreditsCheckoutOnce({
             checkoutSessionId: s.id,
             userId,
             credits,
+            amountTotalCents,
+            currency,
           });
         }
         const custId =

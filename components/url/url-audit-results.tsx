@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Copy, Download, FileDown, Layers, LineChart, Loader2 } from "lucide-react";
+import { Copy, Download, FileDown, Layers, LineChart, Loader2, ListChecks } from "lucide-react";
 import { chargeUrlAuditPdfExport } from "@/actions/url-audit-pdf";
 import { CREDIT_URL_AUDIT_PDF } from "@/lib/url-audit/credits-config";
 import { downloadUrlAuditPdfClient } from "@/components/url/url-audit-pdf-export";
@@ -318,6 +318,42 @@ export function UrlAuditResults({
 
           {llm ? (
             <>
+              {llm.detailedRecommendations && llm.detailedRecommendations.length > 0 ? (
+                <div className="rounded-xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.06] to-primary/[0.04] p-4">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                    <ListChecks className="h-4 w-4 text-violet-600 dark:text-violet-300" />
+                    Plan de acción detallado
+                  </div>
+                  <p className="mb-4 text-xs text-muted-foreground">
+                    Qué cambiar, qué sustituir y cómo implementarlo (nivel consultoría). Incluido en el PDF.
+                  </p>
+                  <ol className="space-y-4">
+                    {llm.detailedRecommendations.map((d, idx) => (
+                      <li
+                        key={idx}
+                        className="rounded-lg border border-border/60 bg-background/80 p-3 text-sm"
+                      >
+                        <p className="font-semibold text-foreground">{d.title}</p>
+                        {d.problem ? (
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            <span className="font-medium text-foreground/90">Situación: </span>
+                            {d.problem}
+                          </p>
+                        ) : null}
+                        <p className="mt-2 text-foreground/95">
+                          <span className="font-medium text-primary">Propuesta: </span>
+                          {d.proposedChange}
+                        </p>
+                        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                          <span className="font-medium text-foreground">Cómo hacerlo: </span>
+                          {d.howToImplement}
+                        </p>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : null}
+
               <div>
                 <h3 className="mb-2 text-sm font-semibold">Acciones priorizadas</h3>
                 <ol className="list-decimal space-y-2 pl-5 text-sm">

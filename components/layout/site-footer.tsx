@@ -54,6 +54,11 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/blog" className="transition-colors hover:text-foreground">
+                  Blog SEO
+                </Link>
+              </li>
+              <li>
                 <Link href="/contacto" className="transition-colors hover:text-foreground">
                   Contacto
                 </Link>

@@ -1,5 +1,35 @@
 import type { Plan } from "@prisma/client";
 
+/**
+ * Precio unitario en céntimos (EUR) por crédito extra.
+ * Debe coincidir con `unit_amount` del Price de Stripe (npm run stripe:seed:write).
+ * Free: 1,00 €/ud (packs con descuento vía checkout en `lib/credit-packs.ts`). Pro/Pro+/Enterprise bajan.
+ */
+export const EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR: Record<Plan, number> = {
+  FREE: 100,
+  PRO: 70,
+  PRO_PLUS: 50,
+  ENTERPRISE: 50,
+};
+
+/** Formato "1,99" para UI (sin símbolo €). */
+export function formatEurUnitsFromCents(cents: number): string {
+  return (cents / 100).toLocaleString("es-ES", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+export function extraCreditUnitAmountCents(plan: Plan): number {
+  return EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR[plan] ?? EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR.FREE;
+}
+
+/** Total en céntimos para una compra de `quantity` créditos (1–500). */
+export function totalExtraCreditsAmountCents(plan: Plan, quantity: number): number {
+  const q = Math.min(500, Math.max(1, Math.floor(quantity)));
+  return extraCreditUnitAmountCents(plan) * q;
+}
+
 /** Incluidos/mes por plan (calibrado para margen razonable vs coste API típico). */
 export const PLAN_INCLUDED_ANALYSES: Record<Plan, number> = {
   FREE: Number(process.env.FREE_MONTHLY_ANALYSES ?? "5"),
@@ -16,12 +46,12 @@ export function isPaidPlan(plan: Plan): boolean {
   return plan !== "FREE";
 }
 
-/** Precio mostrado (€) por crédito extra según plan actual del usuario. */
+/** Precio mostrado (€) por crédito extra según plan — derivado de EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR. */
 export const EXTRA_CREDIT_PRICE_EUR: Record<Plan, string> = {
-  FREE: "2,00",
-  PRO: "0,70",
-  PRO_PLUS: "0,50",
-  ENTERPRISE: "0,50",
+  FREE: formatEurUnitsFromCents(EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR.FREE),
+  PRO: formatEurUnitsFromCents(EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR.PRO),
+  PRO_PLUS: formatEurUnitsFromCents(EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR.PRO_PLUS),
+  ENTERPRISE: formatEurUnitsFromCents(EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR.ENTERPRISE),
 };
 
 export const PLAN_PRICING_DISPLAY = {

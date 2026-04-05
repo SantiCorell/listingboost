@@ -5,7 +5,10 @@
  *   npm run stripe:seed
  *   npm run stripe:seed:write   → imprime IDs y actualiza STRIPE_PRICE_ID_* en .env.local
  *
- * Montos (EUR): Pro 15/mes, Pro+ 30/mes, Enterprise 100/mes; créditos Free 2,00 / Pro 0,70 / Pro+ 0,50 / Ent. 0,50 €.
+ * Montos (EUR): Pro 15/mes, Pro+ 30/mes, Enterprise 100/mes.
+ * Créditos extra (debe coincidir con lib/plans.ts EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR):
+ *   Free 1,00 · Pro 0,70 · Pro+ 0,50 · Enterprise 0,50 €/crédito.
+ *   Packs con descuento (solo Free) usan price_data en checkout, no estos IDs.
  */
 /* eslint-disable @typescript-eslint/no-require-imports, no-console */
 const fs = require("fs");
@@ -143,22 +146,22 @@ async function main() {
   });
 
   const creditFree = await findOrCreatePrice(stripe, {
-    productName: `ListingBoost — Crédito análisis (Free tier)${s}`,
-    unitAmount: 200,
+    productName: `ListingBoost — Crédito extra (plan Free · 1,00 €/ud)${s}`,
+    unitAmount: 100,
     recurring: false,
   });
   const creditPro = await findOrCreatePrice(stripe, {
-    productName: `ListingBoost — Crédito análisis (Pro)${s}`,
+    productName: `ListingBoost — Crédito extra (plan Pro · 0,70 €/ud)${s}`,
     unitAmount: 70,
     recurring: false,
   });
   const creditProPlus = await findOrCreatePrice(stripe, {
-    productName: `ListingBoost — Crédito análisis (Pro+)${s}`,
+    productName: `ListingBoost — Crédito extra (plan Pro+ · 0,50 €/ud)${s}`,
     unitAmount: 50,
     recurring: false,
   });
   const creditEnterprise = await findOrCreatePrice(stripe, {
-    productName: `ListingBoost — Crédito análisis (Enterprise)${s}`,
+    productName: `ListingBoost — Crédito extra (plan Enterprise · 0,50 €/ud)${s}`,
     unitAmount: 50,
     recurring: false,
   });
