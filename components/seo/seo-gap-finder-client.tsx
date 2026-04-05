@@ -65,7 +65,7 @@ export function SeoGapFinderClient() {
         return;
       }
       if (!r.ok) {
-        setErr(j.error ?? `Error ${r.status}`);
+        setErr(j.error ?? (r.status === 503 ? "Servicio temporalmente no disponible. Inténtalo en unos minutos." : `Error ${r.status}`));
         return;
       }
       if (j.output) {
@@ -112,7 +112,13 @@ export function SeoGapFinderClient() {
               </li>
               <li>
                 Cuesta <strong className="text-foreground">{FEATURE_CREDITS.SEO_GAP_FINDER} créditos</strong> por
-                informe nuevo; la misma consulta en 24 h puede servirse desde caché sin cobrar.
+                análisis nuevo. Si repites la <strong className="text-foreground">misma keyword + dominio + país + idioma</strong>{" "}
+                en menos de 24 h, reutilizamos el resultado <strong className="text-foreground">sin descontar créditos</strong>.
+                Todos los informes quedan <strong className="text-foreground">guardados de forma permanente</strong> en{" "}
+                <Link href="/dashboard/history#seo-gap-informes" className="font-medium text-primary hover:underline">
+                  Historial
+                </Link>
+                .
               </li>
             </ol>
           </AccordionContent>
@@ -186,7 +192,7 @@ export function SeoGapFinderClient() {
             </Button>
             <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
               <Coins className="h-3.5 w-3.5" />
-              Pro+ y Enterprise · caché 24 h
+              Pro+ · mismo estudio en 24 h sin cr · informes permanentes en Historial
             </span>
           </div>
           {err ? (

@@ -362,7 +362,7 @@ model SeoGapReport {
   country     String   @default("es")
   language    String   @default("es")
   creditsUsed Int      @default(0)
-  /** Dedupe de caché 24h por usuario (hash keyword+domain+gl+hl). */
+  /** Dedupe de ahorro de créditos 24h (misma consulta = sin cobrar de nuevo). El informe sigue guardado para siempre. */
   cacheKey    String?
   outputJson  Json
   createdAt   DateTime @default(now())

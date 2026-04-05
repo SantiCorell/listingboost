@@ -2,18 +2,31 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import { formatDate } from "@/lib/utils";
 import { historyTake } from "@/lib/usage";
 import { canOpenSavedStudy } from "@/lib/history-access";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { CreditsUpsellBanner } from "@/components/pricing/credits-upsell-banner";
 import { FREE_HISTORY_LIMIT } from "@/lib/constants";
-import { BarChart3, ChevronRight, LineChart, Lock, ScanSearch } from "lucide-react";
+import { BarChart3, ChevronRight, LineChart, Lock, ScanSearch, Search } from "lucide-react";
 
-export default async function HistoryPage() {
+export default async function HistoryPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
+
+  const sp = await searchParams;
+  const rawQ = sp.q;
+  const q =
+    (typeof rawQ === "string" ? rawQ : Array.isArray(rawQ) ? rawQ[0] : "").trim() ?? "";
+  const qFilter = q.length > 0;
 
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: session.user.id },
@@ -21,19 +34,54 @@ export default async function HistoryPage() {
   const take = historyTake(user.plan, session.user.role, session.user.email);
   const freeListCap = take ?? FREE_HISTORY_LIMIT;
 
+  const mode = "insensitive" as Prisma.QueryMode;
+
+  const productWhere: Prisma.ProductAnalysisWhereInput = {
+    userId: user.id,
+    ...(qFilter ? { descriptionInput: { contains: q, mode } } : {}),
+  };
+  const auditWhere: Prisma.UrlAuditWhereInput = {
+    userId: user.id,
+    ...(qFilter ? { url: { contains: q, mode } } : {}),
+  };
+  const monitoringWhere: Prisma.SeoMonitoringWhereInput = {
+    userId: user.id,
+    ...(qFilter
+      ? {
+          OR: [{ url: { contains: q, mode } }, { keyword: { contains: q, mode } }],
+        }
+      : {}),
+  };
+  const serpInsightWhere: Prisma.SerpCompetitorInsightReportWhereInput = {
+    userId: user.id,
+    ...(qFilter
+      ? {
+          OR: [{ keyword: { contains: q, mode } }, { pageUrl: { contains: q, mode } }],
+        }
+      : {}),
+  };
+  const seoGapWhere: Prisma.SeoGapReportWhereInput = {
+    userId: user.id,
+    ...(qFilter
+      ? {
+          OR: [{ keyword: { contains: q, mode } }, { domain: { contains: q, mode } }],
+        }
+      : {}),
+  };
+
   const [products, audits, monitorings, serpInsightReports, seoGapReports] = await Promise.all([
     prisma.productAnalysis.findMany({
-      where: { userId: user.id },
+      where: productWhere,
       orderBy: { createdAt: "desc" },
       take: take ?? 500,
     }),
     prisma.urlAudit.findMany({
-      where: { userId: user.id },
+      where: auditWhere,
       orderBy: { createdAt: "desc" },
       take: take ?? 500,
     }),
     prisma.seoMonitoring.findMany({
-      where: { userId: user.id },
+      where: monitoringWhere,
       orderBy: { createdAt: "desc" },
       take: 50,
       select: {
@@ -46,7 +94,7 @@ export default async function HistoryPage() {
       },
     }),
     prisma.serpCompetitorInsightReport.findMany({
-      where: { userId: user.id },
+      where: serpInsightWhere,
       orderBy: { createdAt: "desc" },
       take: take ?? 200,
       select: {
@@ -58,7 +106,7 @@ export default async function HistoryPage() {
       },
     }),
     prisma.seoGapReport.findMany({
-      where: { userId: user.id },
+      where: seoGapWhere,
       orderBy: { createdAt: "desc" },
       take: take ?? 200,
       select: {
@@ -93,6 +141,41 @@ export default async function HistoryPage() {
           </Link>
         ) : null}
       </div>
+
+      <div className="flex max-w-2xl flex-col gap-2 sm:flex-row sm:items-center">
+        <form
+          action="/dashboard/history"
+          method="get"
+          className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center"
+          role="search"
+        >
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              name="q"
+              type="search"
+              defaultValue={q}
+              placeholder="Buscar por keyword o URL (boosts, auditorías, SEO Gap, SERP…)"
+              className="pl-9"
+              autoComplete="off"
+              aria-label="Filtrar historial por keyword o URL"
+            />
+          </div>
+          <Button type="submit" variant="secondary" className="shrink-0">
+            Buscar
+          </Button>
+        </form>
+        {qFilter ? (
+          <Button variant="ghost" className="shrink-0" asChild>
+            <Link href="/dashboard/history">Limpiar</Link>
+          </Button>
+        ) : null}
+      </div>
+      {qFilter ? (
+        <p className="text-sm text-muted-foreground">
+          Filtro activo: «{q}». Se aplican a productos, URLs auditadas, SEO Gap, informes SERP y seguimientos.
+        </p>
+      ) : null}
 
       {!canOpen ? (
         <p className="rounded-lg border border-dashed border-primary/30 bg-primary/5 px-4 py-3 text-sm text-muted-foreground">

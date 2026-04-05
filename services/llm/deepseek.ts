@@ -26,6 +26,25 @@ function stripJsonFence(s: string): string {
   return t;
 }
 
+/** Límite superior seguro para deepseek-chat (evita 400 por max_tokens inválido). */
+const MAX_OUTPUT_TOKENS_CAP = 8192;
+
+function clampMaxTokens(requested: number | undefined): number {
+  const n = requested ?? 4096;
+  return Math.min(Math.max(n, 256), MAX_OUTPUT_TOKENS_CAP);
+}
+
+function appendJsonOnlyHint(messages: ChatMessage[]): ChatMessage[] {
+  const hint =
+    "\n\nResponde únicamente con un único objeto JSON válido (sin bloques markdown ni texto antes o después).";
+  const out = [...messages];
+  const last = out[out.length - 1];
+  if (last?.role === "user" && typeof last.content === "string") {
+    out[out.length - 1] = { role: "user", content: last.content + hint };
+  }
+  return out;
+}
+
 export async function deepseekChatJson(params: {
   messages: ChatMessage[];
   userId?: string;
@@ -48,28 +67,42 @@ export async function deepseekChatJson(params: {
   const model = params.model ?? process.env.DEEPSEEK_MODEL ?? DEFAULT_MODEL;
   const timeoutMs = params.timeoutMs ?? 120_000;
   const started = Date.now();
+  const safeMax = clampMaxTokens(params.maxTokens);
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
-  try {
-    const res = await fetch(`${base}/v1/chat/completions`, {
+  async function callApi(jsonMode: boolean, messages: ChatMessage[]): Promise<Response> {
+    const body: Record<string, unknown> = {
+      model,
+      messages,
+      stream: false,
+      max_tokens: safeMax,
+    };
+    if (jsonMode) body.response_format = { type: "json_object" };
+    return fetch(`${base}/v1/chat/completions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
       signal: controller.signal,
-      body: JSON.stringify({
-        model,
-        messages: params.messages,
-        stream: false,
-        response_format: { type: "json_object" },
-        ...(params.maxTokens != null ? { max_tokens: params.maxTokens } : {}),
-      }),
+      body: JSON.stringify(body),
     });
+  }
 
-    const text = await res.text();
+  try {
+    let res = await callApi(true, params.messages);
+    let text = await res.text();
+
+    if (!res.ok && (res.status === 400 || res.status === 422)) {
+      await logApi(params.userId, `${params.operation}:retry_plain`, false, Date.now() - started, {
+        message: `json_mode rejected (${res.status}): ${text.slice(0, 400)}`,
+      });
+      res = await callApi(false, appendJsonOnlyHint(params.messages));
+      text = await res.text();
+    }
+
     let data: DeepSeekResponse;
     try {
       data = JSON.parse(text) as DeepSeekResponse;

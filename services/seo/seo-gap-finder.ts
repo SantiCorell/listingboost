@@ -30,6 +30,29 @@ function toOriginUrl(domain: string): string {
   return `https://${domain.replace(/^www\./, "")}`;
 }
 
+/** Evita prompts enormes que provocan 400 en el proveedor LLM. */
+function shrinkCompetitorBlocks(
+  competitors: {
+    url: string;
+    position: number;
+    title: string;
+    snippet: string;
+    metaTitle: string | null;
+    metaDescription: string | null;
+    h1: string[];
+    h2: string[];
+    topWords: { word: string; count: number }[];
+  }[],
+) {
+  return competitors.map((c) => ({
+    ...c,
+    snippet: c.snippet.slice(0, 300),
+    metaDescription: c.metaDescription ? c.metaDescription.slice(0, 220) : null,
+    h2: c.h2.slice(0, 10),
+    topWords: c.topWords.slice(0, 14),
+  }));
+}
+
 async function crawlSafe(url: string): Promise<
   | {
       ok: true;
@@ -191,14 +214,14 @@ export async function runSeoGapFinder(params: {
     organic: topOrganic,
     relatedSearches: serp.relatedSearches,
     peopleAlsoAsk: serp.peopleAlsoAsk,
-    competitors: competitorBlocks,
+    competitors: shrinkCompetitorBlocks(competitorBlocks),
     userSite,
   });
 
   const llm = await deepseekChatJson({
     userId: params.userId,
     operation: "seo_gap_finder",
-    maxTokens: 10_000,
+    maxTokens: 6144,
     timeoutMs: 180_000,
     messages: [
       { role: "system", content: buildSeoGapFinderSystemPrompt() },

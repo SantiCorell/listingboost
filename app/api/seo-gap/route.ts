@@ -108,7 +108,7 @@ async function handle(req: Request) {
     });
 
     if (!result.ok) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+      return NextResponse.json({ error: result.error }, { status: 503 });
     }
 
     const charged = admin || hasUnlimitedMonthlyCredits(user.plan) ? 0 : COST;
