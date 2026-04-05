@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type PricingPlanFeatureListProps = {
   items: string[];
-  /** En desktop (lg+), abrir la lista al montar. En móvil siempre empieza cerrada para acortar la card. */
+  /** Si true, el acordeón empieza abierto (p. ej. destacar un plan). */
   defaultOpen?: boolean;
   summaryHint?: string;
   className?: string;
@@ -18,20 +18,9 @@ export function PricingPlanFeatureList({
   summaryHint,
   className,
 }: PricingPlanFeatureListProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(defaultOpen);
   const count = items.length;
   const hint = summaryHint ?? `${count} ventajas incluidas`;
-
-  useEffect(() => {
-    if (!defaultOpen || typeof window === "undefined") return;
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const apply = () => {
-      if (mq.matches) setExpanded(true);
-    };
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, [defaultOpen]);
 
   const list = (extraClass: string) => (
     <ul
@@ -50,10 +39,8 @@ export function PricingPlanFeatureList({
   );
 
   return (
-    <div className={cn("min-h-0 flex-1", className)}>
-      <div className="hidden lg:block">{list("")}</div>
-
-      <div className="overflow-hidden rounded-xl border border-border/70 bg-muted/25 lg:hidden">
+    <div className={cn("min-h-0 w-full", className)}>
+      <div className="overflow-hidden rounded-xl border border-border/70 bg-muted/25">
         <button
           type="button"
           className="flex w-full cursor-pointer items-center justify-between gap-2 px-3 py-2.5 text-left text-sm font-semibold text-foreground outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -61,7 +48,7 @@ export function PricingPlanFeatureList({
           onClick={() => setExpanded((v) => !v)}
         >
           <span className="min-w-0">
-            {expanded ? "Ocultar detalle" : "Ver todo lo incluido"}
+            {expanded ? "Ocultar lo incluido" : "Ver lo incluido"}
             <span className="mt-0.5 block text-xs font-normal text-muted-foreground">{hint}</span>
           </span>
           <ChevronDown
@@ -72,7 +59,13 @@ export function PricingPlanFeatureList({
             aria-hidden
           />
         </button>
-        {expanded ? <div className="border-t border-border/60 px-3 pb-3 pt-1">{list("pt-2")}</div> : null}
+        {expanded ? (
+          <div className="border-t border-border/60">
+            <div className="max-h-[min(42vh,260px)] overflow-y-auto overscroll-contain px-3 pb-3 pt-2 sm:max-h-[240px] lg:max-h-[220px]">
+              {list("")}
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

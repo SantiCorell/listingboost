@@ -363,9 +363,9 @@ export default async function PricingPage() {
               </div>
             ) : null}
 
-            <div className="mt-10 grid auto-rows-fr gap-6 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-10 grid items-start gap-6 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
               {/* Free */}
-              <Card className="flex h-full min-h-0 flex-col border-border/80 bg-card/95 shadow-sm">
+              <Card className="flex w-full min-h-0 flex-col border-border/80 bg-card/95 shadow-sm">
                 <CardHeader className="pb-2 max-lg:pb-1.5">
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Free
@@ -379,7 +379,7 @@ export default async function PricingPage() {
                     que los planes de pago. Ideal si publicas poco o quieres validar antes de invertir un euro.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 max-lg:gap-2 lg:gap-4">
+                <CardContent className="flex min-h-0 flex-col gap-3 max-lg:gap-2 lg:gap-4">
                   <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
                     {!session?.user ? (
                       <div className="flex flex-col justify-end gap-2">
@@ -431,13 +431,13 @@ export default async function PricingPage() {
                     notan el coste en horas, no solo en euros.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 max-lg:gap-2 lg:gap-4">
+                <CardContent className="flex min-h-0 flex-col gap-3 max-lg:gap-2 lg:gap-4">
                   <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
                     {session?.user ? (
                       <div>
                         {commerceEnabled ? (
                           <CheckoutPlanButton plan="PRO" className="shadow-md">
-                            Pasar a Pro — pagar con Stripe
+                            Contratar Pro
                           </CheckoutPlanButton>
                         ) : (
                           <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
@@ -458,7 +458,7 @@ export default async function PricingPage() {
                             <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
                               <Link href="/login?callbackUrl=/pricing">
                                 Iniciar sesión
-                                <span className="block w-full text-[0.85em] font-normal opacity-90">y pagar con Stripe</span>
+                                <span className="block w-full text-[0.85em] font-normal opacity-90">y contratar</span>
                               </Link>
                             </Button>
                           </>
@@ -475,10 +475,9 @@ export default async function PricingPage() {
                       </div>
                     )}
                   </div>
-                  <div className="order-2 min-h-0 flex-1 lg:order-1">
+                  <div className="order-2 min-h-0 lg:order-1">
                     <PricingPlanFeatureList
                       items={proPlanBullets}
-                      defaultOpen
                       summaryHint="Historial completo + SEO Engine + PDFs"
                     />
                   </div>
@@ -486,7 +485,7 @@ export default async function PricingPage() {
               </Card>
 
               {/* Pro+ */}
-              <Card className="flex h-full min-h-0 flex-col border-primary/30 bg-card/95 shadow-lg">
+              <Card className="flex w-full min-h-0 flex-col border-primary/30 bg-card/95 shadow-lg">
                 <CardHeader className="pb-2 max-lg:pb-1.5">
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Pro+
@@ -502,13 +501,13 @@ export default async function PricingPage() {
                     quedarse sin aire a mitad de mes.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-3 max-lg:gap-2 lg:gap-4">
+                <CardContent className="flex min-h-0 flex-col gap-3 max-lg:gap-2 lg:gap-4">
                   <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
                     {session?.user ? (
                       <div>
                         {commerceEnabled ? (
                           <CheckoutPlanButton plan="PRO_PLUS" variant="default">
-                            Contratar Pro+ ahora
+                            Contratar Pro+
                           </CheckoutPlanButton>
                         ) : (
                           <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`} size="lg">
@@ -547,7 +546,7 @@ export default async function PricingPage() {
                       </div>
                     )}
                   </div>
-                  <div className="order-2 min-h-0 flex-1 lg:order-1">
+                  <div className="order-2 min-h-0 lg:order-1">
                     <PricingPlanFeatureList
                       items={proPlusPlanBullets}
                       summaryHint="Más cupo + PDF comparativa incluido"
@@ -557,7 +556,7 @@ export default async function PricingPage() {
               </Card>
 
               {/* Enterprise */}
-              <Card className="relative flex h-full min-h-0 flex-col overflow-hidden border-2 border-violet-500/35 bg-gradient-to-b from-violet-500/[0.08] via-muted/20 to-card shadow-xl shadow-violet-500/10">
+              <Card className="relative flex w-full min-h-0 flex-col overflow-hidden border-2 border-violet-500/35 bg-gradient-to-b from-violet-500/[0.08] via-muted/20 to-card shadow-xl shadow-violet-500/10">
                 <div className="pointer-events-none absolute -right-16 top-0 h-32 w-32 rounded-full bg-violet-500/20 blur-2xl" />
                 <CardHeader className="relative pb-2 max-lg:pb-1.5">
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
@@ -569,18 +568,18 @@ export default async function PricingPage() {
                   </CardTitle>
                   <CardDescription className="text-pretty text-sm leading-relaxed break-words max-lg:text-[13px] max-lg:leading-snug sm:text-base">
                     Para <strong className="text-foreground">equipos y tiendas que viven del catálogo</strong>: un solo
-                    precio fijo online (<strong className="text-foreground">100 €/mes</strong> en Stripe) y{" "}
+                    precio fijo online (<strong className="text-foreground">100 €/mes</strong>) y{" "}
                     <strong className="text-foreground">cupo ilimitado de créditos</strong> para todo lo que importa en
                     venta — boosts, scans, SEO Engine, informes SERP premium y PDFs — sin estar pendiente del contador
                     cada vez que lanzas campaña o subes 200 SKUs.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="relative mt-auto flex min-h-0 flex-1 flex-col gap-3 max-lg:gap-2 lg:gap-4">
+                <CardContent className="relative flex min-h-0 flex-col gap-3 max-lg:gap-2 lg:gap-4">
                   <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
                     <div className="flex flex-col justify-end gap-2">
                       {session?.user && enterpriseStripeReady && commerceEnabled ? (
                         <CheckoutPlanButton plan="ENTERPRISE" className="shadow-md">
-                          Contratar Enterprise — 100 €/mes
+                          Contratar Enterprise
                         </CheckoutPlanButton>
                       ) : session?.user && enterpriseStripeReady && !commerceEnabled ? (
                         <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`}>
@@ -597,7 +596,7 @@ export default async function PricingPage() {
                           <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
                             <Link href="/login?callbackUrl=/pricing">
                               Iniciar sesión
-                              <span className="block w-full text-[0.85em] font-normal opacity-90">y pagar con Stripe</span>
+                              <span className="block w-full text-[0.85em] font-normal opacity-90">y contratar</span>
                             </Link>
                           </Button>
                         </>
@@ -611,7 +610,7 @@ export default async function PricingPage() {
                       </Button>
                     </div>
                   </div>
-                  <div className="order-2 min-h-0 flex-1 lg:order-1">
+                  <div className="order-2 min-h-0 lg:order-1">
                     <PricingPlanFeatureList
                       items={enterprisePlanBullets}
                       summaryHint="Cupo ilimitado + SERP premium sin cupo"
