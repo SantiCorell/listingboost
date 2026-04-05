@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { APP_NAME, APP_TAGLINE, ENGINE_NAME } from "@/lib/constants";
 import { BrandLogoLink } from "@/components/brand/brand-logo-link";
+import { CookieSettingsLink } from "@/components/legal/cookie-settings-link";
 import { getPublicContactEmail } from "@/lib/contact";
 import { Separator } from "@/components/ui/separator";
 
@@ -81,8 +82,11 @@ export function SiteFooter() {
       </li>
       <li>
         <Link href="/cookies" className="transition-colors hover:text-foreground">
-          Cookies
+          Política de cookies
         </Link>
+      </li>
+      <li>
+        <CookieSettingsLink className="block w-full text-left transition-colors hover:text-foreground" />
       </li>
     </ul>
   );
@@ -248,6 +252,7 @@ export function SiteFooter() {
             <Link href="/cookies" className="transition-colors hover:text-foreground">
               Cookies
             </Link>
+            <CookieSettingsLink className="text-muted-foreground transition-colors hover:text-foreground" />
           </div>
         </div>
       </div>

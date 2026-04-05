@@ -88,7 +88,15 @@ export default function TerminosPage() {
         terceros (marketplaces, redes sociales, etc.).
       </p>
 
-      <h2>7. Limitación de responsabilidad</h2>
+      <h2>7. Privacidad, cookies y comunicaciones</h2>
+      <p>
+        El tratamiento de tus datos personales se rige por la <Link href="/privacidad">política de privacidad</Link>. El
+        uso de cookies y tecnologías similares se describe en la <Link href="/cookies">política de cookies</Link>,
+        incluido el mecanismo de consentimiento (banner y panel de preferencias). Al usar el Servicio tras dicho
+        mecanismo, confirmas haber sido informado y, en su caso, haber consentido conforme a la normativa aplicable.
+      </p>
+
+      <h2>8. Limitación de responsabilidad</h2>
       <p>
         En la máxima medida permitida por la ley aplicable, el Titular no será responsable de daños indirectos, lucro
         cesante, pérdida de datos o interrupciones del Servicio. La responsabilidad total acumulada por el Titular en
@@ -96,21 +104,21 @@ export default function TerminosPage() {
         el Servicio en los doce meses anteriores al hecho causante, salvo en casos de dolo o negligencia grave.
       </p>
 
-      <h2>8. Duración y baja</h2>
+      <h2>9. Duración y baja</h2>
       <p>
         Puedes dejar de usar el Servicio en cualquier momento. Las suscripciones activas se rigen por las condiciones de
         facturación de Stripe y por lo acordado en el checkout. La baja puede no suponer reembolso de periodos ya
         iniciados, salvo derecho legal imperativo.
       </p>
 
-      <h2>9. Legislación y jurisdicción</h2>
+      <h2>10. Legislación y jurisdicción</h2>
       <p>
         Estos términos se rigen por la legislación de <strong>España</strong>. Para consumidores residentes en la UE se
         respetan los derechos imperativos que les correspondan. Para la resolución de controversias, los tribunales del
         domicilio del consumidor o los que correspondan según normativa aplicable podrán resultar competentes.
       </p>
 
-      <h2>10. Contacto</h2>
+      <h2>11. Contacto</h2>
       <p>
         Para consultas sobre estos términos: <a href={`mailto:${email}`}>{email}</a>. Sitio web:{" "}
         <Link href="/">{url}</Link>.

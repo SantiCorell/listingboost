@@ -6,6 +6,7 @@ import { PageViewTracker } from "@/components/analytics/page-view-tracker";
 import { JobNotificationsProvider } from "@/components/jobs/job-notifications-provider";
 import { CookieConsentProvider } from "@/components/legal/cookie-consent-context";
 import { CookieConsentBanner } from "@/components/legal/cookie-consent-banner";
+import { CookiePreferencesSheet } from "@/components/legal/cookie-preferences-sheet";
 
 export function AppProviders({
   children,
@@ -24,6 +25,7 @@ export function AppProviders({
         <PageViewTracker />
         <JobNotificationsProvider />
         {children}
+        <CookiePreferencesSheet />
         <CookieConsentBanner />
       </CookieConsentProvider>
     </SessionProvider>

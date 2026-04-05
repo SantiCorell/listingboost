@@ -103,6 +103,11 @@ export default function PrivacidadPage() {
         <a href={`mailto:${email}`}>{email}</a>, acreditando tu identidad. También puedes reclamar ante la{" "}
         <strong>Agencia Española de Protección de Datos (AEPD)</strong> (<a href="https://www.aepd.es">www.aepd.es</a>).
       </p>
+      <p>
+        Para las cookies y el almacenamiento no estrictamente necesarios, puedes gestionar tu decisión en cualquier
+        momento desde el enlace «Configurar cookies» en el pie del sitio o desde la{" "}
+        <Link href="/cookies">política de cookies</Link>, además de los controles de tu navegador.
+      </p>
 
       <h2>6. Menores</h2>
       <p>

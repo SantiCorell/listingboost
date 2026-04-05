@@ -9,22 +9,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-
-const STORAGE_KEY = "lb_cookie_consent_v1";
-
-type StoredConsent = { v: 1; analytics: boolean; at: string };
-
-function readStored(): boolean | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const j = JSON.parse(raw) as StoredConsent;
-    return j.analytics === true;
-  } catch {
-    return null;
-  }
-}
+import {
+  LB_COOKIE_CONSENT_KEY,
+  type StoredCookieConsent,
+  readAnalyticsChoiceFromStorage,
+} from "@/lib/legal/cookie-consent-storage";
 
 type CookieConsentContextValue = {
   /** Hydration + lectura de localStorage completada */
@@ -34,6 +23,13 @@ type CookieConsentContextValue = {
   analyticsAllowed: boolean;
   acceptAll: () => void;
   acceptNecessaryOnly: () => void;
+  preferencesOpen: boolean;
+  openPreferences: () => void;
+  closePreferences: () => void;
+  /** Persiste elección y cierra el panel. */
+  savePreferences: (allowAnalytics: boolean) => void;
+  /** Borra la decisión: vuelve el banner y revoca analíticas. */
+  resetConsent: () => void;
 };
 
 const CookieConsentContext = createContext<CookieConsentContextValue | null>(null);
@@ -41,19 +37,20 @@ const CookieConsentContext = createContext<CookieConsentContextValue | null>(nul
 export function CookieConsentProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const [analyticsChoice, setAnalyticsChoice] = useState<boolean | null>(null);
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
 
   useEffect(() => {
-    setAnalyticsChoice(readStored());
+    setAnalyticsChoice(readAnalyticsChoiceFromStorage());
     setReady(true);
   }, []);
 
   const persist = useCallback((allowAnalytics: boolean) => {
-    const payload: StoredConsent = {
+    const payload: StoredCookieConsent = {
       v: 1,
       analytics: allowAnalytics,
       at: new Date().toISOString(),
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    localStorage.setItem(LB_COOKIE_CONSENT_KEY, JSON.stringify(payload));
     if (!allowAnalytics) {
       try {
         localStorage.removeItem("lb_vid");
@@ -65,15 +62,56 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
     window.dispatchEvent(new CustomEvent("lb-consent-changed"));
   }, []);
 
+  const acceptAll = useCallback(() => persist(true), [persist]);
+  const acceptNecessaryOnly = useCallback(() => persist(false), [persist]);
+
+  const openPreferences = useCallback(() => setPreferencesOpen(true), []);
+  const closePreferences = useCallback(() => setPreferencesOpen(false), []);
+
+  const savePreferences = useCallback(
+    (allowAnalytics: boolean) => {
+      persist(allowAnalytics);
+      setPreferencesOpen(false);
+    },
+    [persist],
+  );
+
+  const resetConsent = useCallback(() => {
+    try {
+      localStorage.removeItem(LB_COOKIE_CONSENT_KEY);
+      localStorage.removeItem("lb_vid");
+    } catch {
+      /* ignore */
+    }
+    setAnalyticsChoice(null);
+    setPreferencesOpen(false);
+    window.dispatchEvent(new CustomEvent("lb-consent-changed"));
+  }, []);
+
   const value = useMemo<CookieConsentContextValue>(
     () => ({
       ready,
       analyticsChoice,
       analyticsAllowed: analyticsChoice === true,
-      acceptAll: () => persist(true),
-      acceptNecessaryOnly: () => persist(false),
+      acceptAll,
+      acceptNecessaryOnly,
+      preferencesOpen,
+      openPreferences,
+      closePreferences,
+      savePreferences,
+      resetConsent,
     }),
-    [ready, analyticsChoice, persist],
+    [
+      ready,
+      analyticsChoice,
+      acceptAll,
+      acceptNecessaryOnly,
+      preferencesOpen,
+      openPreferences,
+      closePreferences,
+      savePreferences,
+      resetConsent,
+    ],
   );
 
   return <CookieConsentContext.Provider value={value}>{children}</CookieConsentContext.Provider>;
