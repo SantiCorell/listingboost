@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductLandingFaq } from "@/components/producto/product-landing-faq";
 import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo-jsonld";
-import { ArrowRight, Building2, Hash, LineChart, PackageSearch, Zap } from "lucide-react";
+import { ArrowRight, Building2, Hash, LineChart, PackageSearch, Sparkles, Zap } from "lucide-react";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
   title: "Producto — motor propietario para listings",
-  description: `${APP_NAME}: motor ${ENGINE_NAME} con tono, hashtags, estructura y reglas por canal. Boost multicanal, auditoría SEO de URL y hashtags Instagram/TikTok. Empieza gratis.`,
+  description: `${APP_NAME}: motor ${ENGINE_NAME} con tono, hashtags, estructura y reglas por canal. Boost multicanal, auditoría SEO de URL, SEO Engine (contenido, blog, competidor, monitor) y hashtags. Empieza gratis.`,
   keywords: [
     "ListingBoost producto",
     "motor propietario listings",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: `Producto · ${APP_NAME}`,
-    description: `Tres pilares: boost multicanal, scan URL y hashtags. Infra pensada para escalar catálogo.`,
+    description: `Boost multicanal, scan URL, SEO Engine, hashtags e inmobiliarias. Infra pensada para escalar catálogo.`,
     url: `${siteUrl}/producto`,
   },
   alternates: { canonical: `${siteUrl}/producto` },
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: `¿Qué incluye el producto ${APP_NAME}?`,
-    a: `Incluye tres bloques: generación y optimización de fichas para distintos marketplaces y tiendas (boost multicanal), análisis técnico de páginas públicas con puntuación y prioridades (scan SEO de URL), y generación de hashtags listos para copiar en redes sociales. Todo apoyado en ${ENGINE_NAME}, nuestro motor propietario.`,
+    a: `Incluye: generación y optimización de fichas multicanal (boost), análisis técnico de URLs públicas con puntuación y prioridades (scan SEO de URL), el SEO Engine con generación/optimización de contenidos, blog, comparativa con competidor y monitor de posiciones según plan, más hashtags listos para redes. Todo apoyado en ${ENGINE_NAME}, nuestro motor propietario.`,
   },
   {
     q: "¿Puedo usar solo una de las funciones?",
@@ -59,6 +59,12 @@ const cards = [
     icon: LineChart,
     title: "Scan SEO de URL",
     desc: "Pega la URL pública de una ficha, categoría o blog: metadatos, headings, imágenes, enlaces internos y quick wins priorizados.",
+  },
+  {
+    href: "/producto/seo-engine",
+    icon: Sparkles,
+    title: "SEO Engine",
+    desc: "Contenido, blog, comparativa con competidor y monitor de SERP en un solo flujo; créditos unificados con el resto de la plataforma.",
   },
   {
     href: "/producto/hashtags-redes",
@@ -145,7 +151,7 @@ export default function ProductoHubPage() {
               <h2 className="text-xl font-bold">Por qué separar “producto” en páginas claras</h2>
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
                 Documentar cada módulo en su propia URL mejora la claridad para buscadores y para IA que citan
-                fuentes: cada página tiene un propósito único (boost, URL o hashtags), títulos específicos y FAQs
+                fuentes: cada página tiene un propósito único (boost, URL, SEO Engine, hashtags…), títulos específicos y FAQs
                 alineadas. Así reducimos ambigüedad y ayudamos a que te encuentren quienes buscan exactamente esa
                 solución.
               </p>

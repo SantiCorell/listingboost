@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import type { Plan } from "@prisma/client";
@@ -24,7 +24,6 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
-  User,
   ChevronDown,
   Crown,
   Sparkles,
@@ -35,8 +34,56 @@ import {
   Mail,
   Shield,
   Coins,
+  LayoutGrid,
+  Building2,
+  SearchCheck,
 } from "lucide-react";
 import { AuthModal } from "@/components/auth/auth-modal";
+
+/** Guías públicas (mismo orden en dropdown y menú móvil). */
+const PRODUCT_GUIDES: {
+  href: string;
+  label: string;
+  sub: string;
+  Icon: ComponentType<{ className?: string }>;
+}[] = [
+  {
+    href: "/producto",
+    label: "Centro de producto",
+    sub: "Mapa: boost, scan, SEO Engine, hashtags e inmobiliarias",
+    Icon: LayoutGrid,
+  },
+  {
+    href: "/producto/boost-de-ficha",
+    label: "Boost de ficha",
+    sub: "Wallapop, eBay, Shopify, ecommerce",
+    Icon: PackageSearch,
+  },
+  {
+    href: "/producto/scan-seo-url",
+    label: "Scan SEO de URL",
+    sub: "Auditoría on-page y quick wins",
+    Icon: LineChart,
+  },
+  {
+    href: "/producto/seo-engine",
+    label: "SEO Engine",
+    sub: "Contenido, blog, competidor, monitor",
+    Icon: Sparkles,
+  },
+  {
+    href: "/producto/hashtags-redes",
+    label: "Hashtags para redes",
+    sub: "Instagram, TikTok, Shorts",
+    Icon: Hash,
+  },
+  {
+    href: "/producto/inmobiliarias",
+    label: "Inmobiliarias",
+    sub: "Portales y web propia",
+    Icon: Building2,
+  },
+];
 
 function initials(name: string | null | undefined, email: string | null | undefined) {
   if (name?.trim()) {
@@ -97,36 +144,32 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                 <SheetTitle className="text-base">Navegación</SheetTitle>
               </SheetHeader>
               <nav className="mt-6 flex flex-col gap-1 text-sm" aria-label="Principal">
-                <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Producto
+                <p className="px-3 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Guías y módulos
                 </p>
+                <p className="px-3 pb-2 text-[11px] leading-snug text-muted-foreground/90">
+                  Páginas públicas: qué hace cada parte del producto antes de entrar al panel.
+                </p>
+                {PRODUCT_GUIDES.map(({ href, label, sub, Icon }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="rounded-lg px-3 py-2.5 hover:bg-accent"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <span className="flex items-center gap-2 font-medium">
+                      <Icon className="h-4 w-4 shrink-0 text-primary" />
+                      {label}
+                    </span>
+                    <span className="mt-0.5 block pl-6 text-xs font-normal text-muted-foreground">{sub}</span>
+                  </Link>
+                ))}
                 <Link
-                  href="/producto"
-                  className="rounded-lg px-3 py-2.5 font-medium hover:bg-accent"
+                  href="/#features"
+                  className="mt-1 rounded-lg px-3 py-2.5 text-muted-foreground hover:bg-accent hover:text-foreground"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Centro de producto
-                </Link>
-                <Link
-                  href="/producto/boost-de-ficha"
-                  className="rounded-lg px-3 py-2.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Boost de ficha
-                </Link>
-                <Link
-                  href="/producto/scan-seo-url"
-                  className="rounded-lg px-3 py-2.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Scan SEO de URL
-                </Link>
-                <Link
-                  href="/producto/hashtags-redes"
-                  className="rounded-lg px-3 py-2.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Hashtags redes
+                  Cómo funciona (home)
                 </Link>
                 <p className="mt-4 px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Sitio
@@ -185,6 +228,13 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                       onClick={() => setMobileOpen(false)}
                     >
                       Scan URL (panel)
+                    </Link>
+                    <Link
+                      href="/dashboard/seo-engine"
+                      className="rounded-lg px-3 py-2.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      SEO Engine (panel)
                     </Link>
                     {session.user.isAdmin ? (
                       <p className="rounded-lg px-3 py-2.5 text-sm font-medium text-amber-800 dark:text-amber-200">
@@ -277,69 +327,36 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
             <DropdownMenuContent
               align="start"
               sideOffset={6}
-              className="z-[200] w-[min(100vw-2rem,20rem)] p-0 shadow-xl"
+              className="z-[200] max-h-[min(85vh,32rem)] w-[min(100vw-2rem,22rem)] overflow-y-auto p-0 shadow-xl"
             >
               <div className="border-b border-border/70 bg-gradient-to-r from-primary/10 via-transparent to-accent/10 px-3 py-2.5">
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">Producto</p>
-                <p className="text-xs text-muted-foreground">Guías, SEO y FAQ por módulo</p>
+                <p className="text-xs text-muted-foreground">
+                  Guías públicas por módulo y atajos a tu panel (si has iniciado sesión)
+                </p>
               </div>
               <div className="p-1.5">
-                <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
-                  <Link
-                    href="/producto"
-                    className="flex w-full flex-col gap-0.5 rounded-md px-2 py-2.5 hover:bg-accent"
+                <DropdownMenuLabel className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Guías en la web
+                </DropdownMenuLabel>
+                {PRODUCT_GUIDES.map(({ href, label, sub, Icon }) => (
+                  <DropdownMenuItem
+                    key={href}
+                    asChild
+                    className="cursor-pointer rounded-lg p-0 focus:bg-transparent"
                   >
-                    <span className="flex items-center gap-2 text-sm font-semibold">
-                      <Sparkles className="h-4 w-4 shrink-0 text-primary" />
-                      Centro de producto
-                    </span>
-                    <span className="pl-6 text-xs font-normal text-muted-foreground">
-                      Mapa completo: boost, URL, hashtags
-                    </span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
-                  <Link
-                    href="/producto/boost-de-ficha"
-                    className="flex w-full flex-col gap-0.5 rounded-md px-2 py-2.5 hover:bg-accent"
-                  >
-                    <span className="flex items-center gap-2 text-sm font-semibold">
-                      <PackageSearch className="h-4 w-4 shrink-0 text-primary" />
-                      Boost de ficha
-                    </span>
-                    <span className="pl-6 text-xs font-normal text-muted-foreground">
-                      Wallapop, eBay, Shopify, ecommerce
-                    </span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
-                  <Link
-                    href="/producto/scan-seo-url"
-                    className="flex w-full flex-col gap-0.5 rounded-md px-2 py-2.5 hover:bg-accent"
-                  >
-                    <span className="flex items-center gap-2 text-sm font-semibold">
-                      <LineChart className="h-4 w-4 shrink-0 text-primary" />
-                      Scan SEO de URL
-                    </span>
-                    <span className="pl-6 text-xs font-normal text-muted-foreground">
-                      Auditoría on-page y quick wins
-                    </span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
-                  <Link
-                    href="/producto/hashtags-redes"
-                    className="flex w-full flex-col gap-0.5 rounded-md px-2 py-2.5 hover:bg-accent"
-                  >
-                    <span className="flex items-center gap-2 text-sm font-semibold">
-                      <Hash className="h-4 w-4 shrink-0 text-primary" />
-                      Hashtags para redes
-                    </span>
-                    <span className="pl-6 text-xs font-normal text-muted-foreground">
-                      Instagram, TikTok, Shorts
-                    </span>
-                  </Link>
-                </DropdownMenuItem>
+                    <Link
+                      href={href}
+                      className="flex w-full flex-col gap-0.5 rounded-md px-2 py-2.5 hover:bg-accent"
+                    >
+                      <span className="flex items-center gap-2 text-sm font-semibold">
+                        <Icon className="h-4 w-4 shrink-0 text-primary" />
+                        {label}
+                      </span>
+                      <span className="pl-6 text-xs font-normal text-muted-foreground">{sub}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
                 <DropdownMenuSeparator className="my-1.5" />
                 <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
                   <Link href="/#features" className="block rounded-md px-2 py-2 text-sm hover:bg-accent">
@@ -349,16 +366,25 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                 {session?.user ? (
                   <>
                     <DropdownMenuSeparator className="my-1.5" />
-                    <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                      Tu cuenta
+                    <DropdownMenuLabel className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      Tu cuenta · panel
                     </DropdownMenuLabel>
+                    <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
+                      <Link
+                        href="/dashboard"
+                        className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent"
+                      >
+                        <LayoutDashboard className="h-4 w-4 text-primary" />
+                        Ir al panel (resumen)
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
                       <Link
                         href="/dashboard/product"
                         className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent"
                       >
-                        <User className="h-4 w-4 text-primary" />
-                        Ir a boost (panel)
+                        <PackageSearch className="h-4 w-4 text-primary" />
+                        Ir a Boost (panel)
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
@@ -366,8 +392,17 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                         href="/dashboard/audit"
                         className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent"
                       >
-                        <LineChart className="h-4 w-4 text-primary" />
-                        Ir a scan (panel)
+                        <SearchCheck className="h-4 w-4 text-primary" />
+                        Ir a Scan URL (panel)
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
+                      <Link
+                        href="/dashboard/seo-engine"
+                        className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent"
+                      >
+                        <Sparkles className="h-4 w-4 text-primary" />
+                        Ir a SEO Engine (panel)
                       </Link>
                     </DropdownMenuItem>
                   </>
@@ -495,8 +530,20 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard/product" className="cursor-pointer">
-                      <User className="h-4 w-4" />
+                      <PackageSearch className="h-4 w-4" />
                       Boost de ficha
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/audit" className="cursor-pointer">
+                      <SearchCheck className="h-4 w-4" />
+                      Scan URL
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/seo-engine" className="cursor-pointer">
+                      <Sparkles className="h-4 w-4" />
+                      SEO Engine
                     </Link>
                   </DropdownMenuItem>
                   {commerceEnabled && !isAdminUser ? (

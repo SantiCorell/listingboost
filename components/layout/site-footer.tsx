@@ -22,6 +22,7 @@ export function SiteFooter() {
 
           <div className="lg:col-span-2">
             <p className="text-xs font-semibold uppercase tracking-wider text-foreground">Producto</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">Guías públicas por módulo</p>
             <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
               <li>
                 <Link href="/producto" className="transition-colors hover:text-foreground">
@@ -36,6 +37,11 @@ export function SiteFooter() {
               <li>
                 <Link href="/producto/scan-seo-url" className="transition-colors hover:text-foreground">
                   Scan SEO de URL
+                </Link>
+              </li>
+              <li>
+                <Link href="/producto/seo-engine" className="transition-colors hover:text-foreground">
+                  SEO Engine (guía)
                 </Link>
               </li>
               <li>
@@ -94,6 +100,7 @@ export function SiteFooter() {
 
           <div className="lg:col-span-2">
             <p className="text-xs font-semibold uppercase tracking-wider text-foreground">Plataforma</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">Accesos al panel (requiere cuenta)</p>
             <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
               <li>
                 <Link href="/dashboard" className="transition-colors hover:text-foreground">
@@ -108,6 +115,11 @@ export function SiteFooter() {
               <li>
                 <Link href="/dashboard/audit" className="transition-colors hover:text-foreground">
                   Scan URL
+                </Link>
+              </li>
+              <li>
+                <Link href="/dashboard/seo-engine" className="transition-colors hover:text-foreground">
+                  SEO Engine
                 </Link>
               </li>
               <li>
