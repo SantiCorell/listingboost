@@ -5,17 +5,9 @@ import { prisma } from "@/lib/prisma";
 import { userIsAdmin } from "@/lib/auth/admin";
 import { hasSeoGapFinder } from "@/lib/plan-features";
 import { parseSeoGapOutput } from "@/lib/seo-gap-output";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { SeoGapIntentChart, SeoGapLevelChart, SeoGapScoreBars } from "@/components/seo/seo-gap-charts";
+import { SeoGapReportBody } from "@/components/seo/seo-gap-report-body";
 import { ArrowLeft } from "lucide-react";
-
-const LEVEL_BADGE: Record<string, string> = {
-  alta: "border-emerald-500/40 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100",
-  media: "border-amber-500/40 bg-amber-500/10 text-amber-950 dark:text-amber-100",
-  baja: "border-border bg-muted/50 text-muted-foreground",
-};
 
 export default async function SeoGapReportPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -53,65 +45,10 @@ export default async function SeoGapReportPage({ params }: { params: Promise<{ i
           <span className="font-medium text-foreground">{report.keyword}</span>
           {report.domain ? ` · ${report.domain}` : ""} · {report.country}/{report.language}
         </p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {new Date(report.createdAt).toLocaleString()}
-        </p>
+        <p className="mt-1 text-xs text-muted-foreground">{new Date(report.createdAt).toLocaleString()}</p>
       </div>
 
-      <Card className="border-violet-200/50 bg-violet-500/[0.04] dark:border-violet-500/20 dark:bg-violet-950/20">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base">Resumen ejecutivo</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
-            {parsed.executiveSummary}
-          </p>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-4 lg:grid-cols-3">
-        <SeoGapIntentChart opportunities={parsed.opportunities} />
-        <SeoGapLevelChart opportunities={parsed.opportunities} />
-        <div className="lg:col-span-1">
-          <SeoGapScoreBars opportunities={parsed.opportunities} />
-        </div>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Oportunidades</CardTitle>
-          <CardDescription>Prioridad por score.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {parsed.opportunities.map((o, i) => (
-            <div
-              key={`${o.keyword}-${i}`}
-              className="rounded-xl border border-border/70 bg-muted/10 p-4 shadow-sm"
-            >
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div>
-                  <p className="font-semibold">{o.keyword}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {o.cluster} · <span className="capitalize">{o.type}</span> · {o.score}
-                  </p>
-                </div>
-                <Badge className={LEVEL_BADGE[o.opportunityLevel] ?? ""}>{o.opportunityLevel}</Badge>
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground">{o.action}</p>
-              <p className="mt-2 text-sm">
-                <span className="text-muted-foreground">Título:</span>{" "}
-                <strong>{o.title}</strong>
-              </p>
-              <p className="mt-1 font-mono text-xs text-primary">{o.url}</p>
-              <Button asChild size="sm" className="mt-3">
-                <Link href={`/dashboard/seo-engine?tab=content&kw=${encodeURIComponent(o.keyword)}`}>
-                  Generar página
-                </Link>
-              </Button>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+      <SeoGapReportBody data={parsed} />
     </div>
   );
 }

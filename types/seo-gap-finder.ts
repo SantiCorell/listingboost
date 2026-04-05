@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-export const seoGapOpportunitySchema = z.object({
+export const seoGapDemandTierSchema = z.enum(["alto", "medio", "bajo", "nicho"]);
+export type SeoGapDemandTier = z.infer<typeof seoGapDemandTierSchema>;
+
+const seoGapOpportunityInputSchema = z.object({
   keyword: z.string(),
   type: z.enum(["informacional", "transaccional", "navegacional"]),
   cluster: z.string(),
@@ -9,7 +12,14 @@ export const seoGapOpportunitySchema = z.object({
   action: z.string(),
   title: z.string(),
   url: z.string(),
+  /** Estimación de volumen / long-tail (inferida por el modelo desde la SERP). */
+  demandTier: seoGapDemandTierSchema.optional(),
 });
+
+export const seoGapOpportunitySchema = seoGapOpportunityInputSchema.transform((o) => ({
+  ...o,
+  demandTier: o.demandTier ?? ("medio" as SeoGapDemandTier),
+}));
 
 export const seoGapLlmOutputSchema = z.object({
   executiveSummary: z.string(),
@@ -33,3 +43,7 @@ export type SeoGapFinderMeta = {
 };
 
 export type SeoGapFinderResult = SeoGapLlmOutput & { meta: SeoGapFinderMeta };
+
+export function isLongTailGem(o: SeoGapOpportunity): boolean {
+  return o.demandTier === "bajo" || o.demandTier === "nicho";
+}

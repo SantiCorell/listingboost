@@ -193,7 +193,7 @@ export async function runSeoGapFinder(params: {
   const llm = await deepseekChatJson({
     userId: params.userId,
     operation: "seo_gap_finder",
-    maxTokens: 8192,
+    maxTokens: 10_000,
     timeoutMs: 180_000,
     messages: [
       { role: "system", content: buildSeoGapFinderSystemPrompt() },

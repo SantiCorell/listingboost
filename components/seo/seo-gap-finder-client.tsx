@@ -13,16 +13,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { SeoGapIntentChart, SeoGapLevelChart, SeoGapScoreBars } from "@/components/seo/seo-gap-charts";
+import { SeoGapReportBody } from "@/components/seo/seo-gap-report-body";
 import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import type { SeoGapFinderResult } from "@/types/seo-gap-finder";
-import { Loader2, Sparkles, ArrowRight, Coins, Zap } from "lucide-react";
-
-const LEVEL_BADGE: Record<string, string> = {
-  alta: "border-emerald-500/40 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100",
-  media: "border-amber-500/40 bg-amber-500/10 text-amber-950 dark:text-amber-100",
-  baja: "border-border bg-muted/50 text-muted-foreground",
-};
+import { Loader2, Sparkles, Coins, Zap } from "lucide-react";
 
 export function SeoGapFinderClient() {
   const [keyword, setKeyword] = useState("");
@@ -112,8 +106,9 @@ export function SeoGapFinderClient() {
                 contrastamos huecos frente a la competencia.
               </li>
               <li>
-                <strong className="text-foreground">ListingBrain</strong> agrupa intenciones, prioriza con score y
-                convierte cada fila en <strong className="text-foreground">acción + título + URL sugerida</strong>.
+                <strong className="text-foreground">ListingBrain</strong> mezcla cabeza de término con{" "}
+                <strong className="text-foreground">long-tail y nicho</strong> (menos volumen, más fácil de ejecutar)
+                y prioriza con score, acción, título y URL.
               </li>
               <li>
                 Cuesta <strong className="text-foreground">{FEATURE_CREDITS.SEO_GAP_FINDER} créditos</strong> por
@@ -203,102 +198,28 @@ export function SeoGapFinderClient() {
       </Card>
 
       {result ? (
-        <div className="space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-xl font-semibold tracking-tight">Informe</h2>
-            <div className="flex flex-wrap gap-2">
-              {cached ? (
-                <Badge variant="secondary">Desde caché (0 cr)</Badge>
-              ) : (
-                <Badge variant="secondary">
-                  {creditsUsed === 0 ? "Sin cargo de cupo" : `−${creditsUsed} cr`}
-                </Badge>
-              )}
-              {reportId ? (
-                <Button asChild variant="outline" size="sm">
-                  <Link href={`/dashboard/seo-gap/${reportId}`}>Abrir URL del informe</Link>
-                </Button>
-              ) : null}
-            </div>
-          </div>
-
-          <Card className="border-violet-200/50 bg-violet-500/[0.04] dark:border-violet-500/20 dark:bg-violet-950/20">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Resumen ejecutivo</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
-                {result.executiveSummary}
-              </p>
-            </CardContent>
-          </Card>
-
-          <div className="grid gap-4 lg:grid-cols-3">
-            <SeoGapIntentChart opportunities={result.opportunities} />
-            <SeoGapLevelChart opportunities={result.opportunities} />
-            <div className="lg:col-span-1">
-              <SeoGapScoreBars opportunities={result.opportunities} />
-            </div>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Oportunidades priorizadas</CardTitle>
-              <CardDescription>
-                Ordenadas por score. Cada fila es una acción concreta, no solo una métrica.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {result.opportunities.map((o, i) => (
-                <div
-                  key={`${o.keyword}-${i}`}
-                  className="rounded-xl border border-border/70 bg-muted/10 p-4 shadow-sm"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="font-semibold text-foreground">{o.keyword}</p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {o.cluster} · <span className="capitalize">{o.type}</span> · score {o.score}
-                      </p>
-                    </div>
-                    <Badge className={LEVEL_BADGE[o.opportunityLevel] ?? ""}>{o.opportunityLevel}</Badge>
-                  </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{o.action}</p>
-                  <p className="mt-2 text-sm">
-                    <span className="text-muted-foreground">Título sugerido:</span>{" "}
-                    <strong className="text-foreground">{o.title}</strong>
-                  </p>
-                  <p className="mt-1 font-mono text-xs text-primary">{o.url}</p>
-                  <Button asChild size="sm" className="mt-3 gap-1">
-                    <Link
-                      href={`/dashboard/seo-engine?tab=content&kw=${encodeURIComponent(o.keyword)}`}
-                    >
-                      Generar página
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
+        <SeoGapReportBody
+          data={result}
+          toolbar={
+            <>
+              <h2 className="text-xl font-semibold tracking-tight">Informe</h2>
+              <div className="flex flex-wrap gap-2">
+                {cached ? (
+                  <Badge variant="secondary">Desde caché (0 cr)</Badge>
+                ) : (
+                  <Badge variant="secondary">
+                    {creditsUsed === 0 ? "Sin cargo de cupo" : `−${creditsUsed} cr`}
+                  </Badge>
+                )}
+                {reportId ? (
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={`/dashboard/seo-gap/${reportId}`}>Abrir URL del informe</Link>
                   </Button>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {result.meta.crawlWarnings.length ? (
-            <Card className="border-amber-500/30 bg-amber-500/[0.04]">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base text-amber-900 dark:text-amber-100">
-                  Avisos de rastreo
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-inside list-disc text-sm text-muted-foreground">
-                  {result.meta.crawlWarnings.map((w, i) => (
-                    <li key={i}>{w}</li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          ) : null}
-        </div>
+                ) : null}
+              </div>
+            </>
+          }
+        />
       ) : null}
     </div>
   );
