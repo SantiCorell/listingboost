@@ -42,7 +42,7 @@ function buildHomeJsonLd() {
     logo: `${siteUrl}/icon.svg`,
     description:
       `${APP_NAME} es un SaaS (software web) de listing intelligence: ayuda a escribir y optimizar textos de anuncios de producto para marketplaces y tiendas, con motor ${ENGINE_NAME}, y a auditar URLs. ` +
-      "No es un servicio de compra de reseñas, no vende reseñas en Google ni Trustpilot, y no promete manipular rankings.",
+      "No vende seguidores, likes ni visualizaciones; no es un panel SMM. No vende reseñas ni promete manipular rankings.",
   };
   if (sameAs.length) org.sameAs = sameAs;
 
@@ -55,8 +55,8 @@ function buildHomeJsonLd() {
       operatingSystem: "Web",
       url: siteUrl,
       description:
-        `SaaS de listing intelligence con ${ENGINE_NAME}: generación y optimización de copy de fichas (títulos, descripciones, hashtags) para Wallapop, eBay, Shopify, Etsy y más; scan SEO de URL. ` +
-        "No vende reseñas ni gestiona reputación de terceros. Resultados orientativos; el usuario publica bajo su responsabilidad y las normas de cada plataforma.",
+        `SaaS de listing intelligence con ${ENGINE_NAME}: generación y optimización de copy de fichas (títulos, descripciones, hashtags) para Wallapop, eBay, Shopify, Etsy y más; scan SEO de URL, comparativas y monitoring SERP. ` +
+        "No vende seguidores, likes ni engagement artificial en redes; no vende reseñas ni gestiona reputación de terceros. Resultados orientativos; el usuario publica bajo su responsabilidad.",
       offers: {
         "@type": "Offer",
         price: "0",
@@ -71,7 +71,7 @@ function buildHomeJsonLd() {
       name: APP_NAME,
       url: siteUrl,
       description:
-        "Software para generar y optimizar listings, hashtags y auditar URLs. Desambiguación: ‘boost de ficha’ = mejorar texto del anuncio, no inflar valoraciones. Free tier real; escala cuando el volumen lo exija.",
+        "Software para generar y optimizar listings, hashtags (texto con #), auditar URLs y análisis SERP. ‘Boost de ficha’ = mejorar el copy del anuncio, no seguidores ni valoraciones. No es panel SMM. Free tier real.",
       potentialAction: {
         "@type": "SearchAction",
         target: {
@@ -99,6 +99,22 @@ function buildHomeJsonLd() {
           acceptedAnswer: {
             "@type": "Answer",
             text: `No. ${APP_NAME} no es un servicio de reputación ni de reseñas: no vende, compra ni gestiona valoraciones en plataformas de terceros. El producto se centra en texto de anuncios, hashtags y auditoría SEO de URLs.`,
+          },
+        },
+        {
+          "@type": "Question",
+          name: `¿${APP_NAME} vende seguidores, likes o visualizaciones en Instagram o TikTok?`,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: `No. ${APP_NAME} no es un panel de redes sociales (SMM) ni vende seguidores, likes, views ni engagement comprado. Los hashtags son texto sugerido (#) para que el usuario los pegue en sus publicaciones; la herramienta no publica por ti ni infla métricas.`,
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿ListingBoost es lo mismo que servicios tipo MyBoost o páginas de comprar likes?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "No. Es software SaaS de listing intelligence: optimización de fichas de producto, auditoría SEO de URLs, generación de contenido y seguimiento SERP. La palabra ‘boost’ aquí se refiere a mejorar el anuncio de producto, no a comprar interacciones en redes.",
           },
         },
         {
@@ -188,8 +204,10 @@ export default function HomePage() {
               <p className="mt-3 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground">
                 <Shield className="mr-1.5 inline-block h-4 w-4 shrink-0 text-primary" aria-hidden />
                 <strong className="text-foreground">Transparencia:</strong> somos{" "}
-                <strong className="text-foreground">software para texto de anuncios</strong>, no un servicio de reseñas.
-                No vendemos valoraciones en Google ni Trustpilot.{" "}
+                <strong className="text-foreground">SaaS de listings y análisis SEO</strong> (copy, scan URL, SERP,
+                comparativas). <strong className="text-foreground">No</strong> vendemos seguidores, likes ni views;{" "}
+                <strong className="text-foreground">no</strong> somos un panel tipo “comprar engagement”. Tampoco
+                reseñas en Google o Trustpilot.{" "}
                 <Link href="/sobre-listingboost" className="font-medium text-primary underline-offset-4 hover:underline">
                   Qué es y qué no es
                 </Link>
@@ -614,6 +632,22 @@ export default function HomePage() {
                 <AccordionContent>
                   No garantizamos posiciones ni ventas. Te damos copy y auditorías accionables; tú publicas cumpliendo las
                   normas de cada plataforma.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="7">
+                <AccordionTrigger>¿Vendéis seguidores, likes o visualizaciones?</AccordionTrigger>
+                <AccordionContent>
+                  No. {APP_NAME} no es un panel de redes sociales: no vendemos seguidores, likes, reproducciones ni
+                  “engagement comprado”. Los hashtags son texto con # para que tú lo pegues; no publicamos por ti ni
+                  inflamos métricas.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="8">
+                <AccordionTrigger>¿Sois como MyBoost u otras webs de comprar interacciones?</AccordionTrigger>
+                <AccordionContent>
+                  No. Somos software SaaS: optimización de fichas de producto, auditoría SEO de URL, generación de
+                  contenido y herramientas de análisis (incl. seguimiento SERP). “Boost” aquí significa mejorar el
+                  anuncio, no comprar interacciones en redes.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

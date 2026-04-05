@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     default: `${APP_NAME} — Optimiza fichas con IA | Wallapop, eBay, Shopify | SEO y hashtags`,
     template: `%s · ${APP_NAME}`,
   },
-  description: `${APP_NAME}: SaaS de listing intelligence con ${ENGINE_NAME} — optimiza textos de anuncios (títulos, descripciones, hashtags) para Wallapop, eBay, Shopify y más; audita URLs. No vende reseñas ni manipula reputación. Empieza gratis.`,
+  description: `${APP_NAME}: SaaS de listing intelligence con ${ENGINE_NAME} — optimiza textos de anuncios, audita URLs, comparativas y monitoring SERP. No vende seguidores/likes ni reseñas; no es panel SMM. Empieza gratis.`,
   applicationName: APP_NAME,
   authors: [{ name: APP_NAME, url: siteUrl }],
   creator: APP_NAME,
@@ -50,6 +50,8 @@ export const metadata: Metadata = {
     "ficha marketplace IA",
     "TikTok hashtags producto",
     "copiar pegar marketplace",
+    "no comprar seguidores marketplace",
+    "SaaS no SMM panel",
   ],
   openGraph: {
     type: "website",

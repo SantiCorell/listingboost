@@ -1,60 +1,38 @@
 import type { MetadataRoute } from "next";
-import { getPublicSiteUrl } from "@/lib/site-url";
 import { BLOG_POSTS } from "@/lib/blog/registry";
-import {
-  GROWTH_STATIC_ROUTES,
-  SEO_CATEGORIAS,
-  VENDER_WALLAPOP_PRODUCTOS,
-} from "@/lib/seo/growth-registry";
+import { getPublicSiteUrl } from "@/lib/site-url";
+import { getMarketingSitemapSpecs } from "@/lib/sitemap/marketing-routes";
+
+/** Sitemap regenerado con la frecuencia indicada (blog y landings estáticas en código). */
+export const revalidate = 86400;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getPublicSiteUrl();
-  const paths: {
-    path: string;
-    priority: number;
-    changeFrequency: "weekly" | "monthly" | "yearly";
-  }[] = [
-      { path: "", priority: 1, changeFrequency: "weekly" },
-      { path: "/blog", priority: 0.82, changeFrequency: "weekly" },
-      ...BLOG_POSTS.map((p) => ({
-        path: `/blog/${p.slug}` as const,
-        priority: 0.72,
-        changeFrequency: "monthly" as const,
-      })),
-      ...GROWTH_STATIC_ROUTES.map((path) => ({
-        path,
-        priority: 0.88,
-        changeFrequency: "weekly" as const,
-      })),
-      ...SEO_CATEGORIAS.flatMap((categoria) => [
-        { path: `/titulo-seo/${categoria}`, priority: 0.76, changeFrequency: "monthly" as const },
-        { path: `/descripcion-producto/${categoria}`, priority: 0.76, changeFrequency: "monthly" as const },
-      ]),
-      ...VENDER_WALLAPOP_PRODUCTOS.map((producto) => ({
-        path: `/vender-${producto}-wallapop`,
-        priority: 0.78,
-        changeFrequency: "monthly" as const,
-      })),
-      { path: "/producto", priority: 0.95, changeFrequency: "weekly" },
-      { path: "/producto/boost-de-ficha", priority: 0.9, changeFrequency: "weekly" },
-      { path: "/producto/scan-seo-url", priority: 0.9, changeFrequency: "weekly" },
-      { path: "/producto/seo-engine", priority: 0.9, changeFrequency: "weekly" },
-      { path: "/producto/hashtags-redes", priority: 0.9, changeFrequency: "weekly" },
-      { path: "/producto/inmobiliarias", priority: 0.88, changeFrequency: "weekly" },
-      { path: "/pricing", priority: 0.85, changeFrequency: "monthly" },
-      { path: "/contacto", priority: 0.7, changeFrequency: "monthly" },
-      { path: "/login", priority: 0.5, changeFrequency: "monthly" },
-      { path: "/register", priority: 0.75, changeFrequency: "monthly" },
-      { path: "/terminos", priority: 0.35, changeFrequency: "yearly" },
-      { path: "/privacidad", priority: 0.35, changeFrequency: "yearly" },
-      { path: "/cookies", priority: 0.3, changeFrequency: "yearly" },
-      { path: "/sobre-listingboost", priority: 0.55, changeFrequency: "monthly" },
-    ];
 
-  return paths.map(({ path, priority, changeFrequency }) => ({
-    url: `${base}${path}`,
-    lastModified: new Date(),
-    changeFrequency,
-    priority,
+  const marketing: MetadataRoute.Sitemap = getMarketingSitemapSpecs().map(
+    ({ path, priority, changeFrequency }) => ({
+      url: `${base}${path}`,
+      changeFrequency,
+      priority,
+    }),
+  );
+
+  const blogPosts: MetadataRoute.Sitemap = BLOG_POSTS.map((p) => ({
+    url: `${base}/blog/${p.slug}`,
+    lastModified: new Date(p.updatedAt ?? p.publishedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.72,
   }));
+
+  const merged = [...marketing, ...blogPosts];
+
+  const seen = new Set<string>();
+  const deduped: MetadataRoute.Sitemap = [];
+  for (const entry of merged) {
+    if (seen.has(entry.url)) continue;
+    seen.add(entry.url);
+    deduped.push(entry);
+  }
+
+  return deduped.sort((a, b) => a.url.localeCompare(b.url, "es"));
 }
