@@ -48,6 +48,10 @@ const faqs = [
     q: "¿Qué cuesta el informe SERP frente a competidores?",
     a: `Desde la pestaña de monitoring, el informe premium (quién está por encima en Google para tu consulta, por qué pueden rankear mejor y plan por fases) consume ${FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos por ejecución en planes Pro y Pro+. En Enterprise el cupo es ilimitado: no descuenta. Las comprobaciones periódicas de posición siguen el cron de tu plan.`,
   },
+  {
+    q: "¿Puedo volver a ver un informe o guardarlo en PDF?",
+    a: "Sí. Cada informe se guarda automáticamente en Historial → Informes SERP vs competidores. Desde ahí (o desde el propio cuadro de diálogo al generarlo) puedes abrirlo cuando quieras. La exportación a PDF multipágina cuesta 1 crédito adicional, igual que en auditorías URL.",
+  },
 ];
 
 export default function SeoEngineProductPage() {

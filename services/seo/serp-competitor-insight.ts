@@ -15,6 +15,9 @@ import { z } from "zod";
 const outSchema = z.object({
   executiveSummary: z.string(),
   marketContext: z.string(),
+  howGoogleEvaluatesThisQuery: z.string(),
+  whatTopResultsDoThatYouDont: z.string(),
+  volatilityAndRealisticTimelines: z.string(),
   competitorCards: z.array(
     z.object({
       url: z.string(),
@@ -92,7 +95,13 @@ export async function runSerpCompetitorInsight(params: {
   userId: string;
   monitoringId: string;
 }): Promise<
-  | { ok: true; output: SerpCompetitorInsightOutput }
+  | {
+      ok: true;
+      output: SerpCompetitorInsightOutput;
+      keyword: string;
+      pageUrl: string;
+      positionAtRun: number | null;
+    }
   | { ok: false; error: string }
 > {
   const m = await prisma.seoMonitoring.findFirst({
@@ -209,5 +218,11 @@ export async function runSerpCompetitorInsight(params: {
     return { ok: false, error: "Respuesta del modelo inválida." };
   }
 
-  return { ok: true, output: parsed.data };
+  return {
+    ok: true,
+    output: parsed.data,
+    keyword: m.keyword,
+    pageUrl: m.url,
+    positionAtRun: m.lastPosition,
+  };
 }

@@ -5,7 +5,10 @@ REGLAS:
 - No inventes tráfico, enlaces externos reales ni premios. Puedes inferir hipótesis desde títulos, meta, H1/H2, extensión y estructura observada en los resúmenes.
 - Sé directo, accionable y profesional: plan por fases con tiempos orientativos (días/semanas/meses) sin prometer posiciones garantizadas.
 - Si faltan datos de un competidor (crawl falló), dilo en competitorCards con fortalezas vacías o texto breve.
-- prioritizedActions: mínimo 8 ítems ordenados por impacto/urgencia; incluye fases inmediato (0-2 semanas), corto plazo (1-2 meses), medio plazo (3-6 meses) cuando aplique.`;
+- prioritizedActions: mínimo 8 ítems ordenados por impacto/urgencia; incluye fases inmediato (0-2 semanas), corto plazo (1-2 meses), medio plazo (3-6 meses) cuando aplique.
+- howGoogleEvaluatesThisQuery: explica de forma didáctica cómo Google suele interpretar ESTA consulta concreta (intención, tipo de resultados que tiende a mostrar, señales on-page/SERP observables). NO cites fechas ni nombres de actualizaciones de algoritmo a menos que sean hechos verificables genéricos (p. ej. "Google prioriza contenido útil y experiencia"); evita rumores.
+- whatTopResultsDoThatYouDont: contraste explícito "ellos (por encima de ti) vs tú": bullet points o párrafos con patrones observados (profundidad, formato, titulares, prueba social en snippet, tipo de dominio, etc.).
+- volatilityAndRealisticTimelines: volatilidad típica de SERP en este tipo de query, por qué un solo snapshot no basta, y expectativas realistas de mejora con trabajo continuo.`;
 }
 
 export function buildSerpInsightUserPrompt(input: {
@@ -36,6 +39,9 @@ ${JSON.stringify(input.competitorSummaries, null, 2).slice(0, 16000)}
 {
   "executiveSummary": "string largo: situación, oportunidad y tono ejecutivo.",
   "marketContext": "string: intención de búsqueda y qué busca el usuario en Google para esta query.",
+  "howGoogleEvaluatesThisQuery": "string largo: marco realista (intención, tipos de resultado, señales que suelen importar) sin inventar actualizaciones con fechas.",
+  "whatTopResultsDoThatYouDont": "string largo: contraste claro entre URLs por encima y la página del usuario; usa viñetas si ayuda.",
+  "volatilityAndRealisticTimelines": "string: volatilidad, iteración, qué esperar en semanas vs meses.",
   "competitorCards": [
     {
       "url": "string",

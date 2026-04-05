@@ -1,6 +1,12 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import type { SerpCompetitorInsightOutput } from "@/types/serp-competitor-insight";
+import { chargeSerpInsightPdfExport } from "@/actions/serp-insight-pdf";
+import { FEATURE_CREDITS } from "@/lib/feature-credits";
+import { downloadSerpInsightPdfClient } from "@/components/seo/serp-insight-pdf-export";
+import { SerpInsightReportView } from "@/components/seo/serp-insight-report-view";
 import {
   Dialog,
   DialogContent,
@@ -8,25 +14,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import {
-  ClipboardList,
-  Gauge,
-  Lightbulb,
-  ListOrdered,
-  Sparkles,
-  Target,
-  Users,
-} from "lucide-react";
-
-function phaseBadgeClass(phase: string) {
-  const p = phase.toLowerCase();
-  if (p.includes("inmediat")) return "border-emerald-300/60 bg-emerald-50 text-emerald-950 dark:bg-emerald-950/40 dark:text-emerald-100";
-  if (p.includes("corto")) return "border-sky-300/60 bg-sky-50 text-sky-950 dark:bg-sky-950/40 dark:text-sky-100";
-  if (p.includes("medio")) return "border-violet-300/60 bg-violet-50 text-violet-950 dark:bg-violet-950/40 dark:text-violet-100";
-  return "border-border bg-muted/50";
-}
+import { Button } from "@/components/ui/button";
+import { FolderOpen, Loader2, Sparkles, FileDown } from "lucide-react";
 
 export function SerpCompetitorInsightDialog({
   open,
@@ -35,6 +24,8 @@ export function SerpCompetitorInsightDialog({
   keyword,
   pageUrl,
   creditsUsed,
+  savedReportId,
+  positionAtRun,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -42,10 +33,43 @@ export function SerpCompetitorInsightDialog({
   keyword: string;
   pageUrl: string;
   creditsUsed: number;
+  /** Tras guardar en servidor; habilita PDF con cobro y enlace fijo al historial. */
+  savedReportId: string | null;
+  positionAtRun?: number | null;
 }) {
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const [pdfErr, setPdfErr] = useState<string | null>(null);
+
+  const positionLabel =
+    positionAtRun != null && positionAtRun > 0
+      ? `Posición orgánica aproximada ~${positionAtRun} para «${keyword}»`
+      : "Sin posición clara en el tramo analizado de la SERP para esta consulta";
+
+  async function handlePdf() {
+    if (!data || !savedReportId) return;
+    setPdfErr(null);
+    setPdfBusy(true);
+    try {
+      const r = await chargeSerpInsightPdfExport(savedReportId);
+      if (!r.ok) {
+        setPdfErr(r.error);
+        return;
+      }
+      await downloadSerpInsightPdfClient(
+        data,
+        { keyword, pageUrl, positionLabel },
+        `informe-serp-${keyword.replace(/\s+/g, "-").slice(0, 40)}`,
+      );
+    } catch {
+      setPdfErr("No se pudo generar el PDF.");
+    } finally {
+      setPdfBusy(false);
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[min(92vh,840px)] w-[min(100vw-1.5rem,640px)] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
+      <DialogContent className="flex max-h-[min(92vh,880px)] w-[min(100vw-1.5rem,720px)] flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl">
         <DialogHeader className="shrink-0 border-b border-border/60 bg-gradient-to-r from-violet-500/10 via-sky-500/8 to-transparent px-6 py-4 text-left">
           <div className="flex flex-wrap items-center gap-2">
             <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/12 text-primary">
@@ -66,136 +90,72 @@ export function SerpCompetitorInsightDialog({
               </DialogDescription>
             </div>
           </div>
-          <p className="mt-2 break-all font-mono text-[11px] text-muted-foreground">{pageUrl}</p>
         </DialogHeader>
 
         {!data ? (
           <div className="p-8 text-center text-sm text-muted-foreground">Sin datos.</div>
         ) : (
-          <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">
-            <div className="space-y-6">
-              <section>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <Target className="h-4 w-4 text-primary" />
-                  Resumen ejecutivo
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
-                  {data.executiveSummary}
-                </p>
-              </section>
+          <>
+            <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">
+              <div className="mb-4 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+                <strong className="text-foreground">Guardado automáticamente.</strong> Para volver a ver este informe
+                más tarde, entra en{" "}
+                <Link href="/dashboard/history#informes-serp" className="font-semibold text-primary underline-offset-4 hover:underline">
+                  Historial → Informes SERP
+                </Link>
+                . Desde ahí también puedes descargar el PDF.
+              </div>
+              <SerpInsightReportView
+                data={data}
+                keyword={keyword}
+                pageUrl={pageUrl}
+                positionLabel={positionLabel}
+              />
+            </div>
 
-              <section>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <Gauge className="h-4 w-4 text-sky-600 dark:text-sky-400" />
-                  Contexto de búsqueda
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
-                  {data.marketContext}
-                </p>
-              </section>
-
-              <Separator />
-
-              <section>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <Users className="h-4 w-4 text-violet-600 dark:text-violet-400" />
-                  Qué hacen mejor (por encima en Google)
-                </h3>
-                <ul className="mt-3 space-y-4">
-                  {data.competitorCards.map((c, i) => (
-                    <li
-                      key={`${c.url}-${i}`}
-                      className="rounded-xl border border-violet-200/50 bg-violet-50/40 p-4 dark:border-violet-500/20 dark:bg-violet-950/25"
+            <div className="shrink-0 space-y-2 border-t border-border/60 bg-muted/20 px-6 py-4">
+              {pdfErr ? <p className="text-sm text-destructive">{pdfErr}</p> : null}
+              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+                {savedReportId ? (
+                  <>
+                    <Button asChild variant="default" size="sm" className="gap-2">
+                      <Link href={`/dashboard/history/serp-insight/${savedReportId}`}>
+                        <FolderOpen className="h-4 w-4" />
+                        Abrir en historial
+                      </Link>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="gap-2"
+                      disabled={pdfBusy}
+                      onClick={() => void handlePdf()}
                     >
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="secondary" className="font-mono text-[10px]">
-                          #{c.serpPosition}
-                        </Badge>
-                        <span className="break-all text-xs font-medium text-foreground">{c.url}</span>
-                      </div>
-                      <ul className="mt-2 list-inside list-disc text-xs text-muted-foreground">
-                        {c.strengthsObserved.map((s, j) => (
-                          <li key={j}>{s}</li>
-                        ))}
-                      </ul>
-                      <p className="mt-2 text-sm leading-snug text-foreground">{c.whatTheyDoBetter}</p>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-
-              <section>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <Lightbulb className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                  Tu página
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
-                  {data.yourUrlDiagnosis}
-                </p>
-              </section>
-
-              <Separator />
-
-              <section>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <ListOrdered className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                  Plan de acción priorizado
-                </h3>
-                <ol className="mt-4 space-y-4">
-                  {[...data.prioritizedActions]
-                    .sort((a, b) => a.order - b.order)
-                    .map((a) => (
-                      <li
-                        key={a.order}
-                        className="rounded-xl border border-border/70 bg-muted/20 p-4"
-                      >
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
-                            {a.order}
-                          </span>
-                          <span className="font-semibold text-foreground">{a.title}</span>
-                          <Badge variant="outline" className={`text-[10px] ${phaseBadgeClass(a.phase)}`}>
-                            {a.phase.replace(/_/g, " ")}
-                          </Badge>
-                          <Badge variant="outline" className="text-[10px] font-normal">
-                            Esfuerzo: {a.effortLevel}
-                          </Badge>
-                        </div>
-                        <ul className="mt-2 list-inside list-decimal text-sm text-muted-foreground">
-                          {a.steps.map((s, j) => (
-                            <li key={j} className="leading-relaxed">
-                              {s}
-                            </li>
-                          ))}
-                        </ul>
-                        <p className="mt-2 text-xs text-foreground/90">
-                          <strong>Por qué importa:</strong> {a.whyItMatters}
-                        </p>
-                        <p className="mt-1 text-xs font-medium text-primary">
-                          Tiempo estimado hasta efecto: {a.expectedTimeToEffect}
-                        </p>
-                      </li>
-                    ))}
-                </ol>
-              </section>
-
-              <section>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <ClipboardList className="h-4 w-4 text-muted-foreground" />
-                  Métricas a vigilar
-                </h3>
-                <ul className="mt-2 list-inside list-disc text-sm text-muted-foreground">
-                  {data.metricsToWatch.map((m, i) => (
-                    <li key={i}>{m}</li>
-                  ))}
-                </ul>
-              </section>
-
-              <p className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30 p-3 text-xs text-muted-foreground">
-                {data.honestDisclaimer}
+                      {pdfBusy ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <FileDown className="h-4 w-4" />
+                      )}
+                      PDF ({FEATURE_CREDITS.SERP_INSIGHT_PDF_EXPORT} cr)
+                    </Button>
+                  </>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    Generando enlace al historial… si no aparece, recarga y abre{" "}
+                    <Link href="/dashboard/history#informes-serp" className="text-primary underline-offset-4 hover:underline">
+                      Historial
+                    </Link>
+                    .
+                  </p>
+                )}
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                El PDF multipágina cuesta {FEATURE_CREDITS.SERP_INSIGHT_PDF_EXPORT} crédito (misma política que la
+                auditoría URL). Plan Enterprise: sin descuento de cupo.
               </p>
             </div>
-          </div>
+          </>
         )}
       </DialogContent>
     </Dialog>

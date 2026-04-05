@@ -512,6 +512,8 @@ function MonitoringPanel({
     url: string;
     keyword: string;
     credits: number;
+    reportId: string | null;
+    positionAtRun: number | null;
   } | null>(null);
   const [insightLoadingId, setInsightLoadingId] = useState<string | null>(null);
 
@@ -599,7 +601,12 @@ function MonitoringPanel({
               Cuesta <strong className="text-foreground">{FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos</strong> por
               ejecución.
             </>
-          )}
+          )}{" "}
+          Cada informe queda <strong className="text-foreground">guardado en Historial</strong> (
+          <Link href="/dashboard/history#informes-serp" className="font-medium text-primary underline-offset-4 hover:underline">
+            Informes SERP
+          </Link>
+          ); el PDF cuesta {FEATURE_CREDITS.SERP_INSIGHT_PDF_EXPORT} crédito aparte.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 pt-6">
@@ -707,6 +714,8 @@ function MonitoringPanel({
                       error?: string;
                       output?: SerpCompetitorInsightOutput;
                       creditsUsed?: number;
+                      reportId?: string;
+                      positionAtRun?: number | null;
                     };
                     if (!r.ok) {
                       setMonitorErr(j.error ?? "No se pudo generar el informe");
@@ -718,6 +727,8 @@ function MonitoringPanel({
                         url: m.url,
                         keyword: m.keyword,
                         credits: j.creditsUsed ?? FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT,
+                        reportId: j.reportId ?? null,
+                        positionAtRun: j.positionAtRun ?? null,
                       });
                       setInsightOpen(true);
                     }
@@ -763,6 +774,8 @@ function MonitoringPanel({
           keyword={insightMeta?.keyword ?? ""}
           pageUrl={insightMeta?.url ?? ""}
           creditsUsed={insightMeta?.credits ?? FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT}
+          savedReportId={insightMeta?.reportId ?? null}
+          positionAtRun={insightMeta?.positionAtRun}
         />
       </CardContent>
     </Card>

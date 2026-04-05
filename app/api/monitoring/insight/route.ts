@@ -78,9 +78,24 @@ export async function POST(req: Request) {
   const charged =
     admin || (user && hasUnlimitedMonthlyCredits(user.plan)) ? 0 : cost;
 
+  const saved = await prisma.serpCompetitorInsightReport.create({
+    data: {
+      userId: session.user.id,
+      monitoringId: id,
+      keyword: result.keyword,
+      pageUrl: result.pageUrl,
+      positionAtRun: result.positionAtRun,
+      creditsUsed: charged,
+      outputJson: result.output as object,
+    },
+    select: { id: true },
+  });
+
   return NextResponse.json({
     ok: true,
     output: result.output,
     creditsUsed: charged,
+    reportId: saved.id,
+    positionAtRun: result.positionAtRun,
   });
 }

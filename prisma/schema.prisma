@@ -99,6 +99,7 @@ model User {
   blogOptimizations         BlogOptimization[]
   competitorAnalyses        CompetitorAnalysis[]
   contentGenerations        ContentGeneration[]
+  serpCompetitorInsightReports SerpCompetitorInsightReport[]
 }
 
 /** Token de un solo uso para restablecer contraseña (email). */
@@ -326,9 +327,29 @@ model SeoMonitoring {
 
   user      User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   snapshots SeoMonitoringSnapshot[]
+  insightReports SerpCompetitorInsightReport[]
 
   @@index([userId, active])
   @@index([nextRunAt])
+}
+
+/** Informe SERP premium (vs competidores) guardado para historial y PDF. */
+model SerpCompetitorInsightReport {
+  id             String   @id @default(cuid())
+  userId         String
+  monitoringId   String?
+  keyword        String
+  pageUrl        String   @db.Text
+  positionAtRun  Int?
+  creditsUsed    Int      @default(0)
+  outputJson     Json
+  createdAt      DateTime @default(now())
+
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  monitoring SeoMonitoring? @relation(fields: [monitoringId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([monitoringId, createdAt])
 }
 
 model SeoMonitoringSnapshot {

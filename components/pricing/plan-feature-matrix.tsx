@@ -156,6 +156,15 @@ const rows: (SectionRow | FeatureRow)[] = [
     proPlus: "Incluido‡",
     enterprise: "Incluido‡ §",
   },
+  {
+    kind: "feature",
+    feature: "Informe SERP premium: guardado + PDF",
+    hint: "El informe queda en Historial; el PDF descargable cuesta 1 cr (como auditoría URL). Enterprise §.",
+    free: "—",
+    pro: "Historial + PDF 1 cr",
+    proPlus: "Historial + PDF 1 cr",
+    enterprise: "Historial + PDF §",
+  },
 
   { kind: "section", title: "Escala y relación con el producto" },
   {

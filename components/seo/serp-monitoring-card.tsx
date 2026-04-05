@@ -9,6 +9,7 @@ import {
   snapshotsChronological,
   type SnapshotPoint,
 } from "@/lib/serp/monitoring-display";
+import Link from "next/link";
 import { Loader2, RefreshCw, Sparkles, TrendingDown, TrendingUp, Minus } from "lucide-react";
 
 export type SerpMonitoringCardProps = {
@@ -254,6 +255,15 @@ export function SerpMonitoringCard({
                 Informe vs competidores
                 {insightCreditsWaived ? " (sin cargo)" : ` (${insightCreditCost} cr)`}
               </Button>
+            ) : null}
+            {onInsight != null ? (
+              <p className="max-w-[20rem] text-center text-[11px] leading-snug text-muted-foreground sm:text-right">
+                Cada informe queda en{" "}
+                <Link href="/dashboard/history#informes-serp" className="font-medium text-primary underline-offset-4 hover:underline">
+                  Historial → Informes SERP
+                </Link>
+                . Vuelve a abrirlo o descarga PDF desde ahí.
+              </p>
             ) : null}
           </div>
         </div>

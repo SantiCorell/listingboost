@@ -19,4 +19,6 @@ export const FEATURE_CREDITS = {
    * (crawl + SerpAPI + LLM). Mayor coste que una comparativa manual entre dos URLs.
    */
   SERP_COMPETITOR_INSIGHT: 8,
+  /** Export PDF informe SERP premium ya guardado (misma lógica que auditoría URL). */
+  SERP_INSIGHT_PDF_EXPORT: 1,
 } as const;
