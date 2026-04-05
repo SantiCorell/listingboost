@@ -1,6 +1,11 @@
 import type { MetadataRoute } from "next";
 import { getPublicSiteUrl } from "@/lib/site-url";
 import { BLOG_POSTS } from "@/lib/blog/registry";
+import {
+  GROWTH_STATIC_ROUTES,
+  SEO_CATEGORIAS,
+  VENDER_WALLAPOP_PRODUCTOS,
+} from "@/lib/seo/growth-registry";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getPublicSiteUrl();
@@ -14,6 +19,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ...BLOG_POSTS.map((p) => ({
         path: `/blog/${p.slug}` as const,
         priority: 0.72,
+        changeFrequency: "monthly" as const,
+      })),
+      ...GROWTH_STATIC_ROUTES.map((path) => ({
+        path,
+        priority: 0.88,
+        changeFrequency: "weekly" as const,
+      })),
+      ...SEO_CATEGORIAS.flatMap((categoria) => [
+        { path: `/titulo-seo/${categoria}`, priority: 0.76, changeFrequency: "monthly" as const },
+        { path: `/descripcion-producto/${categoria}`, priority: 0.76, changeFrequency: "monthly" as const },
+      ]),
+      ...VENDER_WALLAPOP_PRODUCTOS.map((producto) => ({
+        path: `/vender-${producto}-wallapop`,
+        priority: 0.78,
         changeFrequency: "monthly" as const,
       })),
       { path: "/producto", priority: 0.95, changeFrequency: "weekly" },

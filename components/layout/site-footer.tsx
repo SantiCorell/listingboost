@@ -36,6 +36,11 @@ export function SiteFooter() {
         </Link>
       </li>
       <li>
+        <Link href="/seo-wallapop" className="transition-colors hover:text-foreground">
+          Guías SEO marketplaces (Wallapop, eBay…)
+        </Link>
+      </li>
+      <li>
         <Link href="/producto/hashtags-redes" className="transition-colors hover:text-foreground">
           Hashtags redes
         </Link>

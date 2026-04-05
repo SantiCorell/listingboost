@@ -345,11 +345,14 @@ export default async function PricingPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Free
-                    <Badge variant="secondary">0 €</Badge>
+                    <Badge variant="secondary" className="text-base font-bold">
+                      0 €
+                    </Badge>
                   </CardTitle>
                   <CardDescription className="text-pretty text-base leading-relaxed break-words">
-                    Para probar en serio: {PLAN_INCLUDED_ANALYSES.FREE} análisis/mes, mismo motor que los planes de
-                    pago. Ideal si publicas poco o quieres validar antes de invertir.
+                    <strong className="text-foreground">Para probar en serio</strong>:{" "}
+                    {PLAN_INCLUDED_ANALYSES.FREE} análisis/mes con el <strong className="text-foreground">mismo motor</strong>{" "}
+                    que los planes de pago. Ideal si publicas poco o quieres validar antes de invertir un euro.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
@@ -395,8 +398,9 @@ export default async function PricingPage() {
                   </CardTitle>
                   <CardDescription className="text-pretty text-base leading-relaxed break-words">
                     <strong className="text-foreground">{PLAN_INCLUDED_ANALYSES.PRO} análisis/mes</strong> — si los
-                    usas todos, sale desde <strong className="text-foreground">{proUnit} €</strong> por análisis.
-                    Para vendedores y tiendas que publican cada semana.
+                    exprimes, cada uno te sale desde <strong className="text-foreground">{proUnit} €</strong>. Pensado
+                    para <strong className="text-foreground">vendedores y tiendas</strong> que publican cada semana y
+                    notan el coste en horas, no solo en euros.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
@@ -469,9 +473,10 @@ export default async function PricingPage() {
                     </Badge>
                   </CardTitle>
                   <CardDescription className="text-pretty text-base leading-relaxed break-words">
-                    <strong className="text-foreground">{PLAN_INCLUDED_ANALYSES.PRO_PLUS} análisis/mes</strong>.
-                    Desde <strong className="text-foreground">{proPlusUnit} €</strong>/análisis si exprimes el cupo.
-                    Pensado para agencias y sellers con mucho SKU.
+                    <strong className="text-foreground">{PLAN_INCLUDED_ANALYSES.PRO_PLUS} análisis/mes</strong> — desde{" "}
+                    <strong className="text-foreground">{proPlusUnit} €</strong> por análisis si usas todo el cupo.
+                    Para <strong className="text-foreground">agencias y sellers con mucho SKU</strong> que no pueden
+                    quedarse sin aire a mitad de mes.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
@@ -530,28 +535,33 @@ export default async function PricingPage() {
               </Card>
 
               {/* Enterprise */}
-              <Card className="flex h-full min-h-0 flex-col border-border/80 bg-muted/25">
-                <CardHeader className="pb-2">
+              <Card className="relative flex h-full min-h-0 flex-col overflow-hidden border-2 border-violet-500/35 bg-gradient-to-b from-violet-500/[0.08] via-muted/20 to-card shadow-xl shadow-violet-500/10">
+                <div className="pointer-events-none absolute -right-16 top-0 h-32 w-32 rounded-full bg-violet-500/20 blur-2xl" />
+                <CardHeader className="relative pb-2">
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Enterprise
-                    <Badge variant="outline" className="gap-1">
+                    <Badge variant="outline" className="gap-1 border-violet-500/40 bg-violet-500/10 text-violet-950 dark:text-violet-100">
                       <Rocket className="h-3 w-3" />
                       {PLAN_PRICING_DISPLAY.ENTERPRISE.label}
                     </Badge>
                   </CardTitle>
                   <CardDescription className="text-pretty text-base leading-relaxed break-words">
-                    <strong className="text-foreground">100 €/mes</strong> en checkout online (mismo precio Stripe que
-                    ya tienes configurado): <strong className="text-foreground">cupo de créditos ilimitado</strong> para
-                    boosts, scans, SEO Engine, informes SERP premium y PDFs — ideal para equipos que viven del
-                    posicionamiento y del catálogo.
+                    Para <strong className="text-foreground">equipos y tiendas que viven del catálogo</strong>: un solo
+                    precio fijo online (<strong className="text-foreground">100 €/mes</strong> en Stripe) y{" "}
+                    <strong className="text-foreground">cupo ilimitado de créditos</strong> para todo lo que importa en
+                    venta — boosts, scans, SEO Engine, informes SERP premium y PDFs — sin estar pendiente del contador
+                    cada vez que lanzas campaña o subes 200 SKUs.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
+                <CardContent className="relative mt-auto flex min-h-0 flex-1 flex-col gap-4">
                   <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
                     {[
-                      "Sin tope mensual de créditos (uso profesional razonable; ver § en la tabla)",
-                      "Monitoring SERP diario o semanal + informe vs competidores sin descuento de cupo",
-                      "PDF comparativa incluido · soporte e integraciones en roadmap",
+                      "Sin tope mensual de créditos: boosts, scan URL, generador SEO, blog optimizer, hashtags, comparativa y monitoring SERP cuando lo necesites.",
+                      "Informe SERP vs competidores premium sin descuento de cupo (en Pro/Pro+ consume créditos; aquí no).",
+                      "PDF de comparativa SEO incluido; PDFs de auditoría y exports alineados a la tabla de funciones (§ † ‡) sin sorpresas.",
+                      "Historial completo, copias sin pie de marca Free y créditos extra al precio Pro+ por si algún flujo legacy los requiere.",
+                      "Uso profesional razonable: protegemos la plataforma frente a abuso; el detalle legal está en términos — tú te centras en vender.",
+                      "Prioridad en soporte y roadmap de integraciones (API, webhooks, SSO) para escalar operaciones reales, no demos.",
                     ].map((t) => (
                       <li key={t} className="flex gap-2">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />

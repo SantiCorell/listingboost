@@ -497,6 +497,45 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Guías SEO — enlazo interno a landings de adquisición */}
+          <div className="mx-auto mt-20 max-w-5xl rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.06] via-card/90 to-violet-500/[0.05] p-6 shadow-sm sm:p-10">
+            <h2 className="text-2xl font-bold sm:text-3xl">Guías gratis: más visibilidad y más ventas</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Playbooks para Wallapop, eBay, Etsy y Shopify: títulos, descripciones y diagnósticos cuando no vendes.
+              Todo enlaza con el mismo motor que usas en el panel.
+            </p>
+            <ul className="mt-6 grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { href: "/seo-wallapop", label: "SEO Wallapop" },
+                { href: "/optimizar-listings-wallapop", label: "Optimizar listings Wallapop" },
+                { href: "/como-vender-mas-en-wallapop", label: "Cómo vender más en Wallapop" },
+                { href: "/no-vendo-en-wallapop", label: "No vendo en Wallapop" },
+                { href: "/seo-ebay", label: "SEO eBay productos" },
+                { href: "/no-vendo-en-ebay", label: "No vendo en eBay" },
+                { href: "/seo-etsy", label: "SEO Etsy" },
+                { href: "/generador-titulos-productos", label: "Generador de títulos SEO" },
+                { href: "/descripcion-productos-ia", label: "Descripción productos con IA" },
+                { href: "/por-que-no-vendo-productos", label: "Por qué no vendo productos" },
+                { href: "/titulo-seo/iphone", label: "Título SEO iPhone" },
+                { href: "/vender-iphone-wallapop", label: "Vender iPhone en Wallapop" },
+              ].map((x) => (
+                <li key={x.href}>
+                  <Link
+                    href={x.href}
+                    className="font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    {x.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6">
+              <Button asChild className="h-11">
+                <Link href="/register">Analizar listing gratis</Link>
+              </Button>
+            </div>
+          </div>
+
           {/* FAQ */}
           <div id="faq" className="mx-auto mt-24 max-w-3xl scroll-mt-24 text-center">
             <h2 className="text-2xl font-bold">FAQ</h2>
