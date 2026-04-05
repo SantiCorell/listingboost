@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { userIsAdmin } from "@/lib/auth/admin";
 import { parseSerpInsightOutput } from "@/lib/serp-insight-output";
 import { SerpInsightReportView } from "@/components/seo/serp-insight-report-view";
-import { SerpInsightPdfToolbar } from "@/components/seo/serp-insight-pdf-toolbar";
+import { SerpInsightShareToolbar } from "@/components/seo/serp-insight-share-toolbar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { formatDate } from "@/lib/utils";
@@ -42,23 +42,24 @@ export default async function SerpInsightHistoryDetailPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center gap-3">
-        <Button variant="ghost" size="sm" asChild className="gap-1">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <Button variant="ghost" size="sm" asChild className="w-fit gap-1">
           <Link href="/dashboard/history#informes-serp">
             <ArrowLeft className="h-4 w-4" />
             Historial
           </Link>
         </Button>
-        <SerpInsightPdfToolbar
+        <SerpInsightShareToolbar
           reportId={row.id}
           data={data}
           keyword={row.keyword}
           pageUrl={row.pageUrl}
           positionLabel={positionLabel}
           filenameBase={filenameBase}
+          className="w-full sm:w-auto"
         />
         {row.monitoringId ? (
-          <Button variant="outline" size="sm" asChild>
+          <Button variant="outline" size="sm" className="w-full min-h-11 sm:min-h-9 sm:w-auto" asChild>
             <Link href="/dashboard/seo-engine?tab=monitor">Ir al seguimiento SERP</Link>
           </Button>
         ) : null}

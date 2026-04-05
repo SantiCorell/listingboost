@@ -160,20 +160,32 @@ export function SeoEngineWorkbench({
       }}
     >
       <TabsList className="grid w-full grid-cols-2 gap-1 rounded-xl border border-border/60 bg-muted/30 p-1 shadow-sm sm:grid-cols-4">
-        <TabsTrigger value="content" className="gap-1 text-xs sm:text-sm">
-          <FileText className="h-3.5 w-3.5" />
+        <TabsTrigger
+          value="content"
+          className="gap-1 rounded-lg py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-600 data-[state=active]:to-purple-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:py-2 sm:text-sm"
+        >
+          <FileText className="h-3.5 w-3.5 shrink-0" />
           Contenido
         </TabsTrigger>
-        <TabsTrigger value="blog" className="gap-1 text-xs sm:text-sm">
-          <PenLine className="h-3.5 w-3.5" />
+        <TabsTrigger
+          value="blog"
+          className="gap-1 rounded-lg py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-teal-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:py-2 sm:text-sm"
+        >
+          <PenLine className="h-3.5 w-3.5 shrink-0" />
           Blog
         </TabsTrigger>
-        <TabsTrigger value="competitor" className="gap-1 text-xs sm:text-sm">
-          <GitCompare className="h-3.5 w-3.5" />
+        <TabsTrigger
+          value="competitor"
+          className="gap-1 rounded-lg py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-600 data-[state=active]:to-orange-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:py-2 sm:text-sm"
+        >
+          <GitCompare className="h-3.5 w-3.5 shrink-0" />
           Competidor
         </TabsTrigger>
-        <TabsTrigger value="monitor" className="gap-1 text-xs sm:text-sm">
-          <LineChart className="h-3.5 w-3.5" />
+        <TabsTrigger
+          value="monitor"
+          className="gap-1 rounded-lg py-2.5 text-xs font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-600 data-[state=active]:to-indigo-600 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md sm:py-2 sm:text-sm"
+        >
+          <LineChart className="h-3.5 w-3.5 shrink-0" />
           Monitor
         </TabsTrigger>
       </TabsList>
@@ -201,7 +213,9 @@ export function SeoEngineWorkbench({
                 <Loader2 className="h-6 w-6 shrink-0 animate-spin text-violet-600" />
                 <div>
                   <p className="font-medium text-foreground">Generando contenido…</p>
-                  <p className="text-sm text-muted-foreground">Suele tardar entre 20 s y 2 min.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Suele tardar entre 30 s y 2 min; a veces hasta ~3 min si hay cola.
+                  </p>
                 </div>
               </div>
             ) : err ? (
@@ -233,7 +247,9 @@ export function SeoEngineWorkbench({
                 <Loader2 className="h-6 w-6 shrink-0 animate-spin text-emerald-600" />
                 <div>
                   <p className="font-medium text-foreground">Optimizando tu borrador…</p>
-                  <p className="text-sm text-muted-foreground">Reescritura, FAQs sugeridas y enlazado interno.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Reescritura, FAQs y enlaces internos. Suele tardar entre 30 s y 2 minutos.
+                  </p>
                 </div>
               </div>
             ) : err ? (
@@ -285,7 +301,9 @@ export function SeoEngineWorkbench({
                   <Loader2 className="h-6 w-6 shrink-0 animate-spin text-rose-600" />
                   <div>
                     <p className="font-medium text-foreground">Rastreando ambas URLs…</p>
-                    <p className="text-sm text-muted-foreground">Análisis de contenido y recomendaciones con IA.</p>
+                    <p className="text-sm text-muted-foreground">
+                      Análisis de contenido con IA. Suele tardar entre 45 s y 3 minutos.
+                    </p>
                   </div>
                 </div>
               ) : err ? (
@@ -516,6 +534,7 @@ function MonitoringPanel({
     positionAtRun: number | null;
   } | null>(null);
   const [insightLoadingId, setInsightLoadingId] = useState<string | null>(null);
+  const [insightError, setInsightError] = useState<string | null>(null);
 
   function mapMonitoringItems(
     raw: Array<{
@@ -702,6 +721,16 @@ function MonitoringPanel({
                 insightCreditsWaived={Boolean(creditsUnlimited)}
                 insightLoading={insightLoadingId === m.id}
                 onInsight={async () => {
+                  setInsightOpen(true);
+                  setInsightError(null);
+                  setInsightData(null);
+                  setInsightMeta({
+                    url: m.url,
+                    keyword: m.keyword,
+                    credits: FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT,
+                    reportId: null,
+                    positionAtRun: null,
+                  });
                   setInsightLoadingId(m.id);
                   setMonitorErr(null);
                   try {
@@ -718,7 +747,9 @@ function MonitoringPanel({
                       positionAtRun?: number | null;
                     };
                     if (!r.ok) {
-                      setMonitorErr(j.error ?? "No se pudo generar el informe");
+                      const msg = j.error ?? "No se pudo generar el informe";
+                      setInsightError(msg);
+                      setMonitorErr(msg);
                       return;
                     }
                     if (j.output) {
@@ -730,9 +761,9 @@ function MonitoringPanel({
                         reportId: j.reportId ?? null,
                         positionAtRun: j.positionAtRun ?? null,
                       });
-                      setInsightOpen(true);
                     }
                   } catch {
+                    setInsightError("Error de red");
                     setMonitorErr("Error de red");
                   } finally {
                     setInsightLoadingId(null);
@@ -769,13 +800,23 @@ function MonitoringPanel({
         )}
         <SerpCompetitorInsightDialog
           open={insightOpen}
-          onOpenChange={setInsightOpen}
+          onOpenChange={(v) => {
+            setInsightOpen(v);
+            if (!v) {
+              setInsightError(null);
+              setInsightData(null);
+              setInsightMeta(null);
+              setInsightLoadingId(null);
+            }
+          }}
           data={insightData}
           keyword={insightMeta?.keyword ?? ""}
           pageUrl={insightMeta?.url ?? ""}
           creditsUsed={insightMeta?.credits ?? FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT}
           savedReportId={insightMeta?.reportId ?? null}
           positionAtRun={insightMeta?.positionAtRun}
+          isGenerating={insightLoadingId !== null}
+          generateError={insightError}
         />
       </CardContent>
     </Card>

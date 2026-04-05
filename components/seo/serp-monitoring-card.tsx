@@ -59,10 +59,11 @@ function Sparkline({ series }: { series: { t: number; position: number }[] }) {
 
   return (
     <svg
-      width={w}
+      width="100%"
       height={h}
-      className="shrink-0 text-violet-600 dark:text-violet-400"
       viewBox={`0 0 ${w} ${h}`}
+      preserveAspectRatio="xMidYMid meet"
+      className="h-[52px] w-full max-w-[min(100%,280px)] shrink-0 text-violet-600 dark:text-violet-400 sm:max-w-[220px]"
       aria-hidden
     >
       <defs>
@@ -131,7 +132,7 @@ export function SerpMonitoringCard({
   return (
     <li className="group relative overflow-hidden rounded-2xl border border-violet-200/50 bg-gradient-to-br from-violet-50/80 via-background to-background shadow-md ring-1 ring-violet-500/10 dark:border-violet-500/20 dark:from-violet-950/40 dark:ring-violet-400/10">
       <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gradient-to-br from-violet-400/20 to-transparent blur-2xl" />
-      <div className="relative grid gap-4 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-stretch">
+      <div className="relative grid gap-4 p-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)] sm:items-stretch sm:gap-5">
         <div className="min-w-0 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge
@@ -221,8 +222,75 @@ export function SerpMonitoringCard({
             </div>
           ) : null}
 
-          <div className="flex flex-col items-stretch gap-2 sm:items-end">
-            <div className="flex flex-wrap justify-center gap-2 sm:justify-end">
+          {/* Móvil: acciones en panel desplegable para no aplastar el layout */}
+          <details className="group/actions rounded-xl border border-violet-200/60 bg-white/60 shadow-sm dark:border-violet-500/25 dark:bg-zinc-900/50 sm:hidden [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-sm font-semibold text-violet-950 dark:text-violet-100">
+              <span>Acciones e informes</span>
+              <span className="text-xs font-normal text-muted-foreground transition-transform duration-200 group-open/actions:rotate-180">
+                ▼
+              </span>
+            </summary>
+            <div className="flex flex-col gap-2 border-t border-violet-200/40 px-3 py-3 dark:border-violet-500/20">
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="default"
+                  size="sm"
+                  className="min-h-11 flex-1 gap-1.5 bg-gradient-to-r from-violet-600 to-purple-600 shadow-sm hover:from-violet-500 hover:to-purple-500 sm:min-h-0"
+                  disabled={running}
+                  onClick={onRefresh}
+                >
+                  {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+                  Comprobar ahora
+                </Button>
+                <Button type="button" variant="outline" size="sm" className="min-h-11 sm:min-h-0" onClick={onRemove}>
+                  Quitar
+                </Button>
+              </div>
+              {onInsight != null && insightCreditCost != null ? (
+                <>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    className="min-h-11 w-full gap-1.5 border border-amber-400/40 bg-gradient-to-r from-amber-500/15 to-orange-500/10 font-semibold text-amber-950 shadow-sm hover:from-amber-500/25 hover:to-orange-500/15 dark:border-amber-400/25 dark:text-amber-50 sm:min-h-0"
+                    disabled={running || insightLoading}
+                    onClick={onInsight}
+                  >
+                    {insightLoading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-3.5 w-3.5" />
+                    )}
+                    Informe vs competidores
+                    {insightCreditsWaived ? " (sin cargo)" : ` (${insightCreditCost} cr)`}
+                  </Button>
+                  {insightLoading ? (
+                    <p className="rounded-lg bg-amber-50/90 px-2 py-2 text-[11px] leading-snug text-amber-950 dark:bg-amber-950/40 dark:text-amber-100">
+                      Generando informe… <strong className="font-semibold">Suele tardar 2–5 minutos</strong>. Puedes
+                      cerrar el modal y revisar{" "}
+                      <Link href="/dashboard/history#informes-serp" className="font-medium text-primary underline-offset-4 hover:underline">
+                        Historial → Informes SERP
+                      </Link>{" "}
+                      cuando termine.
+                    </p>
+                  ) : null}
+                </>
+              ) : null}
+              {onInsight != null ? (
+                <p className="text-[11px] leading-snug text-muted-foreground">
+                  Los informes quedan guardados en{" "}
+                  <Link href="/dashboard/history#informes-serp" className="font-medium text-primary underline-offset-4 hover:underline">
+                    Historial → Informes SERP
+                  </Link>
+                  : PDF en pantalla o enlace por correo (opcional).
+                </p>
+              ) : null}
+            </div>
+          </details>
+
+          <div className="hidden flex-col items-stretch gap-2 sm:flex sm:items-end">
+            <div className="flex flex-wrap justify-end gap-2">
               <Button
                 type="button"
                 variant="default"
@@ -239,30 +307,42 @@ export function SerpMonitoringCard({
               </Button>
             </div>
             {onInsight != null && insightCreditCost != null ? (
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                className="gap-1.5 border border-amber-400/40 bg-gradient-to-r from-amber-500/15 to-orange-500/10 font-semibold text-amber-950 shadow-sm hover:from-amber-500/25 hover:to-orange-500/15 dark:border-amber-400/25 dark:text-amber-50"
-                disabled={running || insightLoading}
-                onClick={onInsight}
-              >
+              <>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  className="gap-1.5 border border-amber-400/40 bg-gradient-to-r from-amber-500/15 to-orange-500/10 font-semibold text-amber-950 shadow-sm hover:from-amber-500/25 hover:to-orange-500/15 dark:border-amber-400/25 dark:text-amber-50"
+                  disabled={running || insightLoading}
+                  onClick={onInsight}
+                >
+                  {insightLoading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-3.5 w-3.5" />
+                  )}
+                  Informe vs competidores
+                  {insightCreditsWaived ? " (sin cargo)" : ` (${insightCreditCost} cr)`}
+                </Button>
                 {insightLoading ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Sparkles className="h-3.5 w-3.5" />
-                )}
-                Informe vs competidores
-                {insightCreditsWaived ? " (sin cargo)" : ` (${insightCreditCost} cr)`}
-              </Button>
+                  <p className="max-w-[20rem] text-right text-[11px] leading-snug text-muted-foreground">
+                    Suele tardar <strong className="text-foreground">2–5 min</strong>. Puedes cerrar el modal; el
+                    informe aparecerá en{" "}
+                    <Link href="/dashboard/history#informes-serp" className="font-medium text-primary underline-offset-4 hover:underline">
+                      Historial
+                    </Link>
+                    .
+                  </p>
+                ) : null}
+              </>
             ) : null}
-            {onInsight != null ? (
-              <p className="max-w-[20rem] text-center text-[11px] leading-snug text-muted-foreground sm:text-right">
+            {onInsight != null && !insightLoading ? (
+              <p className="max-w-[20rem] text-right text-[11px] leading-snug text-muted-foreground">
                 Cada informe queda en{" "}
                 <Link href="/dashboard/history#informes-serp" className="font-medium text-primary underline-offset-4 hover:underline">
                   Historial → Informes SERP
                 </Link>
-                . Vuelve a abrirlo o descarga PDF desde ahí.
+                . Vuelve a abrirlo, PDF en pantalla o enlace por correo (opcional).
               </p>
             ) : null}
           </div>
