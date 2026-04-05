@@ -190,12 +190,20 @@ export async function POST(req: Request) {
 
     const unitCents = extraCreditUnitAmountCents(user.plan);
     try {
-      const priceObj = await stripe.prices.retrieve(priceId);
+      const priceObj = await stripe.prices.retrieve(priceId, { expand: ["product"] });
       if (priceObj.unit_amount != null && priceObj.unit_amount !== unitCents) {
-        console.error(
-          "[stripe checkout credits] unit_amount mismatch",
-          { priceId, stripeCents: priceObj.unit_amount, expectedCents: unitCents, plan: user.plan },
-        );
+        const prod = priceObj.product;
+        const stripeProductMeta =
+          typeof prod === "object" && prod !== null && "name" in prod
+            ? { stripeProductId: prod.id, stripeProductName: String(prod.name) }
+            : {};
+        console.error("[stripe checkout credits] unit_amount mismatch", {
+          priceId,
+          stripeCents: priceObj.unit_amount,
+          expectedCents: unitCents,
+          plan: user.plan,
+          ...stripeProductMeta,
+        });
         const freeHint =
           user.plan === "FREE"
             ? " Suele pasar si STRIPE_PRICE_ID_CREDIT_FREE en Vercel apunta a un precio antiguo de 2 € o al producto «Crédito análisis» en lugar de «Crédito extra (plan Free · 1,00 €/ud)»."
