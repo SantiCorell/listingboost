@@ -8,7 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Copy, Download, FileDown, Layers, LineChart, Loader2, ListChecks } from "lucide-react";
+import {
+  Copy,
+  Download,
+  FileDown,
+  Layers,
+  LineChart,
+  Loader2,
+  ListChecks,
+  Wand2,
+} from "lucide-react";
 import { chargeUrlAuditPdfExport } from "@/actions/url-audit-pdf";
 import { CREDIT_URL_AUDIT_PDF } from "@/lib/url-audit/credits-config";
 import { downloadUrlAuditPdfClient } from "@/components/url/url-audit-pdf-export";
@@ -69,6 +78,9 @@ export function UrlAuditResults({
   const sitemap = data.sitemapReport;
   const [pdfMsg, setPdfMsg] = useState<string | null>(null);
   const [pdfBusy, setPdfBusy] = useState(false);
+  const [fixBusyId, setFixBusyId] = useState<string | null>(null);
+  const [fixError, setFixError] = useState<string | null>(null);
+  const [fixOutput, setFixOutput] = useState<Record<string, unknown> | null>(null);
 
   const downloadJson = () => {
     const blob = new Blob([JSON.stringify(data, null, 2)], {
@@ -79,6 +91,30 @@ export function UrlAuditResults({
     a.download = `auditoria-url-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(a.href);
+  };
+
+  const onQuickFix = async (issueId: string) => {
+    if (!auditId) return;
+    setFixError(null);
+    setFixOutput(null);
+    setFixBusyId(issueId);
+    try {
+      const r = await fetch("/api/seo/quick-fix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ auditId, issueId }),
+      });
+      const j = (await r.json()) as { error?: string; output?: Record<string, unknown> };
+      if (!r.ok) {
+        setFixError(j.error ?? "No se pudo generar el arreglo.");
+        return;
+      }
+      if (j.output) setFixOutput(j.output);
+    } catch {
+      setFixError("Error de red.");
+    } finally {
+      setFixBusyId(null);
+    }
   };
 
   const onPdf = async () => {
@@ -277,13 +313,17 @@ export function UrlAuditResults({
 
           <div>
             <h3 className="mb-2 text-sm font-semibold">Problemas detectados</h3>
+            <p className="mb-2 text-xs text-muted-foreground">
+              Cada incidencia incluye impacto estimado (heurística).{" "}
+              <strong className="text-foreground">Arreglo 1‑clic</strong> genera title/meta/H1 listos (2 créditos).
+            </p>
             <ul className="space-y-2">
               {issues.map((i) => (
                 <li
                   key={i.id}
-                  className="flex flex-col gap-0.5 rounded-md border border-border/50 px-3 py-2 text-sm"
+                  className="flex flex-col gap-1.5 rounded-md border border-border/50 px-3 py-2 text-sm"
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <Badge
                       variant={
                         i.severity === "error"
@@ -297,14 +337,66 @@ export function UrlAuditResults({
                       {i.severity}
                     </Badge>
                     <span className="text-xs text-muted-foreground">{i.category}</span>
+                    {i.impact ? (
+                      <Badge variant="outline" className="text-[10px] font-normal">
+                        Impacto {i.impact === "high" ? "alto" : i.impact === "medium" ? "medio" : "bajo"}
+                        {i.impactPercentEstimate != null
+                          ? ` · ~${i.impactPercentEstimate}% mejora relativa estimada`
+                          : ""}
+                      </Badge>
+                    ) : null}
                   </div>
                   <span>{i.message}</span>
+                  {i.impactHint ? (
+                    <span className="text-xs text-amber-800/90 dark:text-amber-200/90">{i.impactHint}</span>
+                  ) : null}
                   {i.fix ? (
                     <span className="text-xs text-muted-foreground">Fix: {i.fix}</span>
+                  ) : null}
+                  {auditId ? (
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                        className="h-8 gap-1"
+                        disabled={fixBusyId === i.id}
+                        onClick={() => void onQuickFix(i.id)}
+                      >
+                        {fixBusyId === i.id ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <Wand2 className="h-3.5 w-3.5" />
+                        )}
+                        Arreglo 1‑clic (2 cr)
+                      </Button>
+                    </div>
                   ) : null}
                 </li>
               ))}
             </ul>
+            {fixError ? (
+              <p className="mt-2 text-xs text-destructive">{fixError}</p>
+            ) : null}
+            {fixOutput ? (
+              <div className="mt-3 rounded-lg border border-primary/25 bg-primary/5 p-3 text-sm">
+                <p className="mb-2 font-semibold text-foreground">Propuesta generada</p>
+                <div className="space-y-2 text-xs">
+                  <p>
+                    <span className="font-medium">Title:</span> {String(fixOutput.optimizedTitle ?? "")}
+                  </p>
+                  <p>
+                    <span className="font-medium">Meta:</span> {String(fixOutput.optimizedMetaDescription ?? "")}
+                  </p>
+                  <p>
+                    <span className="font-medium">H1:</span> {String(fixOutput.optimizedH1 ?? "")}
+                  </p>
+                  {fixOutput.htmlSnippet ? (
+                    <CopyBlock label="Snippet" text={String(fixOutput.htmlSnippet)} />
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div>

@@ -8,7 +8,8 @@ import { canOpenSavedStudy } from "@/lib/history-access";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CreditsUpsellBanner } from "@/components/pricing/credits-upsell-banner";
-import { ChevronRight, Lock } from "lucide-react";
+import { FREE_HISTORY_LIMIT } from "@/lib/constants";
+import { ChevronRight, LineChart, Lock } from "lucide-react";
 
 export default async function HistoryPage() {
   const session = await auth();
@@ -18,8 +19,9 @@ export default async function HistoryPage() {
     where: { id: session.user.id },
   });
   const take = historyTake(user.plan, session.user.role, session.user.email);
+  const freeListCap = take ?? FREE_HISTORY_LIMIT;
 
-  const [products, audits] = await Promise.all([
+  const [products, audits, monitorings] = await Promise.all([
     prisma.productAnalysis.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
@@ -29,6 +31,19 @@ export default async function HistoryPage() {
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
       take: take ?? 500,
+    }),
+    prisma.seoMonitoring.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      select: {
+        id: true,
+        url: true,
+        keyword: true,
+        cadence: true,
+        lastPosition: true,
+        createdAt: true,
+      },
     }),
   ]);
 
@@ -42,7 +57,7 @@ export default async function HistoryPage() {
           <h1 className="text-2xl font-semibold tracking-tight">Historial</h1>
           <p className="text-sm text-muted-foreground">
             {user.plan === "FREE"
-              ? `Últimos ${take} elementos en Free. Los estudios guardados se abren con Pro.`
+              ? `Últimos ${freeListCap} elementos en Free. Los estudios guardados se abren con Pro.`
               : "Historial completo. Pulsa una fila para abrir el estudio."}
           </p>
         </div>
@@ -143,6 +158,60 @@ export default async function HistoryPage() {
                 </div>
               ),
             )
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Seguimiento de posiciones (Google)</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            URLs y consultas que vigilas en la pestaña <strong className="text-foreground">Monitor</strong> del{" "}
+            <Link href="/dashboard/seo-engine?tab=monitor" className="font-medium text-primary hover:underline">
+              SEO Engine
+            </Link>
+            . Ahí ves posiciones y cadencia; aquí queda el listado rápido.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {monitorings.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Aún no hay seguimientos.{" "}
+              <Link href="/dashboard/seo-engine?tab=monitor" className="font-medium text-primary hover:underline">
+                Crear uno en Monitor
+              </Link>
+              .
+            </p>
+          ) : (
+            monitorings.map((m) => (
+              <Link
+                key={m.id}
+                href="/dashboard/seo-engine?tab=monitor"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/50 px-3 py-3 text-sm transition-colors hover:border-primary/40 hover:bg-muted/40"
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <LineChart className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+                  <span className="min-w-0 flex-1">
+                    <span className="block break-all font-medium text-foreground">{m.url}</span>
+                    <span className="text-xs text-muted-foreground">
+                      Consulta: «{m.keyword}» · {m.cadence === "daily" ? "Diario" : "Semanal"}
+                    </span>
+                  </span>
+                </span>
+                <span className="shrink-0 text-xs text-muted-foreground">
+                  {formatDate(m.createdAt)}
+                  {m.lastPosition != null ? (
+                    <>
+                      {" "}
+                      · Pos. ~{m.lastPosition}
+                    </>
+                  ) : (
+                    " · Pos. pendiente"
+                  )}
+                </span>
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+              </Link>
+            ))
           )}
         </CardContent>
       </Card>

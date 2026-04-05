@@ -10,6 +10,7 @@ import { APP_NAME, ENGINE_NAME } from "@/lib/constants";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { TRUST_STATS } from "@/lib/social-proof";
 import { faqPageJsonLd } from "@/lib/seo-jsonld";
+import { PlanFeatureMatrix } from "@/components/pricing/plan-feature-matrix";
 import {
   EXTRA_CREDIT_PRICE_EUR,
   PLAN_INCLUDED_ANALYSES,
@@ -126,7 +127,7 @@ export default async function PricingPage() {
 
   const freePlanBullets = [
     `Hasta ${PLAN_INCLUDED_ANALYSES.FREE} análisis incluidos/mes`,
-    "Boost de ficha + scan URL + hashtags",
+    "Boost de ficha + scan URL + SEO Engine (generador, blog optimizer) + hashtags",
     "Historial limitado · marca de agua en export",
     commerceEnabled
       ? `Crédito extra: ${EXTRA_CREDIT_PRICE_EUR.FREE} €/u`
@@ -297,6 +298,18 @@ export default async function PricingPage() {
             </div>
           </section>
 
+          <section className="mx-auto mt-20 max-w-5xl">
+            <h2 className="text-center text-2xl font-bold sm:text-3xl">Qué desbloqueas en cada plan</h2>
+            <p className="mx-auto mt-2 max-w-2xl text-center text-muted-foreground">
+              <strong className="text-foreground">Free</strong> incluye el núcleo (boost, scan, SEO Engine básico con
+              cupo reducido). <strong className="text-foreground">Pro</strong> añade monitoring SERP y mejor relación
+              €/crédito. <strong className="text-foreground">Pro+</strong> es para volumen y cadencia diaria.
+            </p>
+            <div className="mt-8">
+              <PlanFeatureMatrix currentPlan={userPlan} />
+            </div>
+          </section>
+
           {/* Planes */}
           <section id="planes" className="mt-20 scroll-mt-24">
             <div className="text-center">
@@ -383,6 +396,7 @@ export default async function PricingPage() {
                   <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
                     {[
                       "Historial completo · sin marca de agua en export",
+                      "SEO Engine: comparativa competidor + monitoring SERP (cron)",
                       `Créditos extra solo ${EXTRA_CREDIT_PRICE_EUR.PRO} €/u`,
                       "Cancelación gestionada en Stripe",
                       "Prioridad en evolución del producto",
@@ -457,6 +471,7 @@ export default async function PricingPage() {
                   <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
                     {[
                       "Todo lo de Pro con más aire cada mes",
+                      "Monitoring en cadencia diaria (Pro+)",
                       `Créditos al mejor precio: ${EXTRA_CREDIT_PRICE_EUR.PRO_PLUS} €/u`,
                       "Menos fricción cuando el catálogo no para",
                     ].map((t) => (

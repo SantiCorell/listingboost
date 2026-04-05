@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Plan } from "@prisma/client";
 import { auth } from "@/auth";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { prisma } from "@/lib/prisma";
@@ -15,6 +16,7 @@ import {
   getFreeCreditPack,
 } from "@/lib/credit-packs";
 import {
+  expectedSubscriptionUnitAmountCents,
   extraCreditUnitAmountCents,
   formatEurUnitsFromCents,
   planLabel,
@@ -295,6 +297,22 @@ export async function POST(req: Request) {
   if (price.recurring?.interval !== "month") {
     return NextResponse.json(
       { error: "El plan debe facturarse cada mes en Stripe (intervalo «month» en el Price)." },
+      { status: 500 },
+    );
+  }
+
+  const expectedSubCents = expectedSubscriptionUnitAmountCents(plan);
+  if (price.unit_amount != null && price.unit_amount !== expectedSubCents) {
+    console.error("[stripe checkout subscription] unit_amount mismatch", {
+      priceId,
+      stripeCents: price.unit_amount,
+      expectedCents: expectedSubCents,
+      plan,
+    });
+    return NextResponse.json(
+      {
+        error: `Configuración de Stripe desactualizada: el precio de suscripción ${planLabel(plan as Plan)} no coincide con la app (${expectedSubCents} céntimos vs ${price.unit_amount}). Ejecuta «npm run stripe:seed:write» con tu clave (test/live) y actualiza STRIPE_PRICE_ID_${plan} en Vercel.`,
+      },
       { status: 500 },
     );
   }

@@ -53,10 +53,18 @@ export type ScoresByCategory = z.infer<typeof scoresByCategorySchema>;
 
 export type CrawlIssueSeverity = "error" | "warning" | "info";
 
+export type IssueImpact = "low" | "medium" | "high";
+
 export type CrawlIssue = {
   id: string;
   severity: CrawlIssueSeverity;
   category: string;
   message: string;
   fix?: string;
+  /** Prioridad de negocio (heurística, no garantía SERP). */
+  impact?: IssueImpact;
+  /** Estimación orientativa de mejora relativa (0–100 escala interna). */
+  impactPercentEstimate?: number;
+  /** Texto corto para UI / PDF. */
+  impactHint?: string;
 };

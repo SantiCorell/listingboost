@@ -171,8 +171,7 @@ export async function getAdminDashboardStats() {
     mrrEuros,
     mrrNote:
       "Estimación a partir de usuarios con plan Pro / Pro+ y precios de catálogo. Enterprise y Stripe real no incluidos.",
-    potentialNote:
-      "Usuarios en plan Free como posible conversión a Pro (15 €/mes de referencia).",
+    potentialNote: `Usuarios en plan Free como posible conversión a Pro (${PLAN_PRICING_DISPLAY.PRO.euros} €/mes de referencia).`,
     potentialMrrIfAllFreeConvert: freeUsers * (PLAN_PRICING_DISPLAY.PRO.euros ?? 0),
     apiByUserRows,
     recentUsers,

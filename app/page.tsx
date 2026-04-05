@@ -161,6 +161,38 @@ export default function HomePage() {
                 </strong>
                 , scan SEO de URL y boost de ficha en segundos — para equipos que escalan catálogo sin fricción.
               </p>
+
+              {/* Bloque alto impacto: promesa + prueba social implícita + CTA */}
+              <div className="mt-7 max-w-xl rounded-2xl border border-emerald-500/35 bg-gradient-to-br from-emerald-500/[0.12] via-card/95 to-primary/[0.06] p-4 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/20 sm:p-5">
+                <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200/95">
+                  <Timer className="h-4 w-4 shrink-0" />
+                  Sin tarjeta · sin instalar nada
+                </div>
+                <p className="mt-2 text-lg font-bold leading-snug tracking-tight text-foreground sm:text-xl">
+                  Analiza tu web en segundos — <span className="text-emerald-700 dark:text-emerald-300">gratis</span>
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  Pega la URL y obtén <strong className="text-foreground">puntuación</strong>,{" "}
+                  <strong className="text-foreground">fallos por impacto</strong> y el siguiente paso claro. Cada mes
+                  incluye créditos en el plan Free: prueba real, no demo vacía.
+                </p>
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+                  <Button
+                    size="lg"
+                    className="h-11 w-full border border-emerald-600/30 bg-emerald-600 text-white shadow-md hover:bg-emerald-600/90 dark:bg-emerald-500 dark:hover:bg-emerald-500/90 sm:w-auto"
+                    asChild
+                  >
+                    <Link href="/register?callbackUrl=/dashboard/audit">
+                      Quiero mi informe gratis
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <span className="text-center text-[11px] text-muted-foreground sm:text-left">
+                    ~1 min crear cuenta · luego scan en un clic
+                  </span>
+                </div>
+              </div>
+
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button
                   size="lg"

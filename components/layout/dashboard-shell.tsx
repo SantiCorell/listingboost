@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Coins, LayoutDashboard, History, PackageSearch, SearchCheck, Settings } from "lucide-react";
+import { Coins, LayoutDashboard, History, PackageSearch, SearchCheck, Settings, Sparkles } from "lucide-react";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { BrandLogoLink } from "@/components/brand/brand-logo-link";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ const baseLinks = [
   { href: "/dashboard", label: "Resumen", icon: LayoutDashboard },
   { href: "/dashboard/product", label: "Boost ficha", icon: PackageSearch },
   { href: "/dashboard/audit", label: "Scan URL", icon: SearchCheck },
+  { href: "/dashboard/seo-engine", label: "SEO Engine", icon: Sparkles },
   { href: "/dashboard/history", label: "Historial", icon: History },
 ] as const;
 

@@ -73,8 +73,8 @@ Eso borra `.next`, `.turbo` y `node_modules/.cache` y arranca **Turbopack**. Si 
 | Plan | Precio | Incluidos/mes (defecto) | Crédito extra |
 |------|--------|-------------------------|---------------|
 | Free | 0 € | 5 | 1,00 € |
-| Pro | 15 € | 120 | 0,70 € |
-| Pro+ | 30 € | 280 | 0,50 € |
+| Pro | 29 € | 200 | 0,70 € |
+| Pro+ | 79 € | 750 | 0,50 € |
 | Enterprise | A medida / Stripe | 500 | 0,50 € |
 
 Los números incluidos calibran margen frente al coste típico de API; ajústalos con variables `*_MONTHLY_ANALYSES` en `.env`. Los créditos extra se acumulan en `bonusCreditsRemaining` y no se resetean al cambiar de mes.

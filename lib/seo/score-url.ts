@@ -1,8 +1,24 @@
 import type { ParsedUrlSummary } from "@/services/url/crawler";
-import type { CrawlIssue, ScoresByCategory } from "@/types/url-audit";
+import type { CrawlIssue, IssueImpact, ScoresByCategory } from "@/types/url-audit";
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
+}
+
+/** Impacto de negocio estimado por severidad (MVP; sin prometer % SERP exactos). */
+export function annotateIssuesImpact(issues: CrawlIssue[]): CrawlIssue[] {
+  return issues.map((i) => {
+    const impact: IssueImpact =
+      i.severity === "error" ? "high" : i.severity === "warning" ? "medium" : "low";
+    const impactPercentEstimate = impact === "high" ? 18 : impact === "medium" ? 10 : 4;
+    const impactHint =
+      impact === "high"
+        ? "Prioridad alta: suele afectar mucho a visibilidad o CTR si lo corriges."
+        : impact === "medium"
+          ? "Impacto medio: buen ROI si encaja con tu estrategia."
+          : "Impacto menor de forma aislado; útil en conjunto con otros cambios.";
+    return { ...i, impact, impactPercentEstimate, impactHint };
+  });
 }
 
 export type ScoreResult = {
@@ -321,7 +337,7 @@ export function scoreUrlAudit(
   return {
     overallScore,
     scoresByCategory,
-    issues,
+    issues: annotateIssuesImpact(issues),
     quickWins: [...new Set(quickWins)].slice(0, 8),
   };
 }

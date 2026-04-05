@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import type { Plan, User, UserRole } from "@prisma/client";
 import { FREE_HISTORY_LIMIT } from "@/lib/constants";
 import { isCommerceEnabled } from "@/lib/commerce";
+import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import { isPaidPlan, monthlyIncludedLimit } from "@/lib/plans";
 import { userIsAdmin } from "@/lib/auth/admin";
 
@@ -18,6 +19,12 @@ export const CREDIT_COST_URL_AUDIT = 2;
 export function creditCostForUsageKind(kind: string): number {
   if (kind === "url_audit") return CREDIT_COST_URL_AUDIT;
   if (kind === "url_audit_pdf") return 1;
+  if (kind === "seo_quick_fix") return FEATURE_CREDITS.SEO_QUICK_FIX;
+  if (kind === "seo_content") return FEATURE_CREDITS.SEO_CONTENT_BLOG;
+  if (kind === "seo_content_product") return FEATURE_CREDITS.SEO_CONTENT_PRODUCT;
+  if (kind === "blog_optimize") return FEATURE_CREDITS.BLOG_OPTIMIZE;
+  if (kind === "competitor_compare") return FEATURE_CREDITS.COMPETITOR_COMPARE;
+  if (kind === "competitor_compare_pdf") return FEATURE_CREDITS.COMPETITOR_PDF_EXPORT;
   return CREDIT_COST_PRODUCT;
 }
 

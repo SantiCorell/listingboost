@@ -33,8 +33,8 @@ export function totalExtraCreditsAmountCents(plan: Plan, quantity: number): numb
 /** Incluidos/mes por plan (calibrado para margen razonable vs coste API típico). */
 export const PLAN_INCLUDED_ANALYSES: Record<Plan, number> = {
   FREE: Number(process.env.FREE_MONTHLY_ANALYSES ?? "5"),
-  PRO: Number(process.env.PRO_MONTHLY_ANALYSES ?? "120"),
-  PRO_PLUS: Number(process.env.PRO_PLUS_MONTHLY_ANALYSES ?? "280"),
+  PRO: Number(process.env.PRO_MONTHLY_ANALYSES ?? "200"),
+  PRO_PLUS: Number(process.env.PRO_PLUS_MONTHLY_ANALYSES ?? "750"),
   ENTERPRISE: Number(process.env.ENTERPRISE_MONTHLY_ANALYSES ?? "500"),
 };
 
@@ -46,6 +46,11 @@ export function isPaidPlan(plan: Plan): boolean {
   return plan !== "FREE";
 }
 
+/** Pro+ y Enterprise: exportación PDF comparativa sin coste en créditos (Free/Pro: 1 cr). */
+export function isProPlusOrHigher(plan: Plan): boolean {
+  return plan === "PRO_PLUS" || plan === "ENTERPRISE";
+}
+
 /** Precio mostrado (€) por crédito extra según plan — derivado de EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR. */
 export const EXTRA_CREDIT_PRICE_EUR: Record<Plan, string> = {
   FREE: formatEurUnitsFromCents(EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR.FREE),
@@ -55,10 +60,30 @@ export const EXTRA_CREDIT_PRICE_EUR: Record<Plan, string> = {
 };
 
 export const PLAN_PRICING_DISPLAY = {
-  PRO: { euros: 15, label: "15 €/mes" },
-  PRO_PLUS: { euros: 30, label: "30 €/mes" },
+  PRO: { euros: 29, label: "29 €/mes" },
+  PRO_PLUS: { euros: 79, label: "79 €/mes" },
   ENTERPRISE: { euros: null as number | null, label: "A medida" },
 } as const;
+
+/**
+ * Importe mensual en céntimos (EUR) por suscripción — debe coincidir con `scripts/stripe-seed-catalog.cjs`
+ * y con los Price IDs en Vercel (`STRIPE_PRICE_ID_PRO`, etc.).
+ */
+export const SUBSCRIPTION_UNIT_AMOUNT_CENTS_EUR = {
+  PRO: 2900,
+  PRO_PLUS: 7900,
+  ENTERPRISE: 10000,
+} as const;
+
+export type SubscriptionCheckoutPlanKey = keyof typeof SUBSCRIPTION_UNIT_AMOUNT_CENTS_EUR;
+
+/** Céntimos esperados en Stripe para el checkout de suscripción (Enterprise sin price propio usa Pro+). */
+export function expectedSubscriptionUnitAmountCents(plan: SubscriptionCheckoutPlanKey): number {
+  if (plan === "ENTERPRISE" && !process.env.STRIPE_PRICE_ID_ENTERPRISE?.trim()) {
+    return SUBSCRIPTION_UNIT_AMOUNT_CENTS_EUR.PRO_PLUS;
+  }
+  return SUBSCRIPTION_UNIT_AMOUNT_CENTS_EUR[plan];
+}
 
 export function planLabel(plan: Plan): string {
   switch (plan) {

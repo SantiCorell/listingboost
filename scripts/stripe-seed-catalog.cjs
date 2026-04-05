@@ -5,7 +5,7 @@
  *   npm run stripe:seed
  *   npm run stripe:seed:write   → imprime IDs y actualiza STRIPE_PRICE_ID_* en .env.local
  *
- * Montos (EUR): Pro 15/mes, Pro+ 30/mes, Enterprise 100/mes.
+ * Montos (EUR): Pro 29/mes, Pro+ 79/mes, Enterprise 100/mes.
  * Créditos extra (debe coincidir con lib/plans.ts EXTRA_CREDIT_UNIT_AMOUNT_CENTS_EUR):
  *   Free 1,00 · Pro 0,70 · Pro+ 0,50 · Enterprise 0,50 €/crédito.
  *   Packs con descuento (solo Free) usan price_data en checkout, no estos IDs.
@@ -131,12 +131,12 @@ async function main() {
 
   const pro = await findOrCreatePrice(stripe, {
     productName: `ListingBoost — Pro${s}`,
-    unitAmount: 1500,
+    unitAmount: 2900,
     recurring: true,
   });
   const proPlus = await findOrCreatePrice(stripe, {
     productName: `ListingBoost — Pro+${s}`,
-    unitAmount: 3000,
+    unitAmount: 7900,
     recurring: true,
   });
   const enterprise = await findOrCreatePrice(stripe, {
