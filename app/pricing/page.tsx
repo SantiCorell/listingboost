@@ -69,6 +69,16 @@ export const metadata: Metadata = {
 const PRICING_CTA_CLASS =
   "inline-flex h-auto min-h-12 w-full flex-col items-center justify-center gap-0.5 whitespace-normal px-3 py-3 text-center text-sm font-semibold leading-snug sm:text-base";
 
+/** Misma altura por fila (grid + h-full); en móvil ancho fijo + snap + min-h uniforme. */
+const PLAN_CARD_BASE =
+  "flex h-full min-h-0 w-full flex-col max-lg:min-h-[27.5rem] max-lg:w-[min(91vw,22rem)] max-lg:max-w-[22rem] max-lg:shrink-0 max-lg:snap-center";
+
+const PLAN_CARD_HEADER = "shrink-0 space-y-1.5 pb-2 pt-6 max-lg:pb-1.5 max-lg:pt-5";
+
+/** Cuerpo: móvil CTA arriba; desktop fila flexible + acordeón pegado abajo y CTAs alineados entre cards. */
+const PLAN_CARD_CONTENT =
+  "grid flex-1 grid-rows-[auto_auto] gap-3 p-6 pt-0 min-h-0 lg:grid-rows-[1fr_auto] lg:gap-4";
+
 /** Enterprise online: precio dedicado o, si falta, mismo checkout que Pro+ con metadata ENTERPRISE. */
 const enterpriseStripeReady =
   Boolean(process.env.STRIPE_PRICE_ID_ENTERPRISE?.trim()) ||
@@ -363,10 +373,13 @@ export default async function PricingPage() {
               </div>
             ) : null}
 
-            <div className="mt-10 grid items-start gap-6 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+            <p className="mt-6 text-center text-xs text-muted-foreground lg:hidden">
+              Desliza horizontalmente para comparar los cuatro planes.
+            </p>
+            <div className="mt-3 flex snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-visible pb-4 [scrollbar-width:thin] max-lg:-mx-4 max-lg:px-4 max-lg:pt-1 lg:mx-0 lg:mt-10 lg:grid lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0 xl:grid-cols-4 xl:items-stretch">
               {/* Free */}
-              <Card className="flex w-full min-h-0 flex-col border-border/80 bg-card/95 shadow-sm">
-                <CardHeader className="pb-2 max-lg:pb-1.5">
+              <Card className={`${PLAN_CARD_BASE} border-border/80 bg-card/95 shadow-sm`}>
+                <CardHeader className={PLAN_CARD_HEADER}>
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Free
                     <Badge variant="secondary" className="text-base font-bold">
@@ -379,8 +392,8 @@ export default async function PricingPage() {
                     que los planes de pago. Ideal si publicas poco o quieres validar antes de invertir un euro.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex min-h-0 flex-col gap-3 max-lg:gap-2 lg:gap-4">
-                  <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
+                <CardContent className={PLAN_CARD_CONTENT}>
+                  <div className="row-start-1 shrink-0 space-y-2 lg:row-start-2 lg:border-t lg:border-border/50 lg:pt-4">
                     {!session?.user ? (
                       <div className="flex flex-col justify-end gap-2">
                         <Button asChild className={PRICING_CTA_CLASS} size="lg">
@@ -402,7 +415,7 @@ export default async function PricingPage() {
                       </div>
                     )}
                   </div>
-                  <div className="order-2 min-h-0 flex-1 lg:order-1">
+                  <div className="row-start-2 flex min-h-0 flex-col justify-end lg:row-start-1">
                     <PricingPlanFeatureList
                       items={freePlanBullets}
                       summaryHint={`${PLAN_INCLUDED_ANALYSES.FREE} análisis/mes + herramientas`}
@@ -412,14 +425,16 @@ export default async function PricingPage() {
               </Card>
 
               {/* Pro — destacado */}
-              <Card className="relative flex h-full min-h-0 flex-col border-2 border-primary/45 bg-gradient-to-b from-primary/[0.06] to-card shadow-xl shadow-primary/15 ring-2 ring-primary/20">
+              <Card
+                className={`relative ${PLAN_CARD_BASE} border-2 border-primary/45 bg-gradient-to-b from-primary/[0.06] to-card shadow-xl shadow-primary/15 ring-2 ring-primary/20`}
+              >
                 <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap">
                   <Badge className="gap-1 border border-amber-400/50 bg-gradient-to-r from-amber-400 to-amber-500 px-3 py-1 text-amber-950 shadow-md">
                     <Crown className="h-3.5 w-3.5" />
                     Más elegido
                   </Badge>
                 </div>
-                <CardHeader className="pb-2 pt-6 max-lg:pb-1.5 max-lg:pt-5">
+                <CardHeader className={PLAN_CARD_HEADER}>
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Pro
                     <Badge className="bg-primary text-base">{PLAN_PRICING_DISPLAY.PRO.label}</Badge>
@@ -431,8 +446,8 @@ export default async function PricingPage() {
                     notan el coste en horas, no solo en euros.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex min-h-0 flex-col gap-3 max-lg:gap-2 lg:gap-4">
-                  <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
+                <CardContent className={PLAN_CARD_CONTENT}>
+                  <div className="row-start-1 shrink-0 space-y-2 lg:row-start-2 lg:border-t lg:border-border/50 lg:pt-4">
                     {session?.user ? (
                       <div>
                         {commerceEnabled ? (
@@ -475,7 +490,7 @@ export default async function PricingPage() {
                       </div>
                     )}
                   </div>
-                  <div className="order-2 min-h-0 lg:order-1">
+                  <div className="row-start-2 flex min-h-0 flex-col justify-end lg:row-start-1">
                     <PricingPlanFeatureList
                       items={proPlanBullets}
                       summaryHint="Historial completo + SEO Engine + PDFs"
@@ -485,8 +500,8 @@ export default async function PricingPage() {
               </Card>
 
               {/* Pro+ */}
-              <Card className="flex w-full min-h-0 flex-col border-primary/30 bg-card/95 shadow-lg">
-                <CardHeader className="pb-2 max-lg:pb-1.5">
+              <Card className={`${PLAN_CARD_BASE} border-primary/30 bg-card/95 shadow-lg`}>
+                <CardHeader className={PLAN_CARD_HEADER}>
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Pro+
                     <Badge className="gap-1 bg-primary/90">
@@ -501,8 +516,8 @@ export default async function PricingPage() {
                     quedarse sin aire a mitad de mes.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex min-h-0 flex-col gap-3 max-lg:gap-2 lg:gap-4">
-                  <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
+                <CardContent className={PLAN_CARD_CONTENT}>
+                  <div className="row-start-1 shrink-0 space-y-2 lg:row-start-2 lg:border-t lg:border-border/50 lg:pt-4">
                     {session?.user ? (
                       <div>
                         {commerceEnabled ? (
@@ -546,7 +561,7 @@ export default async function PricingPage() {
                       </div>
                     )}
                   </div>
-                  <div className="order-2 min-h-0 lg:order-1">
+                  <div className="row-start-2 flex min-h-0 flex-col justify-end lg:row-start-1">
                     <PricingPlanFeatureList
                       items={proPlusPlanBullets}
                       summaryHint="Más cupo + PDF comparativa incluido"
@@ -556,9 +571,11 @@ export default async function PricingPage() {
               </Card>
 
               {/* Enterprise */}
-              <Card className="relative flex w-full min-h-0 flex-col overflow-hidden border-2 border-violet-500/35 bg-gradient-to-b from-violet-500/[0.08] via-muted/20 to-card shadow-xl shadow-violet-500/10">
+              <Card
+                className={`relative ${PLAN_CARD_BASE} overflow-hidden border-2 border-violet-500/35 bg-gradient-to-b from-violet-500/[0.08] via-muted/20 to-card shadow-xl shadow-violet-500/10`}
+              >
                 <div className="pointer-events-none absolute -right-16 top-0 h-32 w-32 rounded-full bg-violet-500/20 blur-2xl" />
-                <CardHeader className="relative pb-2 max-lg:pb-1.5">
+                <CardHeader className={`relative ${PLAN_CARD_HEADER}`}>
                   <CardTitle className="flex flex-wrap items-center justify-between gap-2 text-xl">
                     Enterprise
                     <Badge variant="outline" className="gap-1 border-violet-500/40 bg-violet-500/10 text-violet-950 dark:text-violet-100">
@@ -574,8 +591,8 @@ export default async function PricingPage() {
                     cada vez que lanzas campaña o subes 200 SKUs.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="relative flex min-h-0 flex-col gap-3 max-lg:gap-2 lg:gap-4">
-                  <div className="order-1 shrink-0 space-y-2 lg:order-2 lg:mt-auto lg:border-t lg:border-border/50 lg:pt-4">
+                <CardContent className={`relative ${PLAN_CARD_CONTENT}`}>
+                  <div className="row-start-1 shrink-0 space-y-2 lg:row-start-2 lg:border-t lg:border-border/50 lg:pt-4">
                     <div className="flex flex-col justify-end gap-2">
                       {session?.user && enterpriseStripeReady && commerceEnabled ? (
                         <CheckoutPlanButton plan="ENTERPRISE" className="shadow-md">
@@ -610,7 +627,7 @@ export default async function PricingPage() {
                       </Button>
                     </div>
                   </div>
-                  <div className="order-2 min-h-0 lg:order-1">
+                  <div className="row-start-2 flex min-h-0 flex-col justify-end lg:row-start-1">
                     <PricingPlanFeatureList
                       items={enterprisePlanBullets}
                       summaryHint="Cupo ilimitado + SERP premium sin cupo"
