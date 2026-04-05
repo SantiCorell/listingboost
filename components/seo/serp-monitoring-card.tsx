@@ -24,6 +24,8 @@ export type SerpMonitoringCardProps = {
   onRemove: () => void;
   /** Informe premium vs URLs por encima en la SERP (créditos). */
   insightCreditCost?: number;
+  /** Enterprise / admin: no muestra coste en el botón. */
+  insightCreditsWaived?: boolean;
   insightLoading?: boolean;
   onInsight?: () => void;
 };
@@ -111,6 +113,7 @@ export function SerpMonitoringCard({
   onRefresh,
   onRemove,
   insightCreditCost,
+  insightCreditsWaived,
   insightLoading,
   onInsight,
 }: SerpMonitoringCardProps) {
@@ -248,7 +251,8 @@ export function SerpMonitoringCard({
                 ) : (
                   <Sparkles className="h-3.5 w-3.5" />
                 )}
-                Informe vs competidores ({insightCreditCost} cr)
+                Informe vs competidores
+                {insightCreditsWaived ? " (sin cargo)" : ` (${insightCreditCost} cr)`}
               </Button>
             ) : null}
           </div>

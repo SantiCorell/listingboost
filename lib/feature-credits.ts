@@ -18,5 +18,5 @@ export const FEATURE_CREDITS = {
    * Informe SERP premium: quién está por encima, por qué pueden rankear mejor y plan por fases
    * (crawl + SerpAPI + LLM). Mayor coste que una comparativa manual entre dos URLs.
    */
-  SERP_COMPETITOR_INSIGHT: 12,
+  SERP_COMPETITOR_INSIGHT: 8,
 } as const;

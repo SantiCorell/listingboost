@@ -195,9 +195,13 @@ export function ProfileForm({ user, hasStripeCustomer }: Props) {
             </>
           ) : null}
           {commerceEnabled ? (
-            <Link href="/pricing/credits" className="text-primary hover:underline">
-              Comprar créditos (Stripe)
-            </Link>
+            user.plan === "ENTERPRISE" ? (
+              <span className="text-muted-foreground">Cupo ilimitado — no hace falta comprar créditos.</span>
+            ) : (
+              <Link href="/pricing/credits" className="text-primary hover:underline">
+                Comprar créditos (Stripe)
+              </Link>
+            )
           ) : (
             <span className="text-muted-foreground">Pagos y créditos: próximamente</span>
           )}

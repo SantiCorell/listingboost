@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { APP_NAME, ENGINE_NAME } from "@/lib/constants";
+import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import { Button } from "@/components/ui/button";
 import { ProductLandingFaq } from "@/components/producto/product-landing-faq";
 import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo-jsonld";
@@ -10,7 +11,7 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://l
 
 export const metadata: Metadata = {
   title: "SEO Engine — contenido, competencia y monitorización",
-  description: `${APP_NAME}: motor SEO Growth con generación de contenido, optimización de blogs, comparativa frente a competidores y monitor de posiciones. Planes Pro y Pro+.`,
+  description: `${APP_NAME}: motor SEO Growth con generación de contenido, optimización de blogs, comparativa frente a competidores y monitor de posiciones en Google. Planes Pro, Pro+ y Enterprise (cupo ilimitado).`,
   keywords: [
     "SEO Engine ListingBoost",
     "comparar web competidor SEO",
@@ -42,6 +43,10 @@ const faqs = [
   {
     q: "¿Cómo se relaciona con el scan SEO de URL?",
     a: "El scan audita una URL concreta con puntuación y quick wins. El SEO Engine añade generación de contenido, trabajo editorial en blog y visión competitiva o de ranking según el módulo. Muchos equipos usan scan para fichas puntuales y SEO Engine para estrategia y contenidos.",
+  },
+  {
+    q: "¿Qué cuesta el informe SERP frente a competidores?",
+    a: `Desde la pestaña de monitoring, el informe premium (quién está por encima en Google para tu consulta, por qué pueden rankear mejor y plan por fases) consume ${FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos por ejecución en planes Pro y Pro+. En Enterprise el cupo es ilimitado: no descuenta. Las comprobaciones periódicas de posición siguen el cron de tu plan.`,
   },
 ];
 

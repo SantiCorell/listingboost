@@ -3,7 +3,7 @@ import type { Plan, User, UserRole } from "@prisma/client";
 import { FREE_HISTORY_LIMIT } from "@/lib/constants";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { FEATURE_CREDITS } from "@/lib/feature-credits";
-import { isPaidPlan, monthlyIncludedLimit } from "@/lib/plans";
+import { hasUnlimitedMonthlyCredits, isPaidPlan, monthlyIncludedLimit } from "@/lib/plans";
 import { userIsAdmin } from "@/lib/auth/admin";
 
 function startOfMonth(d: Date) {
@@ -58,6 +58,9 @@ export async function assertCanAnalyze(userId: string, creditCost = CREDIT_COST_
   if (userIsAdmin(user.role, user.email)) {
     return user;
   }
+  if (hasUnlimitedMonthlyCredits(user.plan)) {
+    return user;
+  }
   const cap = monthlyIncludedLimit(user.plan);
   const includedLeft = Math.max(0, cap - user.analysesThisMonth);
   const totalAvailable = includedLeft + user.bonusCreditsRemaining;
@@ -92,6 +95,16 @@ export async function recordAnalysisUsage(userId: string, kind: string, creditCo
     return;
   }
   const cost = creditCostOverride ?? creditCostForUsageKind(kind);
+  if (hasUnlimitedMonthlyCredits(user.plan)) {
+    await prisma.usageEvent.create({
+      data: {
+        userId,
+        kind,
+        meta: { fromBundle: 0, fromBonus: 0, creditCost: cost, unlimitedPlan: true },
+      },
+    });
+    return;
+  }
   const cap = monthlyIncludedLimit(user.plan);
   const includedLeft = Math.max(0, cap - user.analysesThisMonth);
   const fromBundle = Math.min(cost, includedLeft);

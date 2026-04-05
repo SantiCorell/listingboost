@@ -4,8 +4,8 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { userIsAdmin } from "@/lib/auth/admin";
 import { hasGrowthAutomation, hasSeoMonitoring } from "@/lib/plan-features";
-import { isPaidPlan, isProPlusOrHigher } from "@/lib/plans";
-import { APP_NAME } from "@/lib/constants";
+import { hasUnlimitedMonthlyCredits, isPaidPlan, isProPlusOrHigher } from "@/lib/plans";
+import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import { SeoEngineWorkbench } from "@/components/seo/seo-engine-workbench";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Sparkles } from "lucide-react";
@@ -37,6 +37,7 @@ export default async function SeoEnginePage({
   const plan = user?.plan ?? "FREE";
   const isAdmin = userIsAdmin(user?.role, user?.email);
   const competitorPdfExportFree = isAdmin || isProPlusOrHigher(plan);
+  const creditsUnlimited = isAdmin || hasUnlimitedMonthlyCredits(plan);
 
   return (
     <div className="space-y-8">
@@ -54,8 +55,20 @@ export default async function SeoEnginePage({
           <div>
             <h1 className="text-2xl font-bold tracking-tight">SEO Growth Engine</h1>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-              Genera contenido, optimiza blogs, compara con competidores y (en Pro) monitoriza posiciones. Todo en{" "}
-              {APP_NAME} con el mismo sistema de créditos.
+              Genera contenido, optimiza blogs, compara con competidores y, en <strong className="text-foreground">Pro o
+              superior</strong>, monitoriza posiciones en Google.{" "}
+              {creditsUnlimited ? (
+                <>
+                  En tu plan el informe SERP premium <strong className="text-foreground">no descuenta créditos</strong>{" "}
+                  (cupo ilimitado).
+                </>
+              ) : (
+                <>
+                  El informe SERP premium en monitoring cuesta{" "}
+                  <strong className="text-foreground">{FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos</strong> por
+                  ejecución.
+                </>
+              )}
             </p>
           </div>
         </div>
@@ -67,6 +80,7 @@ export default async function SeoEnginePage({
         competitorLocked={!isAdmin && !isPaidPlan(plan)}
         allowDailyMonitoring={isAdmin || hasGrowthAutomation(plan)}
         competitorPdfExportFree={competitorPdfExportFree}
+        creditsUnlimited={creditsUnlimited}
       />
     </div>
   );

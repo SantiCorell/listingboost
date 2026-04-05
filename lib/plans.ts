@@ -42,6 +42,11 @@ export function monthlyIncludedLimit(plan: Plan): number {
   return PLAN_INCLUDED_ANALYSES[plan] ?? PLAN_INCLUDED_ANALYSES.FREE;
 }
 
+/** Enterprise: sin tope de cupo mensual (no descuenta créditos incluidos ni extra en acciones habituales). */
+export function hasUnlimitedMonthlyCredits(plan: Plan): boolean {
+  return plan === "ENTERPRISE";
+}
+
 export function isPaidPlan(plan: Plan): boolean {
   return plan !== "FREE";
 }
@@ -62,7 +67,8 @@ export const EXTRA_CREDIT_PRICE_EUR: Record<Plan, string> = {
 export const PLAN_PRICING_DISPLAY = {
   PRO: { euros: 29, label: "29 €/mes" },
   PRO_PLUS: { euros: 79, label: "79 €/mes" },
-  ENTERPRISE: { euros: null as number | null, label: "A medida" },
+  /** Checkout online estándar (100 €/mes); contratos a medida vía contacto. */
+  ENTERPRISE: { euros: 100, label: "100 €/mes" },
 } as const;
 
 /**

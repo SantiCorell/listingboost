@@ -33,6 +33,7 @@ export function SeoEngineWorkbench({
   competitorLocked,
   allowDailyMonitoring,
   competitorPdfExportFree,
+  creditsUnlimited,
 }: {
   /** P.ej. `?tab=monitor` desde Historial. */
   defaultTab?: EngineTab;
@@ -42,6 +43,8 @@ export function SeoEngineWorkbench({
   allowDailyMonitoring: boolean;
   /** Pro+ / Enterprise / admin: PDF comparativa sin coste. */
   competitorPdfExportFree: boolean;
+  /** Admin / Enterprise: sin descuento de cupo en informe SERP premium. */
+  creditsUnlimited?: boolean;
 }) {
   const initialTab = VALID_DEFAULT_TABS.includes(defaultTab) ? defaultTab : "content";
   const [loading, setLoading] = useState<string | null>(null);
@@ -311,7 +314,7 @@ export function SeoEngineWorkbench({
             </CardContent>
           </Card>
         ) : (
-          <MonitoringPanel allowDaily={allowDailyMonitoring} />
+          <MonitoringPanel allowDaily={allowDailyMonitoring} creditsUnlimited={Boolean(creditsUnlimited)} />
         )}
       </TabsContent>
     </Tabs>
@@ -489,7 +492,13 @@ type MonitoringRow = {
   snapshots: Array<{ position: number | null; createdAt: string }>;
 };
 
-function MonitoringPanel({ allowDaily }: { allowDaily: boolean }) {
+function MonitoringPanel({
+  allowDaily,
+  creditsUnlimited,
+}: {
+  allowDaily: boolean;
+  creditsUnlimited?: boolean;
+}) {
   const [items, setItems] = useState<MonitoringRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [url, setUrl] = useState("");
@@ -579,8 +588,18 @@ function MonitoringPanel({ allowDaily }: { allowDaily: boolean }) {
           Posición orgánica actual, <strong className="text-foreground">cambio vs la lectura anterior</strong> (↑ mejora,
           ↓ baja) y <strong className="text-foreground">gráfico de evolución</strong> con cada comprobación. Google
           España; la primera lectura suele tardar unos segundos. Opcional:{" "}
-          <strong className="text-foreground">informe vs competidores</strong> (crawl + IA) por{" "}
-          {FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos — plan de acción por fases y tiempos orientativos.
+          <strong className="text-foreground">informe vs competidores</strong> (crawl + IA) — plan por fases y tiempos
+          orientativos.{" "}
+          {creditsUnlimited ? (
+            <>
+              En tu plan <strong className="text-foreground">no descuenta créditos</strong> (cupo ilimitado).
+            </>
+          ) : (
+            <>
+              Cuesta <strong className="text-foreground">{FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos</strong> por
+              ejecución.
+            </>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 pt-6">
@@ -673,6 +692,7 @@ function MonitoringPanel({ allowDaily }: { allowDaily: boolean }) {
                 snapshots={m.snapshots}
                 running={runningId === m.id}
                 insightCreditCost={FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT}
+                insightCreditsWaived={Boolean(creditsUnlimited)}
                 insightLoading={insightLoadingId === m.id}
                 onInsight={async () => {
                   setInsightLoadingId(m.id);

@@ -27,6 +27,7 @@ export function DashboardAccountHero({
   bonusCreditsRemaining,
   commerceEnabled,
   isAdmin,
+  unlimitedCupo,
 }: {
   displayName: string;
   email: string | null;
@@ -36,6 +37,8 @@ export function DashboardAccountHero({
   bonusCreditsRemaining: number;
   commerceEnabled: boolean;
   isAdmin: boolean;
+  /** Enterprise: no descuenta cupo ni extra en uso habitual. */
+  unlimitedCupo?: boolean;
 }) {
   const used = analysesThisMonth;
   const limit = monthlyLimit;
@@ -113,6 +116,94 @@ export function DashboardAccountHero({
                 Pagos y recibos
               </Link>
             ) : null}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (unlimitedCupo) {
+    return (
+      <section className="relative overflow-hidden rounded-3xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.12] via-card to-primary/[0.06] p-6 shadow-xl shadow-violet-500/10 sm:p-8">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-violet-500/20 blur-3xl" />
+        <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-violet-500/30 bg-gradient-to-br from-violet-600 to-violet-700 text-primary-foreground shadow-lg">
+              <Infinity className="h-8 w-8" aria-hidden />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{displayName}</h2>
+                <Badge className="gap-1 border border-violet-400/40 bg-violet-500/15 text-violet-950 dark:text-violet-50">
+                  <Crown className="h-3 w-3" />
+                  Plan {planLabel(plan)}
+                </Badge>
+              </div>
+              {email ? (
+                <p className="mt-1 truncate text-sm text-muted-foreground" title={email}>
+                  {email}
+                </p>
+              ) : null}
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                Tu plan tiene <strong className="text-foreground">cupo ilimitado</strong>: boosts, scans URL, SEO Engine,
+                informes SERP premium, PDFs y el resto de acciones que consumen créditos en otros planes{" "}
+                <strong className="text-foreground">no descuentan</strong> de un tope mensual. Seguimos registrando uso
+                para soporte y mejora del producto; ante abusos extremos podemos contactarte.
+              </p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Actividad registrada este mes (informativo):{" "}
+                <strong className="text-foreground tabular-nums">{analysesThisMonth}</strong> unidades.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <Button asChild size="sm" className="gap-1.5 shadow-md">
+                  <Link href="/dashboard/product">
+                    <PackageSearch className="h-4 w-4" />
+                    Boost ficha
+                    <ArrowRight className="h-3.5 w-3.5 opacity-70" />
+                  </Link>
+                </Button>
+                <Button asChild size="sm" variant="secondary" className="gap-1.5">
+                  <Link href="/dashboard/audit">
+                    <LineChart className="h-4 w-4" />
+                    Scan URL
+                  </Link>
+                </Button>
+                <Button asChild size="sm" variant="outline" className="gap-1 border-violet-500/30">
+                  <Link href="/dashboard/seo-engine">
+                    <Sparkles className="h-4 w-4" />
+                    SEO Engine
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className="w-full space-y-5 rounded-2xl border border-border/60 bg-background/60 p-5 backdrop-blur-md lg:max-w-[280px]">
+            <div>
+              <div className="flex items-center justify-between gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <Zap className="h-3.5 w-3.5 text-violet-600" />
+                  Cupo mensual
+                </span>
+                <span className="font-semibold text-foreground">Ilimitado</span>
+              </div>
+              <Progress value={0} className="mt-2 h-2.5 bg-secondary/80 opacity-60" />
+              <p className="mt-1.5 text-[11px] text-muted-foreground">Sin tope de créditos en uso normal</p>
+            </div>
+            <div className="rounded-xl border border-violet-500/20 bg-gradient-to-br from-violet-500/10 to-transparent px-4 py-4 shadow-sm">
+              <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Coins className="h-4 w-4 text-violet-600" />
+                Créditos extra
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                No necesitas recargar con Enterprise.{" "}
+                {bonusCreditsRemaining > 0 ? (
+                  <>
+                    Tienes <strong className="text-foreground">{bonusCreditsRemaining}</strong> de compras anteriores
+                    (no se consumen mientras el cupo sea ilimitado).
+                  </>
+                ) : null}
+              </p>
+            </div>
           </div>
         </div>
       </section>

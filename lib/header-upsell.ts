@@ -36,13 +36,13 @@ export function headerUpsell(
       return {
         href: "/pricing",
         label: "Enterprise",
-        sub: "Volumen, prioridad y condiciones a medida",
+        sub: "100 €/mes · cupo ilimitado y prioridad",
       };
     case "ENTERPRISE":
       return {
-        href: "/pricing/credits",
-        label: "Recargar créditos",
-        sub: "Checkout Stripe con la cantidad que necesites",
+        href: "/pricing",
+        label: "Tu plan Enterprise",
+        sub: "Cupo ilimitado · contacto para condiciones a medida",
       };
     default:
       return { href: "/pricing", label: "Ver planes", sub: "" };

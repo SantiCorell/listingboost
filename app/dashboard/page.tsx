@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
 import { isCommerceEnabled } from "@/lib/commerce";
 import { resetMonthlyUsageIfNeeded } from "@/lib/usage";
-import { monthlyIncludedLimit } from "@/lib/plans";
+import { hasUnlimitedMonthlyCredits, monthlyIncludedLimit } from "@/lib/plans";
 import { planLabel } from "@/lib/plans";
 import { DashboardAccountHero } from "@/components/dashboard/dashboard-account-hero";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,8 @@ export default async function DashboardPage() {
   });
   user = await resetMonthlyUsageIfNeeded(user);
 
-  const limit = monthlyIncludedLimit(user.plan);
+  const unlimitedCupo = hasUnlimitedMonthlyCredits(user.plan);
+  const limit = unlimitedCupo ? 0 : monthlyIncludedLimit(user.plan);
   const commerceEnabled = isCommerceEnabled();
   const displayName = user.name?.trim() || user.email?.split("@")[0] || "Usuario";
   const isAdmin = Boolean(session.user.isAdmin);
@@ -51,6 +52,7 @@ export default async function DashboardPage() {
         bonusCreditsRemaining={user.bonusCreditsRemaining}
         commerceEnabled={commerceEnabled}
         isAdmin={isAdmin}
+        unlimitedCupo={unlimitedCupo}
       />
 
       <div>
@@ -101,14 +103,27 @@ export default async function DashboardPage() {
           <>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Incluidos este mes</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  {unlimitedCupo ? "Cupo mensual" : "Incluidos este mes"}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold tabular-nums">
-                  {user.analysesThisMonth}
-                  <span className="text-lg font-normal text-muted-foreground"> / {limit}</span>
-                </p>
-                <p className="text-xs text-muted-foreground">Cupo del plan (se renueva cada mes)</p>
+                {unlimitedCupo ? (
+                  <>
+                    <p className="text-2xl font-bold tabular-nums">Ilimitado</p>
+                    <p className="text-xs text-muted-foreground">
+                      Uso registrado (informativo): {user.analysesThisMonth} unidades este mes
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-2xl font-bold tabular-nums">
+                      {user.analysesThisMonth}
+                      <span className="text-lg font-normal text-muted-foreground"> / {limit}</span>
+                    </p>
+                    <p className="text-xs text-muted-foreground">Cupo del plan (se renueva cada mes)</p>
+                  </>
+                )}
               </CardContent>
             </Card>
             <Card>
@@ -116,13 +131,29 @@ export default async function DashboardPage() {
                 <CardTitle className="text-sm font-medium text-muted-foreground">Créditos extra</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold tabular-nums">{user.bonusCreditsRemaining}</p>
-                {commerceEnabled ? (
-                  <Button size="sm" variant="link" className="h-auto p-0 text-xs font-semibold" asChild>
-                    <Link href="/pricing/credits">Comprar créditos</Link>
-                  </Button>
+                {unlimitedCupo ? (
+                  <>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Con Enterprise no hace falta recargar: el cupo no se agota.
+                    </p>
+                    {user.bonusCreditsRemaining > 0 ? (
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        Saldo legacy de compras anteriores: {user.bonusCreditsRemaining} (no se consume mientras el
+                        cupo sea ilimitado).
+                      </p>
+                    ) : null}
+                  </>
                 ) : (
-                  <span className="text-xs text-muted-foreground">Créditos: próximamente</span>
+                  <>
+                    <p className="text-2xl font-bold tabular-nums">{user.bonusCreditsRemaining}</p>
+                    {commerceEnabled ? (
+                      <Button size="sm" variant="link" className="h-auto p-0 text-xs font-semibold" asChild>
+                        <Link href="/pricing/credits">Comprar créditos</Link>
+                      </Button>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Créditos: próximamente</span>
+                    )}
+                  </>
                 )}
               </CardContent>
             </Card>

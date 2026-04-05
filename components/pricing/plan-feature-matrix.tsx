@@ -24,11 +24,11 @@ const rows: (SectionRow | FeatureRow)[] = [
   {
     kind: "feature",
     feature: "Créditos incluidos / mes",
-    hint: "Unidades para boosts, scans, IA, etc.",
+    hint: "Unidades para boosts, scans, IA, etc. Enterprise: sin tope (§).",
     free: String(PLAN_INCLUDED_ANALYSES.FREE),
     pro: String(PLAN_INCLUDED_ANALYSES.PRO),
     proPlus: String(PLAN_INCLUDED_ANALYSES.PRO_PLUS),
-    enterprise: String(PLAN_INCLUDED_ANALYSES.ENTERPRISE),
+    enterprise: "Ilimitados §",
   },
   {
     kind: "feature",
@@ -41,10 +41,11 @@ const rows: (SectionRow | FeatureRow)[] = [
   {
     kind: "feature",
     feature: "Crédito extra (compra suelta)",
+    hint: "Si superas el cupo en otros planes. Enterprise no lo necesita (§).",
     free: `${EXTRA_CREDIT_PRICE_EUR.FREE} €/u`,
     pro: `${EXTRA_CREDIT_PRICE_EUR.PRO} €/u`,
     proPlus: `${EXTRA_CREDIT_PRICE_EUR.PRO_PLUS} €/u`,
-    enterprise: `${EXTRA_CREDIT_PRICE_EUR.ENTERPRISE} €/u`,
+    enterprise: "Opcional §",
   },
 
   { kind: "section", title: "Catálogo, URL y motor" },
@@ -102,11 +103,11 @@ const rows: (SectionRow | FeatureRow)[] = [
   {
     kind: "feature",
     feature: "Comparativa vs competidor (2 URLs)",
-    hint: `Cada ejecución consume ${FEATURE_CREDITS.COMPETITOR_COMPARE} créditos.`,
+    hint: `En Free/Pro/Pro+: ${FEATURE_CREDITS.COMPETITOR_COMPARE} cr por ejecución. Enterprise: sin descuento de cupo (§).`,
     free: false,
     pro: `${FEATURE_CREDITS.COMPETITOR_COMPARE} cr / análisis`,
     proPlus: `${FEATURE_CREDITS.COMPETITOR_COMPARE} cr / análisis`,
-    enterprise: `${FEATURE_CREDITS.COMPETITOR_COMPARE} cr / análisis`,
+    enterprise: "Incluido §",
   },
   {
     kind: "feature",
@@ -119,11 +120,12 @@ const rows: (SectionRow | FeatureRow)[] = [
   {
     kind: "feature",
     feature: "Informe SERP premium vs competidores",
-    hint: "Desde monitoring: crawl + datos SERP + IA.",
+    hint:
+      "Quién rankea por encima y por qué, plan por fases. Pro/Pro+: consume créditos; Enterprise: sin descuento (§).",
     free: false,
     pro: `${FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} cr / informe`,
     proPlus: `${FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} cr / informe`,
-    enterprise: `${FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} cr / informe`,
+    enterprise: "Incluido §",
   },
 
   { kind: "section", title: "PDF e informes" },
@@ -139,19 +141,20 @@ const rows: (SectionRow | FeatureRow)[] = [
   {
     kind: "feature",
     feature: "Auditoría URL: PDF descargable multipágina",
-    hint: "Listo para archivo o cliente; distinto de guardar desde «Imprimir».",
+    hint: "Listo para archivo o cliente; distinto de guardar desde «Imprimir». Enterprise: sin descuento (§).",
     free: "1 crédito†",
     pro: "1 crédito†",
     proPlus: "1 crédito†",
-    enterprise: "1 crédito†",
+    enterprise: "Incluido §",
   },
   {
     kind: "feature",
     feature: "Comparativa SEO: exportar a PDF",
+    hint: "Pro+ y Enterprise incluyen PDF comparativa; Enterprise además sin tope de cupo (§).",
     free: "—",
     pro: "1 crédito‡",
     proPlus: "Incluido‡",
-    enterprise: "Incluido‡",
+    enterprise: "Incluido‡ §",
   },
 
   { kind: "section", title: "Escala y relación con el producto" },
@@ -166,7 +169,7 @@ const rows: (SectionRow | FeatureRow)[] = [
   {
     kind: "feature",
     feature: "Condiciones comerciales y soporte prioritario",
-    hint: "Enterprise: contrato y volumen negociados.",
+    hint: "Checkout online 100 €/mes o acuerdos a medida con el equipo.",
     free: false,
     pro: false,
     proPlus: false,
@@ -240,7 +243,7 @@ export function PlanFeatureMatrix({ currentPlan }: { currentPlan?: Plan }) {
             >
               <span className="block">Enterprise</span>
               <span className="mt-0.5 hidden text-[10px] font-normal text-muted-foreground sm:block">
-                A medida
+                100 € · cupo ilimitado
               </span>
             </th>
           </tr>
@@ -297,25 +300,36 @@ export function PlanFeatureMatrix({ currentPlan }: { currentPlan?: Plan }) {
         className="space-y-3 border-t border-border/60 bg-muted/10 px-4 py-4 text-xs leading-relaxed text-muted-foreground"
       >
         <p>
+          <strong className="text-foreground">§ Plan Enterprise (100 €/mes en checkout online):</strong> cupo de
+          créditos <strong className="text-foreground">ilimitado</strong> para uso profesional razonable. Boosts, scans
+          URL, comparativas, informe SERP premium, PDFs y el resto de acciones que en otros planes descuentan unidades{" "}
+          <strong className="text-foreground">no consumen</strong> cupo ni créditos extra. Seguimos registrando uso para
+          soporte y mejora del producto; ante abusos extremos (automatización masiva, reventa) podemos contactarte o
+          revisar el acuerdo.
+        </p>
+        <p>
           <strong className="text-foreground">† PDF de auditoría URL:</strong> la{" "}
           <strong className="text-foreground">vista para imprimir</strong> desde el historial{" "}
           <strong className="text-foreground">no consume créditos</strong>. El{" "}
-          <strong className="text-foreground">PDF descargable multipágina</strong> (mismo contenido estructurado para
-          archivo o cliente) cuesta <strong className="text-foreground">1 crédito por exportación</strong> en todos los
-          planes, incluido Pro.
+          <strong className="text-foreground">PDF descargable multipágina</strong> cuesta{" "}
+          <strong className="text-foreground">1 crédito por exportación</strong> en Free, Pro y Pro+; en Enterprise
+          aplica la política §.
         </p>
         <p>
           <strong className="text-foreground">‡ PDF de comparativa SEO:</strong> en{" "}
           <strong className="text-foreground">Free y Pro</strong>, cada exportación a PDF cuesta{" "}
           <strong className="text-foreground">1 crédito</strong>. En <strong className="text-foreground">Pro+</strong>{" "}
           y <strong className="text-foreground">Enterprise</strong> ese PDF va{" "}
-          <strong className="text-foreground">incluido</strong> (sin cargo adicional en créditos).
+          <strong className="text-foreground">incluido</strong> (sin cargo adicional en créditos); en Enterprise el
+          conjunto del producto sigue §.
         </p>
         <p>
-          El núcleo de <strong className="text-foreground">{APP_NAME}</strong> es el mismo en todos los planes: la
-          diferencia es cupo mensual, precio por crédito extra, límites de historial, acceso a SEO Engine (comparativa y
-          monitoring desde Pro), cadencia de monitoring y política de PDFs anteriores. El informe SERP premium cuesta{" "}
+          <strong className="text-foreground">Posicionamiento SEO y monitoring:</strong> el seguimiento SERP te muestra
+          dónde aparece tu URL en Google para una consulta concreta y su evolución. El informe premium añade contexto de
+          competidores por encima (crawl + IA) y un plan por fases; en Pro y Pro+ cuesta{" "}
           <strong className="text-foreground">{FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos</strong> por ejecución.
+          El núcleo de{" "}
+          <strong className="text-foreground">{APP_NAME}</strong> es el mismo en todos los planes.
         </p>
       </div>
     </div>

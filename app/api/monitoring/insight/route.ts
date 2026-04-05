@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { userIsAdmin } from "@/lib/auth/admin";
 import { hasSeoMonitoring } from "@/lib/plan-features";
+import { hasUnlimitedMonthlyCredits } from "@/lib/plans";
 import { assertCanAnalyze, recordAnalysisUsage } from "@/lib/usage";
 import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import { runSerpCompetitorInsight } from "@/services/seo/serp-competitor-insight";
@@ -74,9 +75,12 @@ export async function POST(req: Request) {
 
   await recordAnalysisUsage(session.user.id, "serp_competitor_insight", cost);
 
+  const charged =
+    admin || (user && hasUnlimitedMonthlyCredits(user.plan)) ? 0 : cost;
+
   return NextResponse.json({
     ok: true,
     output: result.output,
-    creditsUsed: cost,
+    creditsUsed: charged,
   });
 }

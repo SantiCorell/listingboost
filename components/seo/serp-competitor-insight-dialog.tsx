@@ -54,7 +54,15 @@ export function SerpCompetitorInsightDialog({
             <div>
               <DialogTitle className="text-lg">Informe SERP vs competidores</DialogTitle>
               <DialogDescription className="text-left">
-                Consulta «{keyword}» · {creditsUsed} créditos · análisis orientativo (no garantiza subidas).
+                Consulta «{keyword}» ·{" "}
+                {creditsUsed === 0 ? (
+                  <>sin descuento de cupo en tu plan · </>
+                ) : (
+                  <>
+                    {creditsUsed} créditos ·{" "}
+                  </>
+                )}
+                análisis orientativo (no garantiza subidas).
               </DialogDescription>
             </div>
           </div>

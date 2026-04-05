@@ -306,8 +306,10 @@ export default async function PricingPage() {
               <strong className="text-foreground">Free</strong> es el núcleo con cupo corto y sin comparativa ni
               monitoring. <strong className="text-foreground">Pro</strong> desbloquea SEO Engine completo, historial
               sin tope y mejor €/crédito. <strong className="text-foreground">Pro+</strong> sube volumen, cadencia
-              diaria en SERP y PDF de comparativa incluido. Las notas <strong className="text-foreground">† ‡</strong>{" "}
-              bajo la tabla detallan PDFs.
+              diaria en SERP y PDF de comparativa incluido. <strong className="text-foreground">Enterprise</strong>{" "}
+              (100 €/mes online) añade <strong className="text-foreground">cupo ilimitado</strong> para posicionamiento
+              y catálogo sin fricción. Las notas <strong className="text-foreground">§ † ‡</strong> bajo la tabla cierran
+              el detalle (PDFs, informe SERP {FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} cr en Pro/Pro+).
             </p>
             <div className="mt-8">
               <PlanFeatureMatrix currentPlan={userPlan} />
@@ -320,8 +322,9 @@ export default async function PricingPage() {
               <h2 className="text-2xl font-bold sm:text-3xl">Elige tu plan</h2>
               <p className="mx-auto mt-2 max-w-2xl text-muted-foreground">
                 Todos incluyen el mismo núcleo tecnológico. La diferencia es{" "}
-                <strong className="text-foreground">cuánto puedes ejecutar al mes</strong> y{" "}
-                <strong className="text-foreground">cuánto cuesta cada análisis extra</strong>.
+                <strong className="text-foreground">cuánto puedes ejecutar al mes</strong>,{" "}
+                <strong className="text-foreground">cuánto cuesta cada análisis extra</strong> y si necesitas{" "}
+                <strong className="text-foreground">cupo ilimitado</strong> (Enterprise).
               </p>
             </div>
 
@@ -537,16 +540,18 @@ export default async function PricingPage() {
                     </Badge>
                   </CardTitle>
                   <CardDescription className="text-pretty text-base leading-relaxed break-words">
-                    Hasta <strong className="text-foreground">{PLAN_INCLUDED_ANALYSES.ENTERPRISE}</strong>{" "}
-                    análisis/mes, condiciones comerciales y roadmap alineado. Para equipos que facturan volumen.
+                    <strong className="text-foreground">100 €/mes</strong> en checkout online (mismo precio Stripe que
+                    ya tienes configurado): <strong className="text-foreground">cupo de créditos ilimitado</strong> para
+                    boosts, scans, SEO Engine, informes SERP premium y PDFs — ideal para equipos que viven del
+                    posicionamiento y del catálogo.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="mt-auto flex min-h-0 flex-1 flex-col gap-4">
                   <ul className="min-h-0 flex-1 space-y-2.5 text-pretty text-sm leading-relaxed text-muted-foreground break-words">
                     {[
-                      `Créditos extra ${EXTRA_CREDIT_PRICE_EUR.ENTERPRISE} €/u`,
-                      "PDF de comparativa SEO incluido (misma política que Pro+ ‡)",
-                      "Prioridad en soporte, acuerdos e integraciones",
+                      "Sin tope mensual de créditos (uso profesional razonable; ver § en la tabla)",
+                      "Monitoring SERP diario o semanal + informe vs competidores sin descuento de cupo",
+                      "PDF comparativa incluido · soporte e integraciones en roadmap",
                     ].map((t) => (
                       <li key={t} className="flex gap-2">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -555,20 +560,35 @@ export default async function PricingPage() {
                     ))}
                   </ul>
                   <div className="mt-auto flex min-h-[6.5rem] flex-col justify-end gap-2 border-t border-transparent pt-2">
-                    <Button asChild variant="default" className={PRICING_CTA_CLASS}>
-                      <a href={`mailto:${getPublicContactEmail()}?subject=${encodeURIComponent(`Enterprise ${APP_NAME}`)}`}>
-                        Pedir propuesta
-                      </a>
-                    </Button>
                     {session?.user && enterpriseStripeReady && commerceEnabled ? (
-                      <CheckoutPlanButton plan="ENTERPRISE" variant="outline">
-                        Contratar Enterprise online
+                      <CheckoutPlanButton plan="ENTERPRISE" className="shadow-md">
+                        Contratar Enterprise — 100 €/mes
                       </CheckoutPlanButton>
                     ) : session?.user && enterpriseStripeReady && !commerceEnabled ? (
-                      <Button disabled variant="outline" className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`}>
+                      <Button disabled className={`${PRICING_CTA_CLASS} cursor-not-allowed opacity-90`}>
                         Enterprise online — próximamente
                       </Button>
+                    ) : !session?.user && commerceEnabled && enterpriseStripeReady ? (
+                      <>
+                        <Button asChild className={`${PRICING_CTA_CLASS} shadow-md`} size="lg">
+                          <Link href="/register">
+                            Registrarse
+                            <span className="block w-full text-[0.85em] font-normal opacity-90">y contratar Enterprise</span>
+                          </Link>
+                        </Button>
+                        <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
+                          <Link href="/login?callbackUrl=/pricing">
+                            Iniciar sesión
+                            <span className="block w-full text-[0.85em] font-normal opacity-90">y pagar con Stripe</span>
+                          </Link>
+                        </Button>
+                      </>
                     ) : null}
+                    <Button asChild variant="outline" className={PRICING_CTA_CLASS}>
+                      <a href={`mailto:${getPublicContactEmail()}?subject=${encodeURIComponent(`Enterprise ${APP_NAME}`)}`}>
+                        Pedir propuesta personalizada
+                      </a>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -583,8 +603,12 @@ export default async function PricingPage() {
               <strong className="text-foreground">boost de ficha</strong> consume{" "}
               <strong className="text-foreground">{CREDIT_COST_PRODUCT} crédito</strong>; un{" "}
               <strong className="text-foreground">scan SEO de URL</strong> consume{" "}
-              <strong className="text-foreground">{CREDIT_COST_URL_AUDIT} créditos</strong> (más intensivo). Si te
-              pasas del cupo, se usan créditos comprados. Todo queda en tu historial según el plan.
+              <strong className="text-foreground">{CREDIT_COST_URL_AUDIT} créditos</strong> (más intensivo). El informe
+              SERP premium (monitoring) cuesta{" "}
+              <strong className="text-foreground">{FEATURE_CREDITS.SERP_COMPETITOR_INSIGHT} créditos</strong> en Pro y
+              Pro+. En <strong className="text-foreground">Enterprise</strong> el cupo es{" "}
+              <strong className="text-foreground">ilimitado</strong>: esas acciones no descuentan. Si te pasas del cupo
+              en otros planes, se usan créditos comprados.
               {!commerceEnabled ? (
                 <span className="mt-2 block text-sm">
                   <strong className="text-foreground">Ahora:</strong> la compra de créditos extra está desactivada; solo
