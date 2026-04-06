@@ -41,7 +41,7 @@ async function fetchText(url: string): Promise<{ ok: boolean; text: string; stat
     });
     const text = await res.text();
     return { ok: res.ok, text, status: res.status };
-  } catch (e) {
+  } catch {
     return {
       ok: false,
       text: "",
