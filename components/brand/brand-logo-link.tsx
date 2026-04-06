@@ -34,9 +34,13 @@ export function BrandLogoLink({
         variant !== "footer" && variant !== "auth" && "h-9 w-9",
       )}
     >
-      <Zap className={zapClass} strokeWidth={2.35} aria-hidden />
+      <Zap
+        className={`${zapClass} drop-shadow-[0_0_10px_rgba(250,245,255,0.55)]`}
+        strokeWidth={2.65}
+        aria-hidden
+      />
       <span
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,white_0%,transparent_55%)] opacity-30"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_32%_18%,white_0%,transparent_50%)] opacity-35"
         aria-hidden
       />
     </span>

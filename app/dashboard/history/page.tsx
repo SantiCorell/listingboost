@@ -123,13 +123,6 @@ export default async function HistoryPage({
 
   const canOpen = canOpenSavedStudy(user.plan, session.user.role, session.user.email);
 
-  const totalMatches =
-    products.length +
-    audits.length +
-    monitorings.length +
-    serpInsightReports.length +
-    seoGapReports.length;
-
   return (
     <div className="space-y-8">
       <CreditsUpsellBanner />
@@ -179,25 +172,9 @@ export default async function HistoryPage({
         ) : null}
       </div>
       {qFilter ? (
-        <div className="space-y-1 text-sm text-muted-foreground">
-          <p>
-            Filtro activo: «{q}». Se busca en productos, URLs auditadas, SEO Gap (keyword o dominio), informes SERP
-            (keyword o URL) y seguimientos (URL o keyword).
-          </p>
-          {totalMatches > 0 ? (
-            <p className="font-medium text-foreground">
-              {totalMatches} coincidencia{totalMatches === 1 ? "" : "s"} en total.
-            </p>
-          ) : (
-            <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-amber-950 dark:text-amber-100">
-              No hay ningún elemento que coincida con «{q}». Prueba otra palabra, el dominio completo o{" "}
-              <Link href="/dashboard/history" className="font-medium underline underline-offset-2">
-                limpia el filtro
-              </Link>
-              .
-            </p>
-          )}
-        </div>
+        <p className="text-sm text-muted-foreground">
+          Filtro activo: «{q}». Se aplican a productos, URLs auditadas, SEO Gap, informes SERP y seguimientos.
+        </p>
       ) : null}
 
       {!canOpen ? (
@@ -214,9 +191,7 @@ export default async function HistoryPage({
         </CardHeader>
         <CardContent className="space-y-2">
           {products.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              {qFilter ? `Ningún boost de ficha coincide con «${q}».` : "Sin registros."}
-            </p>
+            <p className="text-sm text-muted-foreground">Sin registros.</p>
           ) : (
             products.map((p) =>
               canOpen ? (
@@ -261,9 +236,7 @@ export default async function HistoryPage({
         </CardHeader>
         <CardContent className="space-y-2">
           {audits.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              {qFilter ? `Ninguna URL auditada coincide con «${q}».` : "Sin registros."}
-            </p>
+            <p className="text-sm text-muted-foreground">Sin registros.</p>
           ) : (
             audits.map((u) =>
               canOpen ? (
@@ -312,21 +285,11 @@ export default async function HistoryPage({
         <CardContent className="space-y-2">
           {seoGapReports.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              {qFilter ? (
-                <>
-                  Ningún informe <strong className="text-foreground">SEO Gap</strong> coincide con «{q}». Los
-                  informes de Monitor pueden aparecer abajo si la URL o la keyword contienen ese texto (no son el
-                  mismo módulo).
-                </>
-              ) : (
-                <>
-                  Aún no hay informes.{" "}
-                  <Link href="/dashboard/seo-gap" className="font-medium text-primary hover:underline">
-                    Generar uno
-                  </Link>
-                  .
-                </>
-              )}
+              Aún no hay informes.{" "}
+              <Link href="/dashboard/seo-gap" className="font-medium text-primary hover:underline">
+                Generar uno
+              </Link>
+              .
             </p>
           ) : (
             seoGapReports.map((r) =>
@@ -380,17 +343,11 @@ export default async function HistoryPage({
         <CardContent className="space-y-2">
           {serpInsightReports.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              {qFilter ? (
-                `Ningún informe SERP coincide con «${q}».`
-              ) : (
-                <>
-                  Aún no hay informes.{" "}
-                  <Link href="/dashboard/seo-engine?tab=monitor" className="font-medium text-primary hover:underline">
-                    Generar uno en Monitor
-                  </Link>
-                  .
-                </>
-              )}
+              Aún no hay informes.{" "}
+              <Link href="/dashboard/seo-engine?tab=monitor" className="font-medium text-primary hover:underline">
+                Generar uno en Monitor
+              </Link>
+              .
             </p>
           ) : (
             serpInsightReports.map((r) =>
@@ -444,17 +401,11 @@ export default async function HistoryPage({
         <CardContent className="space-y-2">
           {monitorings.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              {qFilter ? (
-                `Ningún seguimiento de posiciones coincide con «${q}».`
-              ) : (
-                <>
-                  Aún no hay seguimientos.{" "}
-                  <Link href="/dashboard/seo-engine?tab=monitor" className="font-medium text-primary hover:underline">
-                    Crear uno en Monitor
-                  </Link>
-                  .
-                </>
-              )}
+              Aún no hay seguimientos.{" "}
+              <Link href="/dashboard/seo-engine?tab=monitor" className="font-medium text-primary hover:underline">
+                Crear uno en Monitor
+              </Link>
+              .
             </p>
           ) : (
             monitorings.map((m) => (

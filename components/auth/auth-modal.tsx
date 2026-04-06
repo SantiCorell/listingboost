@@ -38,7 +38,11 @@ export function AuthModal({
           <DialogHeader className="space-y-2 px-4 pb-1 pt-0 text-center sm:px-5">
             <div className="mx-auto flex flex-col items-center gap-2">
               <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary via-primary to-accent shadow-md shadow-primary/25 ring-1 ring-primary/15">
-                <Zap className="relative z-10 h-7 w-7 text-primary-foreground" strokeWidth={2.35} aria-hidden />
+                <Zap
+                  className="relative z-10 h-7 w-7 text-primary-foreground drop-shadow-[0_0_12px_rgba(250,245,255,0.5)]"
+                  strokeWidth={2.65}
+                  aria-hidden
+                />
               </span>
               <p className="text-center text-lg font-bold tracking-tight">
                 <span className="text-foreground">Listing</span>

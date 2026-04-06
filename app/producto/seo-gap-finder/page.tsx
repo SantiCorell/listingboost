@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { APP_NAME, ENGINE_NAME } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { ProductLandingFaq } from "@/components/producto/product-landing-faq";
+import { SeoGapLandingDemo } from "@/components/producto/seo-gap-landing-demo";
 import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo-jsonld";
 import { ArrowRight, Radar, Sparkles, Target } from "lucide-react";
 import { FEATURE_CREDITS } from "@/lib/feature-credits";
@@ -60,7 +61,7 @@ export default function SeoGapFinderProductPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbs) }} />
 
-      <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+      <article className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
         <nav className="text-sm text-muted-foreground">
           <Link href="/producto" className="hover:text-foreground">
             Producto
@@ -70,10 +71,10 @@ export default function SeoGapFinderProductPage() {
         </nav>
 
         <p className="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-primary">Pro+ · Enterprise</p>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight text-balance">
+        <h1 className="mt-2 text-4xl font-bold tracking-tight text-balance md:text-5xl">
           SEO Gap Finder AI — de la SERP al plan de contenidos
         </h1>
-        <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+        <p className="mt-4 max-w-3xl text-lg leading-relaxed text-muted-foreground">
           Cuando preguntas a Google qué está pasando con una keyword, la respuesta ya está en los resultados. Este módulo
           organiza esa señal en <strong className="text-foreground">oportunidades ordenadas</strong>, con estimación de
           demanda, tendencia y pasos claros — integrado con <strong className="text-foreground">{ENGINE_NAME}</strong>{" "}
@@ -91,6 +92,11 @@ export default function SeoGapFinderProductPage() {
             <Link href="/pricing">Ver planes Pro+</Link>
           </Button>
         </div>
+
+        <section className="mt-14">
+          <h2 className="sr-only">Vista previa del informe</h2>
+          <SeoGapLandingDemo />
+        </section>
 
         <section className="mt-14 space-y-6">
           <h2 className="text-2xl font-bold tracking-tight">Qué resuelve</h2>

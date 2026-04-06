@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductLandingFaq } from "@/components/producto/product-landing-faq";
 import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo-jsonld";
+import type { LucideIcon } from "lucide-react";
 import { ArrowRight, Building2, Hash, LineChart, PackageSearch, ScanSearch, Sparkles, Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
 
@@ -47,12 +49,25 @@ const faqs = [
   },
 ];
 
-const cards = [
+const cards: {
+  href: string;
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+  highlight?: boolean;
+}[] = [
   {
     href: "/producto/boost-de-ficha",
     icon: PackageSearch,
     title: "Boost de ficha multicanal",
     desc: "De imagen o texto a título, descripción, bullets, keywords y CTA calibrados por canal. Ideal para marketplaces y ecommerce.",
+  },
+  {
+    href: "/producto/seo-gap-finder",
+    icon: ScanSearch,
+    title: "SEO Gap Finder AI",
+    desc: "El módulo estrella: lectura de la SERP en tu mercado, gráficos interactivos, clusters y lista priorizada con volumen, tendencia y acciones (Pro+).",
+    highlight: true,
   },
   {
     href: "/producto/scan-seo-url",
@@ -65,12 +80,6 @@ const cards = [
     icon: Sparkles,
     title: "SEO Engine",
     desc: "Contenido, blog, comparativa con competidor y monitor de SERP en un solo flujo; créditos unificados con el resto de la plataforma.",
-  },
-  {
-    href: "/producto/seo-gap-finder",
-    icon: ScanSearch,
-    title: "SEO Gap Finder AI",
-    desc: "Oportunidades reales desde Google: keywords priorizadas, volumen orientativo, tendencia y acciones con título y URL sugerida (Pro+).",
   },
   {
     href: "/producto/hashtags-redes",
@@ -132,15 +141,33 @@ export default function ProductoHubPage() {
         </section>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-1">
-          {cards.map(({ href, icon: Icon, title, desc }) => (
+          {cards.map(({ href, icon: Icon, title, desc, highlight }) => (
             <Link key={href} href={href} className="group block">
-              <Card className="card-tech-hover h-full border-border/80 transition-colors group-hover:border-primary/30">
+              <Card
+                className={cn(
+                  "card-tech-hover h-full border-border/80 transition-colors group-hover:border-primary/30",
+                  highlight &&
+                    "border-violet-500/45 bg-gradient-to-br from-violet-500/[0.07] via-transparent to-fuchsia-500/[0.06] shadow-md shadow-violet-500/10 ring-1 ring-violet-500/20",
+                )}
+              >
                 <CardContent className="flex gap-4 p-6">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary">
+                  <span
+                    className={cn(
+                      "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary",
+                      highlight && "bg-violet-500/15 text-violet-700 dark:text-violet-300",
+                    )}
+                  >
                     <Icon className="h-6 w-6" />
                   </span>
                   <div>
-                    <h3 className="text-lg font-semibold group-hover:text-primary">{title}</h3>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="text-lg font-semibold group-hover:text-primary">{title}</h3>
+                      {highlight ? (
+                        <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-900 dark:text-amber-100">
+                          Módulo top
+                        </span>
+                      ) : null}
+                    </div>
                     <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{desc}</p>
                     <p className="mt-3 text-sm font-medium text-primary">Leer guía completa →</p>
                   </div>

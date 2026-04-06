@@ -37,21 +37,34 @@ import {
   LayoutGrid,
   Building2,
   SearchCheck,
+  ScanSearch,
 } from "lucide-react";
 import { AuthModal } from "@/components/auth/auth-modal";
+import { cn } from "@/lib/utils";
 
-/** Guías públicas (mismo orden en dropdown y menú móvil). */
-const PRODUCT_GUIDES: {
+type ProductGuide = {
   href: string;
   label: string;
   sub: string;
   Icon: ComponentType<{ className?: string }>;
-}[] = [
+  /** Destaca visualmente en menú (módulo estrella). */
+  featured?: boolean;
+};
+
+/** Guías públicas (mismo orden en dropdown y menú móvil). */
+const PRODUCT_GUIDES: ProductGuide[] = [
   {
     href: "/producto",
     label: "Centro de producto",
-    sub: "Mapa: boost, scan, SEO Engine, hashtags e inmobiliarias",
+    sub: "Mapa: boost, scan, SEO Engine, SEO Gap, hashtags e inmobiliarias",
     Icon: LayoutGrid,
+  },
+  {
+    href: "/producto/seo-gap-finder",
+    label: "SEO Gap Finder AI",
+    sub: "SERP real → keywords, gráficos, clusters y acciones (Pro+)",
+    Icon: ScanSearch,
+    featured: true,
   },
   {
     href: "/producto/boost-de-ficha",
@@ -150,16 +163,25 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                 <p className="px-3 pb-2 text-[11px] leading-snug text-muted-foreground/90">
                   Páginas públicas: qué hace cada parte del producto antes de entrar al panel.
                 </p>
-                {PRODUCT_GUIDES.map(({ href, label, sub, Icon }) => (
+                {PRODUCT_GUIDES.map(({ href, label, sub, Icon, featured }) => (
                   <Link
                     key={href}
                     href={href}
-                    className="rounded-lg px-3 py-2.5 hover:bg-accent"
+                    className={cn(
+                      "rounded-lg px-3 py-2.5 hover:bg-accent",
+                      featured &&
+                        "border border-violet-500/45 bg-gradient-to-br from-violet-500/12 to-fuchsia-500/5 shadow-sm",
+                    )}
                     onClick={() => setMobileOpen(false)}
                   >
                     <span className="flex items-center gap-2 font-medium">
-                      <Icon className="h-4 w-4 shrink-0 text-primary" />
+                      <Icon className={cn("h-4 w-4 shrink-0", featured ? "text-violet-600" : "text-primary")} />
                       {label}
+                      {featured ? (
+                        <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-800 dark:text-amber-200">
+                          Top
+                        </span>
+                      ) : null}
                     </span>
                     <span className="mt-0.5 block pl-6 text-xs font-normal text-muted-foreground">{sub}</span>
                   </Link>
@@ -235,6 +257,13 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                       onClick={() => setMobileOpen(false)}
                     >
                       SEO Engine (panel)
+                    </Link>
+                    <Link
+                      href="/dashboard/seo-gap"
+                      className="rounded-lg px-3 py-2.5 font-medium text-violet-700 hover:bg-violet-500/10 dark:text-violet-300"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      SEO Gap AI (panel)
                     </Link>
                     {session.user.isAdmin ? (
                       <p className="rounded-lg px-3 py-2.5 text-sm font-medium text-amber-800 dark:text-amber-200">
@@ -339,19 +368,31 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                 <DropdownMenuLabel className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Guías en la web
                 </DropdownMenuLabel>
-                {PRODUCT_GUIDES.map(({ href, label, sub, Icon }) => (
+                {PRODUCT_GUIDES.map(({ href, label, sub, Icon, featured }) => (
                   <DropdownMenuItem
                     key={href}
                     asChild
-                    className="cursor-pointer rounded-lg p-0 focus:bg-transparent"
+                    className={cn(
+                      "cursor-pointer rounded-lg p-0 focus:bg-transparent",
+                      featured && "p-0.5",
+                    )}
                   >
                     <Link
                       href={href}
-                      className="flex w-full flex-col gap-0.5 rounded-md px-2 py-2.5 hover:bg-accent"
+                      className={cn(
+                        "flex w-full flex-col gap-0.5 rounded-md px-2 py-2.5 hover:bg-accent",
+                        featured &&
+                          "border border-violet-500/45 bg-gradient-to-br from-violet-500/12 via-transparent to-fuchsia-500/8 shadow-sm",
+                      )}
                     >
                       <span className="flex items-center gap-2 text-sm font-semibold">
-                        <Icon className="h-4 w-4 shrink-0 text-primary" />
+                        <Icon className={cn("h-4 w-4 shrink-0", featured ? "text-violet-600" : "text-primary")} />
                         {label}
+                        {featured ? (
+                          <span className="rounded-full bg-amber-500/25 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-900 dark:text-amber-100">
+                            Top
+                          </span>
+                        ) : null}
                       </span>
                       <span className="pl-6 text-xs font-normal text-muted-foreground">{sub}</span>
                     </Link>
@@ -403,6 +444,15 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                       >
                         <Sparkles className="h-4 w-4 text-primary" />
                         Ir a SEO Engine (panel)
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
+                      <Link
+                        href="/dashboard/seo-gap"
+                        className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent"
+                      >
+                        <ScanSearch className="h-4 w-4 text-violet-600" />
+                        Ir a SEO Gap AI (panel)
                       </Link>
                     </DropdownMenuItem>
                   </>
