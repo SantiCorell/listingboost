@@ -24,7 +24,8 @@ export function SeoGapLandingDemo() {
               Datos de ejemplo
             </Badge>
             <span className="text-xs text-slate-400">
-              Keyword demo: <strong className="text-slate-100">zapatillas running mujer</strong>
+              Demo tipo Bess Skin: <strong className="text-slate-100">cremas de belleza</strong> ·{" "}
+              <strong className="text-slate-200">bess-skinhealth.com</strong>
             </span>
           </div>
           <Button
