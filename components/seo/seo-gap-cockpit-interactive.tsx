@@ -17,6 +17,16 @@ const typeHue: Record<string, string> = {
   navegacional: "#38bdf8",
 };
 
+/** Hash estable para separar visualmente puntos que comparten palabras/score parecidos. */
+function hashKeywordSeed(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return Math.abs(h);
+}
+
 function sortOpportunities(opportunities: SeoGapOpportunity[], key: SortKey, dir: "asc" | "desc"): SeoGapOpportunity[] {
   const arr = [...opportunities];
   const m = dir === "asc" ? 1 : -1;
@@ -59,18 +69,39 @@ function SeoGapBubbleMapInteractive({ opportunities }: { opportunities: SeoGapOp
   const hover = hoverIdx != null ? opportunities[hoverIdx] ?? null : null;
 
   const w = 520;
-  const h = 300;
-  const padL = 48;
-  const padR = 16;
-  const padT = 28;
-  const padB = 52;
+  const h = 320;
+  const padL = 52;
+  const padR = 28;
+  const padT = 30;
+  const padB = 54;
   const innerW = w - padL - padR;
   const innerH = h - padT - padB;
+  /** Eje X: hasta 14 palabras; micro-jitter por keyword para evitar columnas superpuestas. */
+  const maxWordsAxis = 14;
 
-  const cx = (words: number) => padL + (Math.min(words, 12) / 12) * innerW;
-  const cy = (score: number) => padT + innerH - (Math.max(0, Math.min(100, score)) / 100) * innerH;
   const rFor = (d: SeoGapOpportunity["demandTier"]) =>
-    d === "nicho" ? 17 : d === "bajo" ? 14 : d === "medio" ? 11 : 9;
+    d === "nicho" ? 15 : d === "bajo" ? 12 : d === "medio" ? 10 : 8;
+
+  const bubbleLayout = useMemo(() => {
+    return opportunities.map((o, i) => {
+      const words = keywordWordCount(o.keyword);
+      const h1 = hashKeywordSeed(o.keyword);
+      const h2 = hashKeywordSeed(`${o.keyword}|${i}`);
+      const fracX = (h1 % 1000) / 1000;
+      const fracY = (h2 % 1000) / 1000;
+      const wordFloat = Math.min(words + fracX * 0.92, maxWordsAxis);
+      const scoreJitter = Math.max(0, Math.min(100, o.score + (fracY - 0.5) * 7));
+      const x = padL + (wordFloat / maxWordsAxis) * innerW;
+      const y = padT + innerH - (scoreJitter / 100) * innerH;
+      const r = rFor(o.demandTier);
+      return { o, i, x, y, r, fill: typeHue[o.type] ?? "#a78bfa" };
+    });
+  }, [opportunities, innerW, innerH, padL, padT, maxWordsAxis]);
+
+  /** Pintar primero las grandes (atrás) y al final las pequeñas (encima) para ver mejor cada punto. */
+  const bubbleRenderOrder = useMemo(() => {
+    return [...bubbleLayout].sort((a, b) => b.r - a.r);
+  }, [bubbleLayout]);
 
   return (
     <div
@@ -136,12 +167,7 @@ function SeoGapBubbleMapInteractive({ opportunities }: { opportunities: SeoGapOp
         >
           Score ↑
         </text>
-        {opportunities.map((o, i) => {
-          const words = keywordWordCount(o.keyword);
-          const x = cx(words);
-          const y = cy(o.score);
-          const r = rFor(o.demandTier);
-          const fill = typeHue[o.type] ?? "#a78bfa";
+        {bubbleRenderOrder.map(({ o, i, x, y, r, fill }) => {
           const active = hoverIdx === i;
           return (
             <g key={`${o.keyword}-${i}`} filter={`url(#${filterId})`}>
@@ -150,9 +176,9 @@ function SeoGapBubbleMapInteractive({ opportunities }: { opportunities: SeoGapOp
                 cy={y}
                 r={r + (active ? 3 : 0)}
                 fill={fill}
-                opacity={active ? 0.92 : 0.5}
+                opacity={active ? 0.95 : 0.42}
                 stroke={fill}
-                strokeWidth={active ? 2.5 : 1.5}
+                strokeWidth={active ? 2.5 : 1.25}
                 className="cursor-pointer transition-all duration-200 ease-out"
                 onMouseEnter={() => setHoverIdx(i)}
                 onFocus={() => setHoverIdx(i)}

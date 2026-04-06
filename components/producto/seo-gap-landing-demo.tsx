@@ -25,7 +25,14 @@ export function SeoGapLandingDemo() {
             </Badge>
             <span className="text-xs text-slate-400">
               Demo tipo Bess Skin: <strong className="text-slate-100">cremas de belleza</strong> ·{" "}
-              <strong className="text-slate-200">bess-skinhealth.com</strong>
+              <a
+                href="https://bess-skinhealth.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-violet-200 underline decoration-violet-400/50 underline-offset-2 transition-colors hover:text-white hover:decoration-violet-300"
+              >
+                bess-skinhealth.com
+              </a>
             </span>
           </div>
           <Button
