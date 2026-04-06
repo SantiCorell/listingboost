@@ -34,8 +34,16 @@ export default async function AppShell({ children }: { children: React.ReactNode
         <NavigationStyleReset />
         <RouteStyleGuard />
         <div className="flex min-h-screen flex-col">
+          <a
+            href="#contenido-principal"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            Saltar al contenido
+          </a>
           <SiteHeader googleAuthAvailable={googleAuthAvailable} />
-          <main className="flex min-h-0 flex-1 flex-col">{children}</main>
+          <main id="contenido-principal" className="flex min-h-0 flex-1 flex-col" tabIndex={-1}>
+            {children}
+          </main>
           <SiteFooter />
         </div>
       </AppProviders>

@@ -64,6 +64,8 @@ function NavLinkButton({
   return (
     <Link
       href={href}
+      prefetch
+      aria-current={active ? "page" : undefined}
       className={cn(
         compact
           ? "shrink-0 rounded-full px-3 py-1.5 text-xs font-medium"
@@ -99,10 +101,10 @@ export function DashboardShell({
     <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 md:flex-row">
       <nav className="space-y-4 md:hidden">
         <div>
-          <p className="mb-2 px-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <p className="mb-2 px-0.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Herramientas
           </p>
-          <p className="mb-2 text-[11px] leading-snug text-muted-foreground/90">
+          <p className="mb-2 text-xs leading-snug text-muted-foreground">
             Optimiza fichas, audita URLs y usa el motor SEO.
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -119,10 +121,10 @@ export function DashboardShell({
           </div>
         </div>
         <div>
-          <p className="mb-2 px-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <p className="mb-2 px-0.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Cuenta y actividad
           </p>
-          <p className="mb-2 text-[11px] leading-snug text-muted-foreground/90">
+          <p className="mb-2 text-xs leading-snug text-muted-foreground">
             Resumen, historial, créditos y ajustes.
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -145,10 +147,10 @@ export function DashboardShell({
           <BrandLogoLink variant="header" className="w-full flex-col items-start gap-2" />
           <nav className="space-y-6">
             <div>
-              <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Herramientas
               </p>
-              <p className="mb-2 px-3 text-[11px] leading-snug text-muted-foreground/90">
+              <p className="mb-2 px-3 text-xs leading-snug text-muted-foreground">
                 Lo que puedes usar para trabajar el SEO de tus fichas.
               </p>
               <div className="space-y-1">
@@ -158,10 +160,10 @@ export function DashboardShell({
               </div>
             </div>
             <div>
-              <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Cuenta y actividad
               </p>
-              <p className="mb-2 px-3 text-[11px] leading-snug text-muted-foreground/90">
+              <p className="mb-2 px-3 text-xs leading-snug text-muted-foreground">
                 Navega por tu espacio: resumen, historial y ajustes.
               </p>
               <div className="space-y-1">

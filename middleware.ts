@@ -13,15 +13,16 @@ const { auth } = NextAuth({
 export default auth((req) => {
   const isProtected =
     req.nextUrl.pathname.startsWith("/dashboard") ||
-    req.nextUrl.pathname.startsWith("/settings");
+    req.nextUrl.pathname.startsWith("/settings") ||
+    req.nextUrl.pathname.startsWith("/admin");
   if (isProtected && !req.auth?.user) {
     const u = new URL("/login", req.url);
-    u.searchParams.set("callbackUrl", req.nextUrl.pathname);
+    u.searchParams.set("callbackUrl", req.nextUrl.pathname + req.nextUrl.search);
     return NextResponse.redirect(u);
   }
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/settings/:path*"],
+  matcher: ["/dashboard/:path*", "/settings/:path*", "/admin", "/admin/:path*"],
 };

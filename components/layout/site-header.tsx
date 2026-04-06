@@ -157,10 +157,10 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                 <SheetTitle className="text-base">Navegación</SheetTitle>
               </SheetHeader>
               <nav className="mt-6 flex flex-col gap-1 text-sm" aria-label="Principal">
-                <p className="px-3 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <p className="px-3 pb-0.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Guías y módulos
                 </p>
-                <p className="px-3 pb-2 text-[11px] leading-snug text-muted-foreground/90">
+                <p className="px-3 pb-2 text-xs leading-snug text-muted-foreground">
                   Páginas públicas: qué hace cada parte del producto antes de entrar al panel.
                 </p>
                 {PRODUCT_GUIDES.map(({ href, label, sub, Icon, featured }) => (
@@ -178,7 +178,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                       <Icon className={cn("h-4 w-4 shrink-0", featured ? "text-violet-600" : "text-primary")} />
                       {label}
                       {featured ? (
-                        <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-800 dark:text-amber-200">
+                        <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-200">
                           Top
                         </span>
                       ) : null}
@@ -193,7 +193,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                 >
                   Cómo funciona (home)
                 </Link>
-                <p className="mt-4 px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <p className="mt-4 px-3 pb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Sitio
                 </p>
                 <Link
@@ -227,7 +227,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                 </Link>
                 {session?.user ? (
                   <>
-                    <p className="mt-4 px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <p className="mt-4 px-3 pb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       Tu cuenta
                     </p>
                     <Link
@@ -312,7 +312,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                   </>
                 ) : (
                   <>
-                    <p className="mt-4 px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <p className="mt-4 px-3 pb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       Acceso
                     </p>
                     <button
@@ -329,7 +329,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                     >
                       Registrarse
                     </button>
-                    <p className="px-3 pt-1 text-[10px] text-muted-foreground">
+                    <p className="px-3 pt-1 text-xs text-muted-foreground">
                       También puedes usar{" "}
                       <Link href="/login" className="underline underline-offset-2" onClick={() => setMobileOpen(false)}>
                         /login
@@ -359,13 +359,13 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
               className="z-[200] max-h-[min(85vh,32rem)] w-[min(100vw-2rem,22rem)] overflow-y-auto p-0 shadow-xl"
             >
               <div className="border-b border-border/70 bg-gradient-to-r from-primary/10 via-transparent to-accent/10 px-3 py-2.5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">Producto</p>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">Producto</p>
                 <p className="text-xs text-muted-foreground">
                   Guías públicas por módulo y atajos a tu panel (si has iniciado sesión)
                 </p>
               </div>
               <div className="p-1.5">
-                <DropdownMenuLabel className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <DropdownMenuLabel className="px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Guías en la web
                 </DropdownMenuLabel>
                 {PRODUCT_GUIDES.map(({ href, label, sub, Icon, featured }) => (
@@ -389,7 +389,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                         <Icon className={cn("h-4 w-4 shrink-0", featured ? "text-violet-600" : "text-primary")} />
                         {label}
                         {featured ? (
-                          <span className="rounded-full bg-amber-500/25 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-900 dark:text-amber-100">
+                          <span className="rounded-full bg-amber-500/25 px-1.5 py-0.5 text-xs font-bold uppercase tracking-wide text-amber-900 dark:text-amber-100">
                             Top
                           </span>
                         ) : null}
@@ -407,7 +407,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                 {session?.user ? (
                   <>
                     <DropdownMenuSeparator className="my-1.5" />
-                    <DropdownMenuLabel className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    <DropdownMenuLabel className="px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       Tu cuenta · panel
                     </DropdownMenuLabel>
                     <DropdownMenuItem asChild className="cursor-pointer rounded-lg p-0 focus:bg-transparent">
@@ -492,7 +492,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                 <span className="flex items-center gap-1.5">
                   <Badge
                     variant="secondary"
-                    className="h-5 px-2 font-mono text-[10px] font-semibold uppercase tracking-wide"
+                    className="h-5 px-2 font-mono text-xs font-semibold uppercase tracking-wide"
                   >
                     Plan {planLabel(plan)}
                   </Badge>
@@ -566,7 +566,7 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
                           {session.user.email}
                         </p>
                       ) : null}
-                      <p className="pt-1 font-mono text-[10px] uppercase tracking-wide text-primary">
+                      <p className="pt-1 font-mono text-xs uppercase tracking-wide text-primary">
                         Plan {planLabel(plan)}
                       </p>
                     </div>

@@ -4,10 +4,12 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { userIsAdmin } from "@/lib/auth/admin";
 import { hasSeoGapFinder } from "@/lib/plan-features";
-import { parseSeoGapOutput } from "@/lib/seo-gap-output";
+import { parseSeoGapOutputForStoredReport } from "@/lib/seo-gap-output";
 import { Button } from "@/components/ui/button";
 import { SeoGapReportBody } from "@/components/seo/seo-gap-report-body";
 import { ArrowLeft } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 export default async function SeoGapReportPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -26,7 +28,12 @@ export default async function SeoGapReportPage({ params }: { params: Promise<{ i
   });
   if (!report) notFound();
 
-  const parsed = parseSeoGapOutput(report.outputJson);
+  const parsed = parseSeoGapOutputForStoredReport(report.outputJson, {
+    keyword: report.keyword,
+    domain: report.domain,
+    country: report.country,
+    language: report.language,
+  });
   if (!parsed) notFound();
 
   return (
