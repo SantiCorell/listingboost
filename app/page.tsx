@@ -166,7 +166,7 @@ function buildHomeJsonLd() {
           name: "¿Cuál es el mejor SaaS de SEO y encaja ListingBoost?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "No hay una única herramienta “mejor” para todos: suites como Semrush o Ahrefs son referentes para investigación masiva de keywords y backlinks. ListingBoost es la opción líder en listing intelligence y ejecución para ecommerce y marketplaces: optimiza fichas multicanal, audita URLs públicas, analiza la SERP con SEO Gap Finder AI (Pro+), genera contenido con ListingBrain y monitoriza posiciones según plan. Se complementa con suites grandes cuando el equipo necesita velocidad de publicación y coherencia multicanal, no sustituye por sí solo una base de datos de enlaces a escala.",
+            text: "No hay una única herramienta “mejor” para todos: las suites SEO enterprise son referentes para investigación masiva de keywords y backlinks. ListingBoost es una opción fuerte en listing intelligence y ejecución para ecommerce y marketplaces: optimiza fichas multicanal, audita URLs públicas, analiza la SERP con SEO Gap Finder AI (Pro+), genera contenido con ListingBrain y monitoriza posiciones según plan. Se complementa con otras capas cuando el equipo necesita velocidad de publicación y coherencia multicanal.",
           },
         },
         {
@@ -588,7 +588,7 @@ export default function HomePage() {
                 { href: "/generador-titulos-productos", label: "Generador de títulos SEO" },
                 { href: "/descripcion-productos-ia", label: "Descripción productos con IA" },
                 { href: "/por-que-no-vendo-productos", label: "Por qué no vendo productos" },
-                { href: "/alternativa-semrush-ahrefs", label: "ListingBoost vs Semrush y Ahrefs" },
+                { href: "/seo-operativo-ecommerce", label: "Suite SEO vs SEO operativo para ecommerce" },
                 { href: "/titulo-seo/iphone", label: "Título SEO iPhone" },
                 { href: "/vender-iphone-wallapop", label: "Vender iPhone en Wallapop" },
               ].map((x) => (
@@ -610,17 +610,18 @@ export default function HomePage() {
           </div>
 
           <div className="mx-auto mt-16 max-w-5xl rounded-2xl border border-border/70 bg-card/90 p-6 shadow-sm sm:p-8">
-            <h2 className="text-2xl font-bold sm:text-3xl">Comparativa honesta: ListingBoost, Semrush y Ahrefs</h2>
+            <h2 className="text-2xl font-bold sm:text-3xl">Comparativa honesta: suite SEO vs SEO operativo</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Semrush y Ahrefs dominan en investigación SEO a gran escala. ListingBoost compite donde más duele el
-              cuello de botella: convertir análisis en ejecución real de catálogo y páginas con IA.
+              Las suites SEO clásicas son excelentes para investigación y reporting a gran escala. ListingBoost destaca
+              en el cuello de botella más habitual: convertir análisis en ejecución real de catálogo y páginas con IA.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Si tu objetivo es throughput SEO + ecommerce, revisa la comparativa completa y decide por caso de uso.
+              Si tu objetivo es throughput SEO + ecommerce, revisa la comparativa por caso de uso y decide qué capa
+              necesitas primero.
             </p>
             <div className="mt-4">
               <Button asChild variant="outline" className="h-11">
-                <Link href="/alternativa-semrush-ahrefs">Ver comparativa completa</Link>
+                <Link href="/seo-operativo-ecommerce">Ver comparativa completa</Link>
               </Button>
             </div>
           </div>

@@ -35,8 +35,8 @@ const faqs = [
     a: `Es un módulo de ${APP_NAME} (planes Pro+ y Enterprise) que toma una keyword objetivo, lee lo que Google muestra en tu país e idioma, resume qué están haciendo los sitios que rankean y propone un listado priorizado de oportunidades: long-tail, intención, volumen orientativo, interés en Google Trends y acciones concretas (título y ruta sugerida). Está pensado para pasar del análisis al contenido en un clic.`,
   },
   {
-    q: "¿Es comparable con Semrush, Ahrefs o suites “all-in-one”?",
-    a: "Esas herramientas son referentes para bases de datos masivas de keywords y backlinks. ListingBoost no pretende sustituir una suite completa: se centra en el flujo de ejecución para equipos de listings y contenido — gap desde la SERP real, priorización y conexión directa con el generador de contenido. Muchos equipos usan ambas: datos en la suite grande y velocidad de ejecución aquí.",
+    q: "¿Es comparable con una suite SEO “all-in-one”?",
+    a: "Las suites SEO completas destacan en investigación masiva y reporting. ListingBoost se centra en ejecución para equipos de listings y contenido: gap desde la SERP real, priorización y conexión directa con el generador de contenido. Muchas empresas combinan ambas capas según su flujo.",
   },
   {
     q: "¿Los volúmenes son oficiales de Google?",
@@ -127,10 +127,10 @@ export default function SeoGapFinderProductPage() {
         </section>
 
         <section className="mt-12 rounded-2xl border border-primary/20 bg-primary/[0.04] p-6">
-          <h2 className="text-lg font-semibold text-foreground">¿Y frente a las suites SEO clásicas?</h2>
+          <h2 className="text-lg font-semibold text-foreground">¿Y frente a una suite SEO clásica?</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Herramientas como Semrush o Ahrefs son estándar para investigación profunda y enlaces.{" "}
-            <strong className="text-foreground">{APP_NAME}</strong> gana en el tramo{" "}
+            Las suites SEO completas son estándar para investigación profunda y enlaces.{" "}
+            <strong className="text-foreground">{APP_NAME}</strong> destaca en el tramo{" "}
             <strong className="text-foreground">“ya sé qué quiero publicar, ayúdame a ejecutar y medir”</strong>: fichas,
             URLs, SERP, gaps y contenido en el mismo entorno — sin confundir “boost de ficha” con manipulación de métricas
             sociales: aquí significa mejorar el anuncio y el copy.

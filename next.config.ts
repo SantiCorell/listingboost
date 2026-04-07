@@ -4,6 +4,15 @@ import type { NextConfig } from "next";
 const isTurbopackDev = process.argv.some((a) => a === "--turbopack" || a === "--turbo");
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/alternativa-semrush-ahrefs",
+        destination: "/seo-operativo-ecommerce",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "utfs.io", pathname: "/**" },

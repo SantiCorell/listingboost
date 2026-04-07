@@ -14,22 +14,22 @@ import { breadcrumbJsonLd } from "@/lib/seo-jsonld";
 const siteUrl = getPublicSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Alternativa a Semrush y Ahrefs para SEO operativo en ecommerce",
+  title: "Suite SEO vs SEO operativo en ecommerce: qué priorizar",
   description:
-    "Comparativa clara: ListingBoost vs Semrush y Ahrefs. Cuándo usar cada herramienta y por qué ListingBoost destaca en ejecución rápida de catálogo, SEO on-page y contenido.",
+    "Guía de decisión para ecommerce: diferencia entre suite SEO de análisis y capa SEO operativa de ejecución de catálogo y contenidos con IA.",
   keywords: [
-    "alternativa semrush",
-    "alternativa ahrefs",
-    "semrush vs ahrefs vs listingboost",
+    "suite seo ecommerce",
     "seo operativo ecommerce",
+    "ejecucion seo catalogo",
     "listing intelligence ai",
+    "herramienta seo para catalogo",
   ],
-  alternates: { canonical: `${siteUrl}/alternativa-semrush-ahrefs` },
+  alternates: { canonical: `${siteUrl}/seo-operativo-ecommerce` },
   openGraph: {
-    title: `Alternativa a Semrush y Ahrefs · ${APP_NAME}`,
+    title: `Suite SEO vs SEO operativo · ${APP_NAME}`,
     description:
-      "No compites por la misma capa: suites para investigación masiva vs ejecución SEO + catálogo en un solo flujo.",
-    url: `${siteUrl}/alternativa-semrush-ahrefs`,
+      "Qué capa priorizar según fase de negocio: investigación SEO masiva o ejecución rápida de catálogo y contenidos.",
+    url: `${siteUrl}/seo-operativo-ecommerce`,
   },
   robots: { index: true, follow: true },
 };
@@ -41,10 +41,10 @@ const related = [
   { href: "/sobre-listingboost", label: "Qué es y qué no es ListingBoost" },
 ];
 
-export default function AlternativaSemrushAhrefsPage() {
+export default function SeoOperativoEcommercePage() {
   const crumbs = breadcrumbJsonLd([
     { name: "Inicio", url: siteUrl },
-    { name: "Alternativa Semrush Ahrefs", url: `${siteUrl}/alternativa-semrush-ahrefs` },
+    { name: "SEO operativo ecommerce", url: `${siteUrl}/seo-operativo-ecommerce` },
   ]);
 
   return (
@@ -53,60 +53,62 @@ export default function AlternativaSemrushAhrefsPage() {
       <GrowthArticleShell
         breadcrumb={[
           { href: "/", label: "Inicio" },
-          { label: "Alternativa a Semrush y Ahrefs" },
+          { label: "Suite SEO vs SEO operativo" },
         ]}
       >
         <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-[2.35rem]">
-          ListingBoost frente a Semrush y Ahrefs: cómo jugar en la misma mesa
+          Suite SEO vs SEO operativo: cómo jugar en la misma mesa
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
-          Si buscas competir en serio, la pregunta no es solo &quot;qué herramienta tiene más datos&quot;, sino{" "}
-          <strong className="text-foreground">qué equipo ejecuta más rápido con calidad</strong>. Semrush y Ahrefs son
-          líderes para research masivo; <strong className="text-foreground">{APP_NAME}</strong> está diseñado para
-          transformar ese research en páginas y listings publicables en minutos con {ENGINE_NAME}.
+          La pregunta clave no es solo cuántos datos tienes, sino{" "}
+          <strong className="text-foreground">qué velocidad de ejecución consigues con calidad</strong>. Las suites SEO
+          clásicas destacan en investigación masiva; <strong className="text-foreground">{APP_NAME}</strong> está
+          orientado a convertir ese análisis en páginas y listings publicables en minutos con {ENGINE_NAME}.
         </p>
 
         <GrowthCtaCluster />
 
         <GrowthSection title="Diferencia real: research masivo vs ejecución operativa">
           <p>
-            <strong className="text-foreground">Semrush / Ahrefs</strong>: excelentes para keyword databases, backlinks,
-            share of voice y reporting avanzado.
+            <strong className="text-foreground">Suite SEO</strong>: ideal para base de keywords amplia, auditorías
+            globales, reporting y trabajo estratégico de gran volumen.
           </p>
           <p>
             <strong className="text-foreground">{APP_NAME}</strong>: capa de ejecución para ecommerce y catálogo:
             reescritura de fichas, auditoría SEO de URL, oportunidades SEO Gap y contenido listo para publicar.
           </p>
           <p>
-            Resultado práctico: no sustituyes necesariamente una suite enterprise; aceleras la parte que más dinero
-            pierde cuando se hace lento: pasar de análisis a publicación.
+            En la práctica no son capas excluyentes: una guía la estrategia y la otra reduce el tiempo entre análisis y
+            publicación.
           </p>
         </GrowthSection>
 
-        <GrowthSection title="Dónde puedes ganar por encima en el día a día">
+        <GrowthSection title="Dónde se nota más el impacto en el día a día">
           <GrowthTipList
             items={[
               "Velocidad de producción: menos tiempo de redacción manual por SKU y categoría.",
               "Consistencia multicanal: mismo criterio SEO/copy entre tienda, fichas y marketplaces.",
               "Priorización de oportunidades: SEO Gap Finder para decidir qué publicar primero.",
               "Handoff claro a negocio: recomendaciones accionables, no solo dashboards.",
-              "Coste operativo más bajo para equipos pequeños y medianos que necesitan throughput.",
+              "Coste operativo más bajo para equipos que necesitan throughput semanal constante.",
             ]}
           />
         </GrowthSection>
 
-        <GrowthSection title="Cómo posicionarte de forma inteligente (sin vender humo)">
+        <GrowthSection title="Cómo priorizar sin perder foco">
           <p>
-            El enfoque ganador es <strong className="text-foreground">stack complementario</strong>: usa Semrush o
-            Ahrefs para investigación profunda y usa {APP_NAME} para ejecutar contenido y optimizaciones a velocidad
-            de negocio.
+            Si estás al inicio o con equipo pequeño, suele rendir más reforzar{" "}
+            <strong className="text-foreground">ejecución operativa</strong> (publicar más y mejor cada semana).
           </p>
           <p>
-            Si hoy solo puedes elegir una herramienta para publicar más y mejor con menos fricción,{" "}
+            Si ya tienes un flujo de publicación sólido, añade una suite SEO para ampliar research y reporting. El
+            objetivo es mantener una cadena continua entre estrategia y salida a producción.
+          </p>
+          <p>
             <Link href="/register" className="font-medium text-primary hover:underline">
-              prueba ListingBoost gratis
+              Prueba ListingBoost gratis
             </Link>{" "}
-            y mide tiempo ahorrado + output generado por semana.
+            y mide tiempo ahorrado + output publicado por semana.
           </p>
         </GrowthSection>
 

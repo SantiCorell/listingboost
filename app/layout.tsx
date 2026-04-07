@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     default: `${APP_NAME} — Listing Intelligence AI para SEO, catálogo y crecimiento`,
     template: `%s · ${APP_NAME}`,
   },
-  description: `${APP_NAME}: SaaS de listing intelligence con ${ENGINE_NAME}. Optimiza fichas, audita URLs, detecta oportunidades SEO Gap y acelera ejecución de catálogo. Complementa suites como Semrush y Ahrefs para pasar del análisis a la publicación.`,
+  description: `${APP_NAME}: SaaS de listing intelligence con ${ENGINE_NAME}. Optimiza fichas, audita URLs, detecta oportunidades SEO Gap y acelera la ejecución de catálogo de forma consistente.`,
   applicationName: APP_NAME,
   authors: [{ name: APP_NAME, url: siteUrl }],
   creator: APP_NAME,
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
     "ListingBrain",
     "listing intelligence",
     "herramienta seo ecommerce",
-    "alternativa semrush para ecommerce",
-    "alternativa ahrefs para ecommerce",
+    "suite seo ecommerce",
+    "seo operativo ecommerce",
     "descripción producto IA",
     "SEO marketplace España",
     "hashtags Instagram ventas",
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     siteName: APP_NAME,
     title: `${APP_NAME} — Listing Intelligence AI para SEO y catálogo`,
     description:
-      "Optimiza fichas, scan SEO de URLs y SEO Gap en un flujo de ejecución. Pensado para equipos ecommerce que usan o complementan Semrush y Ahrefs.",
+      "Optimiza fichas, scan SEO de URLs y SEO Gap en un flujo de ejecución. Pensado para equipos ecommerce y catálogo multicanal.",
   },
   twitter: {
     card: "summary_large_image",

@@ -80,12 +80,12 @@ export default function SobreListingBoostPage() {
           estimado, tendencia y acciones concretas enlazadas a generación de contenido).
         </p>
 
-        <h2>Dónde encajamos frente a Semrush, Ahrefs y suites “enterprise”</h2>
+        <h2>Dónde encajamos frente a suites SEO “enterprise”</h2>
         <p>
-          Herramientas como <strong>Semrush</strong> o <strong>Ahrefs</strong> son referentes mundiales para
-          investigación masiva de palabras clave, análisis de backlinks a escala y reporting para grandes equipos.{" "}
-          <strong>{APP_NAME}</strong> no pretende sustituir ese catálogo histórico de enlaces ni todo el reporting
-          enterprise: compite en otro frente — <strong>ejecución rápida en ecommerce</strong> (fichas multicanal,
+          Las suites SEO enterprise son referentes para investigación masiva de palabras clave, análisis de backlinks a
+          escala y reporting para grandes equipos. <strong>{APP_NAME}</strong> no pretende sustituir todo ese catálogo
+          histórico de enlaces ni el reporting corporativo: compite en otro frente —{" "}
+          <strong>ejecución rápida en ecommerce</strong> (fichas multicanal,
           coherencia de copy, auditoría de URLs públicas) y en pasar de <strong>“lo que muestra Google”</strong> a{" "}
           <strong>textos y páginas listos para publicar</strong>, con {ENGINE_NAME} en un solo flujo.
         </p>
