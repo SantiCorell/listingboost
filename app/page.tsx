@@ -588,6 +588,7 @@ export default function HomePage() {
                 { href: "/generador-titulos-productos", label: "Generador de títulos SEO" },
                 { href: "/descripcion-productos-ia", label: "Descripción productos con IA" },
                 { href: "/por-que-no-vendo-productos", label: "Por qué no vendo productos" },
+                { href: "/alternativa-semrush-ahrefs", label: "ListingBoost vs Semrush y Ahrefs" },
                 { href: "/titulo-seo/iphone", label: "Título SEO iPhone" },
                 { href: "/vender-iphone-wallapop", label: "Vender iPhone en Wallapop" },
               ].map((x) => (
@@ -604,6 +605,22 @@ export default function HomePage() {
             <div className="mt-6">
               <Button asChild className="h-11">
                 <Link href="/register">Analizar listing gratis</Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="mx-auto mt-16 max-w-5xl rounded-2xl border border-border/70 bg-card/90 p-6 shadow-sm sm:p-8">
+            <h2 className="text-2xl font-bold sm:text-3xl">Comparativa honesta: ListingBoost, Semrush y Ahrefs</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Semrush y Ahrefs dominan en investigación SEO a gran escala. ListingBoost compite donde más duele el
+              cuello de botella: convertir análisis en ejecución real de catálogo y páginas con IA.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Si tu objetivo es throughput SEO + ecommerce, revisa la comparativa completa y decide por caso de uso.
+            </p>
+            <div className="mt-4">
+              <Button asChild variant="outline" className="h-11">
+                <Link href="/alternativa-semrush-ahrefs">Ver comparativa completa</Link>
               </Button>
             </div>
           </div>

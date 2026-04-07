@@ -28,10 +28,10 @@ const siteUrl = getPublicSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${APP_NAME} — Optimiza fichas con IA | Wallapop, eBay, Shopify | SEO y hashtags`,
+    default: `${APP_NAME} — Listing Intelligence AI para SEO, catálogo y crecimiento`,
     template: `%s · ${APP_NAME}`,
   },
-  description: `${APP_NAME}: SaaS de listing intelligence con ${ENGINE_NAME} — optimiza textos de anuncios, audita URLs, comparativas y monitoring SERP. No vende seguidores/likes ni reseñas; no es panel SMM. Empieza gratis.`,
+  description: `${APP_NAME}: SaaS de listing intelligence con ${ENGINE_NAME}. Optimiza fichas, audita URLs, detecta oportunidades SEO Gap y acelera ejecución de catálogo. Complementa suites como Semrush y Ahrefs para pasar del análisis a la publicación.`,
   applicationName: APP_NAME,
   authors: [{ name: APP_NAME, url: siteUrl }],
   creator: APP_NAME,
@@ -41,7 +41,10 @@ export const metadata: Metadata = {
   keywords: [
     "ListingBoost",
     "ListingBrain",
-    "optimizar ficha Wallapop",
+    "listing intelligence",
+    "herramienta seo ecommerce",
+    "alternativa semrush para ecommerce",
+    "alternativa ahrefs para ecommerce",
     "descripción producto IA",
     "SEO marketplace España",
     "hashtags Instagram ventas",
@@ -64,13 +67,13 @@ export const metadata: Metadata = {
     locale: "es_ES",
     url: siteUrl,
     siteName: APP_NAME,
-    title: `${APP_NAME} — Fichas que rankean con IA | marketplaces y SEO on-page`,
+    title: `${APP_NAME} — Listing Intelligence AI para SEO y catálogo`,
     description:
-      "Genera y optimiza fichas con motor propietario: hashtags, estructura por canal y scan SEO de URLs. Prueba gratis; escala a Pro.",
+      "Optimiza fichas, scan SEO de URLs y SEO Gap en un flujo de ejecución. Pensado para equipos ecommerce que usan o complementan Semrush y Ahrefs.",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${APP_NAME} | IA para listings y SEO de URL`,
+    title: `${APP_NAME} | AI para SEO operativo y catálogo`,
     description:
       "Boost multicanal + hashtags listos + auditoría URL. Pensado para vendedores y equipos de catálogo.",
   },

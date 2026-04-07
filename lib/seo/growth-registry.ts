@@ -18,6 +18,7 @@ export const VENDER_WALLAPOP_PRODUCTOS = ["zapatillas", "muebles", "iphone", "co
 export type VenderWallapopSlug = (typeof VENDER_WALLAPOP_PRODUCTOS)[number];
 
 export const GROWTH_STATIC_ROUTES = [
+  "/alternativa-semrush-ahrefs",
   "/seo-wallapop",
   "/optimizar-listings-wallapop",
   "/seo-ebay",
