@@ -20,6 +20,9 @@ export async function executeSeoMonitoringById(monitoringId: string): Promise<
   if (!m) {
     return { ok: false, error: "Seguimiento no encontrado." };
   }
+  if (!m.active) {
+    return { ok: false, error: "Seguimiento en pausa." };
+  }
 
   let host: string;
   try {

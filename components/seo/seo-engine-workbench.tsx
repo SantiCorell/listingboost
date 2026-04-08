@@ -513,6 +513,7 @@ type MonitoringRow = {
   id: string;
   url: string;
   keyword: string;
+  active: boolean;
   lastPosition: number | null;
   lastNote: string | null;
   lastRunAt: string | null;
@@ -552,6 +553,7 @@ function MonitoringPanel({
       url: string;
       keyword: string;
       cadence: string;
+      active?: boolean;
       lastPosition: number | null;
       lastNote?: string | null;
       lastRunAt?: Date | string | null;
@@ -563,6 +565,7 @@ function MonitoringPanel({
       url: x.url,
       keyword: x.keyword,
       cadence: x.cadence,
+      active: x.active !== false,
       lastPosition: x.lastPosition,
       lastNote: x.lastNote ?? null,
       lastRunAt: x.lastRunAt
@@ -708,6 +711,10 @@ function MonitoringPanel({
         >
           Añadir seguimiento
         </Button>
+        <p className="text-xs text-muted-foreground">
+          Importante: cada ejecución consume créditos según tu plan. Si eliges <strong>diario</strong>, puede consumir
+          cada día; en <strong>semanal</strong>, aproximadamente una vez por semana. Puedes pausar/reanudar cuando quieras.
+        </p>
         {monitorErr ? <p className="text-sm text-destructive">{monitorErr}</p> : null}
 
         {loading ? (
@@ -722,6 +729,7 @@ function MonitoringPanel({
                 url={m.url}
                 keyword={m.keyword}
                 cadence={m.cadence}
+                active={m.active}
                 lastPosition={m.lastPosition}
                 lastNote={m.lastNote}
                 lastRunAt={m.lastRunAt}
@@ -803,6 +811,24 @@ function MonitoringPanel({
                 onRemove={async () => {
                   await fetch(`/api/monitoring?id=${m.id}`, { method: "DELETE" });
                   await load();
+                }}
+                onToggleActive={async () => {
+                  try {
+                    const r = await fetch("/api/monitoring", {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ id: m.id, action: m.active ? "pause" : "resume" }),
+                    });
+                    const j = (await r.json()) as { error?: string };
+                    if (!r.ok) {
+                      setMonitorErr(j.error ?? "No se pudo actualizar el estado");
+                      return;
+                    }
+                    setMonitorErr(null);
+                    await load();
+                  } catch {
+                    setMonitorErr("Error de red");
+                  }
                 }}
               />
             ))}

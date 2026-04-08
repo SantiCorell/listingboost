@@ -16,6 +16,7 @@ export type SerpMonitoringCardProps = {
   url: string;
   keyword: string;
   cadence: string;
+  active?: boolean;
   lastPosition: number | null;
   lastNote: string | null;
   lastRunAt: string | null;
@@ -23,6 +24,7 @@ export type SerpMonitoringCardProps = {
   running: boolean;
   onRefresh: () => void;
   onRemove: () => void;
+  onToggleActive?: () => void;
   /** Informe premium vs URLs por encima en la SERP (créditos). */
   insightCreditCost?: number;
   /** Enterprise / admin: no muestra coste en el botón. */
@@ -107,6 +109,7 @@ export function SerpMonitoringCard({
   url,
   keyword,
   cadence,
+  active = true,
   lastPosition,
   lastNote,
   lastRunAt,
@@ -114,6 +117,7 @@ export function SerpMonitoringCard({
   running,
   onRefresh,
   onRemove,
+  onToggleActive,
   insightCreditCost,
   insightCreditsWaived,
   insightLoading,
@@ -141,6 +145,9 @@ export function SerpMonitoringCard({
             >
               {cadence === "daily" ? "Diario" : "Semanal"}
             </Badge>
+            <Badge variant={active ? "secondary" : "outline"} className={active ? "" : "border-amber-300 text-amber-700"}>
+              {active ? "Activo" : "Pausado"}
+            </Badge>
             {lastRunAt ? (
               <span className="text-xs text-muted-foreground">
                 Última comprobación · {relativeTimeShort(lastRunAt)}
@@ -155,6 +162,11 @@ export function SerpMonitoringCard({
           {lastPosition == null && lastNote ? (
             <p className="rounded-lg border border-amber-200/80 bg-amber-50/90 px-3 py-2 text-xs leading-relaxed text-amber-950 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-100">
               {lastNote}
+            </p>
+          ) : null}
+          {!active ? (
+            <p className="rounded-lg border border-amber-200/80 bg-amber-50/90 px-3 py-2 text-xs leading-relaxed text-amber-950 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-100">
+              Seguimiento en pausa: no se ejecuta automáticamente hasta reanudar.
             </p>
           ) : null}
         </div>
@@ -237,7 +249,7 @@ export function SerpMonitoringCard({
                   variant="default"
                   size="sm"
                   className="min-h-11 flex-1 gap-1.5 bg-gradient-to-r from-violet-600 to-purple-600 shadow-sm hover:from-violet-500 hover:to-purple-500 sm:min-h-0"
-                  disabled={running}
+                  disabled={running || !active}
                   onClick={onRefresh}
                 >
                   {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
@@ -246,6 +258,11 @@ export function SerpMonitoringCard({
                 <Button type="button" variant="outline" size="sm" className="min-h-11 sm:min-h-0" onClick={onRemove}>
                   Quitar
                 </Button>
+                {onToggleActive ? (
+                  <Button type="button" variant="outline" size="sm" className="min-h-11 sm:min-h-0" onClick={onToggleActive}>
+                    {active ? "Pausar" : "Reanudar"}
+                  </Button>
+                ) : null}
               </div>
               {onInsight != null && insightCreditCost != null ? (
                 <>
@@ -296,7 +313,7 @@ export function SerpMonitoringCard({
                 variant="default"
                 size="sm"
                 className="gap-1.5 bg-gradient-to-r from-violet-600 to-purple-600 shadow-sm hover:from-violet-500 hover:to-purple-500"
-                disabled={running}
+                disabled={running || !active}
                 onClick={onRefresh}
               >
                 {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
@@ -305,6 +322,11 @@ export function SerpMonitoringCard({
               <Button type="button" variant="outline" size="sm" onClick={onRemove}>
                 Quitar
               </Button>
+              {onToggleActive ? (
+                <Button type="button" variant="outline" size="sm" onClick={onToggleActive}>
+                  {active ? "Pausar" : "Reanudar"}
+                </Button>
+              ) : null}
             </div>
             {onInsight != null && insightCreditCost != null ? (
               <>

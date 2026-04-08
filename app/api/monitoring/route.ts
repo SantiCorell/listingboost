@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     );
   }
 
-  let body: { url?: string; keyword?: string; cadence?: string };
+  let body: { url?: string; keyword?: string; cadence?: string; active?: boolean };
   try {
     body = (await req.json()) as typeof body;
   } catch {
@@ -81,6 +81,7 @@ export async function POST(req: Request) {
       url: body.url!.trim(),
       keyword: body.keyword.trim(),
       cadence,
+      active: body.active !== false,
       nextRunAt,
     },
   });
@@ -89,6 +90,39 @@ export async function POST(req: Request) {
   void executeSeoMonitoringById(row.id).catch(() => {});
 
   return NextResponse.json({ ok: true, item: row });
+}
+
+export async function PATCH(req: Request) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  let body: { id?: string; action?: "pause" | "resume" };
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+
+  if (!body.id || !body.action) {
+    return NextResponse.json({ error: "Faltan parámetros" }, { status: 400 });
+  }
+
+  const active = body.action === "resume";
+  const now = new Date();
+  const nextRunAt = active ? now : null;
+
+  const updated = await prisma.seoMonitoring.updateMany({
+    where: { id: body.id, userId: session.user.id },
+    data: { active, nextRunAt },
+  });
+
+  if (updated.count === 0) {
+    return NextResponse.json({ error: "Seguimiento no encontrado" }, { status: 404 });
+  }
+
+  return NextResponse.json({ ok: true, active });
 }
 
 export async function DELETE(req: Request) {

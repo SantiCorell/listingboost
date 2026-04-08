@@ -17,10 +17,28 @@ export async function GET(req: Request) {
   }
 
   const now = new Date();
+  const activeSince = new Date(now.getTime() - 36 * 60 * 60 * 1000);
   const due = await prisma.seoMonitoring.findMany({
     where: {
       active: true,
       OR: [{ nextRunAt: null }, { nextRunAt: { lte: now } }],
+      AND: [
+        {
+          OR: [
+            { cadence: { not: "daily" } },
+            {
+              user: {
+                siteVisits: {
+                  some: {
+                    createdAt: { gte: activeSince },
+                    userId: { not: null },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
     },
     take: 40,
   });
