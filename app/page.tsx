@@ -258,8 +258,8 @@ export default function HomePage() {
           {/* Hero: visual SEO/Google + IA; mock de listings más abajo */}
           <section className="min-w-0 max-w-full" aria-labelledby="home-hero-heading">
             <div className="grid min-w-0 max-w-full items-start gap-6 sm:gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12">
-              {/* Columna visual: primero en móvil = ves el mock al abrir */}
-              <div className="relative min-w-0 max-w-full space-y-2.5 sm:space-y-3 lg:col-span-5 xl:col-span-5">
+              {/* Columna visual: a la derecha en desktop; en móvil va debajo del titular (order) */}
+              <div className="relative order-2 min-w-0 max-w-full space-y-2.5 sm:space-y-3 lg:order-1 lg:col-span-5 xl:col-span-5">
                 <div className="relative max-w-full rounded-2xl border border-primary/20 bg-gradient-to-b from-card via-card to-primary/[0.04] p-0.5 shadow-[0_20px_60px_-24px_hsl(var(--primary)/0.45)] ring-1 ring-primary/10 sm:p-1">
                   <div className="pointer-events-none absolute -inset-px rounded-2xl bg-[linear-gradient(135deg,hsl(var(--primary)/0.12),transparent_42%,hsl(var(--accent)/0.08)_100%)]" />
                   <div className="relative max-w-full overflow-hidden rounded-[0.85rem] border border-white/40 bg-background/40 dark:border-white/5 dark:bg-black/20 sm:rounded-[0.9rem]">
@@ -280,8 +280,8 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Columna copy */}
-              <div className="flex min-w-0 max-w-full flex-col gap-4 sm:gap-5 lg:col-span-7 xl:col-span-7">
+              {/* Columna copy: primero en móvil (H1 arriba); en lg segunda columna visualmente */}
+              <div className="order-1 flex min-w-0 max-w-full flex-col gap-4 sm:gap-5 lg:order-2 lg:col-span-7 xl:col-span-7">
                 <div className="space-y-3">
                   <p className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-border/60 bg-muted/25 px-2.5 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-primary/95">
                     <LayoutGrid className="h-3 w-3 shrink-0" aria-hidden />
