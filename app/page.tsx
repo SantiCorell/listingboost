@@ -77,8 +77,8 @@ import {
 const siteUrl = getPublicSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Herramienta SEO SaaS — Google, ChatGPT, DeepSeek y tu web",
-  description: `${APP_NAME}: SEO operativo para rankear en Google y dejar contenido claro para asistentes (ChatGPT, DeepSeek…). Auditoría URL, competencia y catálogo con ${ENGINE_NAME}. Gratis para empezar.`,
+  title: "Herramienta SEO SaaS — Google, contenido optimizado y sistemas de IA",
+  description: `${APP_NAME}: mejora el SEO en Google y el contenido que entienden buscadores y algoritmos de IA. Auditoría URL, competencia y catálogo con ${ENGINE_NAME}. Gratis para empezar.`,
   keywords: [
     "herramienta SEO SaaS",
     "SEO tool España",
@@ -94,9 +94,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     siteName: APP_NAME,
-    title: `${APP_NAME} — SEO para Google y contenido claro para IA`,
+    title: `${APP_NAME} — SEO en Google y contenido para algoritmos de IA`,
     description:
-      "Panel en vivo: auditoría, competencia y textos. Piensa en buscadores y en ChatGPT / DeepSeek. Plan Free.",
+      "Panel en vivo: auditoría, competencia y textos para Google y para sistemas de IA. Plan Free.",
     url: siteUrl,
   },
 };
@@ -226,10 +226,10 @@ function buildHomeJsonLd() {
         },
         {
           "@type": "Question",
-          name: `¿${APP_NAME} ayuda con la visibilidad en asistentes de IA (ChatGPT, DeepSeek, etc.)?`,
+          name: `¿${APP_NAME} ayuda con contenido entendible por algoritmos de IA y asistentes?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: `No controlamos lo que citan terceros, pero el producto te orienta a páginas y textos más claros, estructurados y alineados a búsqueda: eso suele ayudar tanto a Google como a que modelos de lenguaje entiendan mejor tu oferta cuando alguien pregunta por tu sector.`,
+            text: `No controlamos lo que citan terceros, pero el producto te orienta a páginas y textos más claros, estructurados y alineados a búsqueda: eso suele ayudar tanto a Google como a que sistemas de IA interpreten mejor tu oferta cuando un usuario pregunta por tu sector.`,
           },
         },
       ],
@@ -291,20 +291,15 @@ export default function HomePage() {
                     id="home-hero-heading"
                     className="text-balance text-2xl font-bold leading-[1.15] tracking-tight text-foreground sm:text-3xl lg:text-[2.125rem] lg:leading-tight"
                   >
-                    <span className="text-gradient-brand">Google</span>
-                    <span className="text-foreground"> + </span>
-                    <span className="text-gradient-brand">IA</span>
-                    <span className="text-foreground">: posiciona y haz que </span>
-                    <span className="text-foreground">ChatGPT</span>
-                    <span className="text-foreground">, </span>
-                    <span className="text-foreground">DeepSeek</span>
-                    <span className="text-foreground"> y similares te reconozcan</span>
+                    <span className="text-gradient-brand">Mejora tu SEO en Google</span>
+                    <span className="text-foreground">
+                      {" "}
+                      y crea contenido que los algoritmos de IA entienden
+                    </span>
                   </h1>
                   <p className="max-w-xl text-pretty text-sm leading-snug text-muted-foreground">
-                    Revisamos tu web y el SEO, miramos la competencia en búsqueda y te damos textos y estructura listos
-                    para publicar — menos humo, más señal para{" "}
-                    <strong className="font-medium text-foreground">buscadores</strong> y para{" "}
-                    <strong className="font-medium text-foreground">asistentes</strong> cuando preguntan por tu nicho.
+                    Analizamos tu web, tu SEO y tu competencia para generar contenido optimizado que mejora tu
+                    posicionamiento en Google y es entendido por buscadores y sistemas de IA.
                   </p>
                 </div>
 
@@ -388,10 +383,10 @@ export default function HomePage() {
                     Producto
                   </Link>
                   <Link
-                    href="/producto/seo-gap-finder#ejemplo"
+                    href="/blog/seo-vs-aeo-guia-completa-2026"
                     className="rounded-md border border-border/60 bg-muted/20 px-2 py-1 hover:border-primary/30 hover:text-foreground"
                   >
-                    Datos Google + IA
+                    Guía SEO vs AEO
                   </Link>
                 </div>
               </div>

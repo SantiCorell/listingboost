@@ -36,7 +36,7 @@ const STEPS = [
     label: "Prioridades",
     Icon: Lightbulb,
     lead: "Te lo ordenamos.",
-    body: "Prioridades claras y textos listos para publicar: mejor para humanos y para que asistentes como ChatGPT o DeepSeek capten bien tu oferta cuando alguien pregunta.",
+    body: "Prioridades claras y textos listos para publicar: mejor para humanos y para que buscadores y sistemas de IA capten bien tu oferta cuando alguien pregunta.",
   },
   {
     key: "ship",
