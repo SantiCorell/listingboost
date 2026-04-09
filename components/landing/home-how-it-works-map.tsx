@@ -53,7 +53,7 @@ export function HomeHowItWorksMap() {
 
   return (
     <section
-      className="max-w-xl rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm backdrop-blur-sm sm:p-5"
+      className="mx-auto max-w-xl rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm backdrop-blur-sm sm:p-5"
       aria-labelledby={headingId}
     >
       <h2 id={headingId} className="text-sm font-semibold text-foreground">

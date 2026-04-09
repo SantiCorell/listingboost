@@ -1,9 +1,10 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import type { Metadata } from "next";
 import { APP_NAME, ENGINE_NAME } from "@/lib/constants";
 import { organizationSameAsUrls } from "@/lib/legal/site-legal";
 import { getPublicSiteUrl } from "@/lib/site-url";
-import { HeroProductMock } from "@/components/landing/hero-product-mock";
 import { TRUST_STATS } from "@/lib/social-proof";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,7 +21,21 @@ const HomeFaqSection = dynamic(
 
 const HomeHowItWorksMap = dynamic(
   () => import("@/components/landing/home-how-it-works-map").then((m) => ({ default: m.HomeHowItWorksMap })),
-  { loading: () => <div className="h-36 max-w-xl animate-pulse rounded-2xl bg-muted/30" aria-hidden /> },
+  { loading: () => <div className="mx-auto h-36 max-w-xl animate-pulse rounded-2xl bg-muted/30" aria-hidden /> },
+);
+
+/** Mock del panel: chunk aparte para menos JS inicial en la primera pintura móvil. */
+const HeroProductMock = dynamic(
+  () => import("@/components/landing/hero-product-mock").then((m) => ({ default: m.HeroProductMock })),
+  {
+    loading: () => (
+      <div
+        className="mx-auto w-full max-w-lg min-h-[min(72vw,26rem)] rounded-2xl bg-muted/40 animate-pulse"
+        aria-hidden
+      />
+    ),
+    ssr: true,
+  },
 );
 
 /** Enlaces del hero a guías con sección #ejemplo (demo o listado claro). */
@@ -46,6 +61,16 @@ const HERO_MODULE_LINKS = [
     hint: "Qué sacas en cada análisis",
   },
 ] as const;
+
+const HOME_INTERNAL_NAV = [
+  { href: "/producto", label: "Producto" },
+  { href: "/pricing", label: "Precios" },
+  { href: "/seo-operativo-ecommerce", label: "SEO operativo" },
+  { href: "/producto/seo-gap-finder", label: "Huecos en Google" },
+  { href: "/producto/scan-seo-url", label: "Auditoría URL" },
+  { href: "/blog", label: "Blog SEO" },
+] as const;
+
 import {
   ArrowRight,
   BarChart3,
@@ -64,6 +89,31 @@ import {
 } from "lucide-react";
 
 const siteUrl = getPublicSiteUrl();
+
+export const metadata: Metadata = {
+  title: "Herramienta SEO SaaS — posicionamiento en Google, auditoría web e IA",
+  description: `${APP_NAME}: revisamos tu web, analizamos el SEO y te ayudamos con el posicionamiento en Google usando IA (${ENGINE_NAME}). Software SEO online tipo suite: competencia, URLs, rankings y catálogo. Empieza gratis.`,
+  keywords: [
+    "herramienta SEO SaaS",
+    "SEO tool España",
+    "mejor herramienta SEO",
+    "software posicionamiento Google",
+    "auditoría SEO online",
+    "suite SEO IA",
+    "SaaS SEO ecommerce",
+    "ListingBoost",
+  ],
+  alternates: { canonical: siteUrl },
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    siteName: APP_NAME,
+    title: `${APP_NAME} — Herramienta SEO SaaS, Google e IA`,
+    description:
+      "Revisión web, análisis SEO y ayuda con el posicionamiento en Google. Datos públicos de búsqueda + IA. Plan Free.",
+    url: siteUrl,
+  },
+};
 
 function buildHomeJsonLd() {
   const sameAs = organizationSameAsUrls();
@@ -87,7 +137,7 @@ function buildHomeJsonLd() {
       operatingSystem: "Web",
       url: siteUrl,
       description:
-        `Suite de SEO para equipos de catálogo y ecommerce: palabras clave y brechas frente a competidores en Google, auditoría on-page de URLs, seguimiento de posiciones en búsqueda, más copy multicanal con ${ENGINE_NAME} para marketplaces y tiendas.`,
+        `Herramienta SEO SaaS y suite online para equipos de catálogo y ecommerce: revisión de páginas, análisis SEO, posicionamiento en Google con IA, brechas frente a competidores, seguimiento de posiciones y copy multicanal con ${ENGINE_NAME}.`,
       offers: {
         "@type": "Offer",
         price: "0",
@@ -172,6 +222,22 @@ function buildHomeJsonLd() {
             text: `No. Es software de análisis SEO y textos de anuncio; los hashtags son sugerencias en texto (#) para que tú publiques. No vendemos engagement ni valoraciones en terceros.`,
           },
         },
+        {
+          "@type": "Question",
+          name: `¿${APP_NAME} es una herramienta SEO tipo SaaS o SEO tool?`,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: `Sí. ${APP_NAME} es un software SEO en la nube (SaaS): puedes auditar URLs, ver oportunidades desde Google, seguir posiciones y generar textos con ${ENGINE_NAME}, sin instalar programas en tu ordenador.`,
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿Sirve como alternativa a suites SEO grandes para equipos de ecommerce?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: `Muchos equipos lo usan como capa de ejecución: menos informes sueltos y más pasos claros para publicar. Combina auditoría, visión de competencia en búsqueda y catálogo multicanal en un solo flujo.`,
+          },
+        },
       ],
     },
   ];
@@ -193,132 +259,179 @@ export default function HomePage() {
         <div className="pointer-events-none absolute -left-20 top-[420px] h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
 
         <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pb-28 sm:pt-14">
-          {/* Hero: poco texto, mock visible pronto en móvil (grid 2 filas + panel derecho en desktop) */}
-          <div className="grid min-w-0 gap-6 sm:gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
-            <header className="space-y-3 sm:space-y-4 lg:col-start-1 lg:row-start-1">
-              <p className="inline-flex flex-wrap items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-3 py-1.5 text-[11px] font-medium text-primary shadow-sm backdrop-blur-md sm:px-4 sm:py-2 sm:text-xs">
-                <LayoutGrid className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                <span className="font-mono uppercase tracking-wider">{ENGINE_NAME}</span>
-                <span className="text-muted-foreground">·</span>
-                <span>Un sitio para Google, tu web y tus anuncios</span>
-              </p>
-              <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-[2.65rem] lg:leading-[1.08]">
-                <span className="text-gradient-brand">Miramos Google</span> y a la competencia,{" "}
-                <span className="text-foreground">revisamos tu web</span> y te ayudamos con los{" "}
-                <span className="text-foreground">anuncios</span>
+          {/* Hero: H1 largo + bloque centrado; mock lazy-chunk; enlaces internos */}
+          <section className="min-w-0 space-y-10 lg:space-y-12" aria-labelledby="home-hero-heading">
+            <div className="mx-auto max-w-4xl space-y-4 text-center sm:space-y-5">
+              <div className="flex justify-center">
+                <p className="inline-flex max-w-[min(100%,36rem)] flex-wrap items-center justify-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-3 py-1.5 text-[11px] font-medium text-primary shadow-sm backdrop-blur-md sm:px-4 sm:py-2 sm:text-xs">
+                  <LayoutGrid className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                  <span className="font-mono uppercase tracking-wider">{ENGINE_NAME}</span>
+                  <span className="text-muted-foreground">·</span>
+                  <span>Herramienta SEO SaaS — Google, tu web y catálogo</span>
+                </p>
+              </div>
+              <h1
+                id="home-hero-heading"
+                className="text-balance px-1 text-3xl font-bold tracking-tight text-foreground sm:px-0 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.12]"
+              >
+                <span className="text-gradient-brand">Revisamos tu web y analizamos el SEO</span>
+                {" "}— te ayudamos con el{" "}
+                <span className="text-foreground">posicionamiento en Google</span> usando{" "}
+                <span className="text-foreground">IA</span> y datos reales de búsqueda y competencia;{" "}
+                <span className="text-foreground">anuncios y fichas</span> en el mismo panel.
               </h1>
-              <ul className="flex flex-wrap gap-2 pt-1" aria-label="Ir a la guía de cada parte">
+              <ul
+                className="mx-auto grid w-full max-w-3xl grid-cols-2 gap-2 sm:max-w-4xl sm:gap-3 lg:max-w-5xl lg:grid-cols-4"
+                aria-label="Ir a la guía de cada parte"
+              >
                 {HERO_MODULE_LINKS.map(({ href, label, hint }) => (
                   <li key={href} className="min-w-0">
                     <Link
                       href={href}
                       title={hint}
-                      className="flex min-h-11 max-w-full flex-col justify-center rounded-xl border border-border/80 bg-card/90 px-3 py-2 text-left shadow-sm ring-offset-background transition-colors hover:border-primary/35 hover:bg-primary/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:min-h-0 sm:inline-flex sm:flex-row sm:items-center sm:gap-2 sm:py-1.5"
+                      className="flex min-h-[4.25rem] w-full flex-col items-center justify-center gap-0.5 rounded-xl border border-border/80 bg-card/90 px-2 py-2.5 text-center shadow-sm ring-offset-background transition-colors hover:border-primary/35 hover:bg-primary/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:min-h-0 sm:px-3 sm:py-3"
                     >
-                      <span className="text-[11px] font-bold uppercase tracking-wide text-foreground sm:text-xs">
+                      <span className="text-[10px] font-bold uppercase leading-tight tracking-wide text-foreground sm:text-[11px]">
                         {label}
                       </span>
-                      <span className="text-[10px] font-medium text-primary sm:text-[11px]">Ver ejemplo →</span>
+                      <span className="text-[10px] font-medium text-primary sm:text-xs">Ver ejemplo →</span>
                     </Link>
                   </li>
                 ))}
               </ul>
-            </header>
-
-            <div className="relative mx-auto w-full max-w-md sm:max-w-lg lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:max-w-none lg:self-center">
-              <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-primary/25 via-violet-500/15 to-accent/30 blur-3xl sm:-inset-6 sm:rounded-[2.5rem]" />
-              <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--primary)/0.12),transparent_50%)]" />
-              <div className="relative">
-                <HeroProductMock />
-              </div>
-              <div className="pointer-events-none absolute -bottom-2 left-1/2 z-10 w-[calc(100%-1rem)] max-w-[16rem] -translate-x-1/2 rounded-xl border border-primary/25 bg-card/95 px-3 py-2 shadow-lg backdrop-blur-md sm:-bottom-6 sm:left-auto sm:right-0 sm:max-w-none sm:translate-x-0 sm:rounded-2xl sm:px-4 sm:py-3">
-                <div className="flex items-center gap-2 text-xs font-semibold text-primary sm:text-sm">
-                  <TrendingUp className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
-                  +63% vistas típicas
-                </div>
-                <p className="text-[10px] text-muted-foreground sm:text-xs">Tras mejorar títulos y textos</p>
-              </div>
+              <nav
+                aria-label="Enlaces SEO y producto"
+                className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-x-2 gap-y-1 border-t border-border/50 pt-4 text-[11px] sm:text-xs"
+              >
+                {HOME_INTERNAL_NAV.map(({ href, label }, i) => (
+                  <Fragment key={href}>
+                    {i > 0 ? (
+                      <span className="select-none text-muted-foreground/50" aria-hidden>
+                        ·
+                      </span>
+                    ) : null}
+                    <Link
+                      href={href}
+                      className="font-medium text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+                    >
+                      {label}
+                    </Link>
+                  </Fragment>
+                ))}
+              </nav>
             </div>
 
-            <div className="space-y-6 lg:col-start-1 lg:row-start-2">
-              <p className="max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-                Sin complicaciones: <strong className="text-foreground">vemos qué enseña Google</strong>,{" "}
-                <strong className="text-foreground">miramos páginas parecidas a la tuya</strong> y te decimos{" "}
-                <strong className="text-foreground">qué mejorar primero</strong>. Todo en el mismo sitio.
-              </p>
-
-              <HomeHowItWorksMap />
-
-              <div className="max-w-xl rounded-2xl border border-emerald-500/35 bg-gradient-to-br from-emerald-500/[0.12] via-card/95 to-primary/[0.06] p-4 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/20 sm:p-5">
-                <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200/95 sm:text-xs">
-                  <Timer className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
-                  Sin tarjeta · sin instalar
+            <div className="grid min-w-0 items-start gap-8 lg:grid-cols-2 lg:gap-12 lg:items-center">
+              <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
+                <div className="relative w-full max-w-md sm:max-w-lg">
+                  <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-primary/25 via-violet-500/15 to-accent/30 blur-3xl sm:-inset-6 sm:rounded-[2.5rem]" />
+                  <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--primary)/0.12),transparent_50%)]" />
+                  <div className="relative">
+                    <HeroProductMock />
+                  </div>
+                  <div className="pointer-events-none absolute -bottom-2 left-1/2 z-10 w-[calc(100%-1rem)] max-w-[16rem] -translate-x-1/2 rounded-xl border border-primary/25 bg-card/95 px-3 py-2 text-center shadow-lg backdrop-blur-md sm:-bottom-6 sm:left-auto sm:right-0 sm:max-w-none sm:translate-x-0 sm:text-left sm:rounded-2xl sm:px-4 sm:py-3">
+                    <div className="flex items-center justify-center gap-2 text-xs font-semibold text-primary sm:justify-start sm:text-sm">
+                      <TrendingUp className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                      +63% vistas típicas
+                    </div>
+                    <p className="text-[10px] text-muted-foreground sm:text-xs">Tras mejorar títulos y textos</p>
+                  </div>
                 </div>
-                <p className="mt-2 text-base font-bold leading-snug text-foreground sm:text-lg">
-                  Revisar una página <span className="text-emerald-700 dark:text-emerald-300">gratis</span>
+              </div>
+
+              <div className="order-2 mx-auto flex w-full max-w-xl flex-col items-center space-y-6 text-center lg:order-1 lg:mx-0 lg:items-stretch lg:text-left">
+                <p className="text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  Sin complicaciones: <strong className="text-foreground">consultamos Google</strong>,{" "}
+                  <strong className="text-foreground">miramos páginas parecidas a la tuya</strong> y te decimos{" "}
+                  <strong className="text-foreground">qué mejorar primero</strong>. Una herramienta SEO online, no diez
+                  pestañas.
                 </p>
-                <p className="mt-1.5 text-xs text-muted-foreground sm:text-sm">
-                  Nota y primeros arreglos claros. Plan Free con créditos de verdad cada mes.
-                </p>
-                <div className="mt-3 flex flex-col gap-2 sm:mt-4 sm:flex-row sm:flex-wrap sm:items-center">
+
+                <div className="w-full">
+                  <HomeHowItWorksMap />
+                </div>
+
+                <div className="w-full rounded-2xl border border-emerald-500/35 bg-gradient-to-br from-emerald-500/[0.12] via-card/95 to-primary/[0.06] p-4 text-center shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/20 sm:p-5 lg:text-left">
+                  <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200/95 sm:text-xs lg:justify-start">
+                    <Timer className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                    Sin tarjeta · sin instalar
+                  </div>
+                  <p className="mt-2 text-base font-bold leading-snug text-foreground sm:text-lg">
+                    Revisar una página <span className="text-emerald-700 dark:text-emerald-300">gratis</span>
+                  </p>
+                  <p className="mt-1.5 text-xs text-muted-foreground sm:text-sm">
+                    Nota y primeros arreglos claros. Plan Free con créditos de verdad cada mes.
+                  </p>
+                  <div className="mt-3 flex flex-col items-center gap-2 sm:mt-4 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
+                    <Button
+                      size="lg"
+                      className="h-10 w-full border border-emerald-600/30 bg-emerald-600 text-white shadow-md hover:bg-emerald-600/90 dark:bg-emerald-500 dark:hover:bg-emerald-500/90 sm:h-11 sm:w-auto"
+                      asChild
+                    >
+                      <Link href="/register?callbackUrl=/dashboard/audit">
+                        Probar revisión de página
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <span className="text-center text-[10px] text-muted-foreground sm:text-[11px] lg:text-left">
+                      ~1 min · luego un clic
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex w-full flex-wrap items-center justify-center gap-2 sm:gap-3 lg:justify-start">
                   <Button
                     size="lg"
-                    className="h-10 w-full border border-emerald-600/30 bg-emerald-600 text-white shadow-md hover:bg-emerald-600/90 dark:bg-emerald-500 dark:hover:bg-emerald-500/90 sm:h-11 sm:w-auto"
+                    className="h-11 w-full border border-primary/25 bg-gradient-to-r from-primary to-primary/88 px-6 text-sm shadow-lg shadow-primary/30 sm:h-12 sm:w-auto sm:px-8 sm:text-base"
                     asChild
                   >
-                    <Link href="/register?callbackUrl=/dashboard/audit">
-                      Probar revisión de página
+                    <Link href="/register">
+                      Registrarse gratis
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
-                  <span className="text-center text-[10px] text-muted-foreground sm:text-left sm:text-[11px]">
-                    ~1 min · luego un clic
-                  </span>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-11 flex-1 border-border/80 px-4 text-sm shadow-sm sm:h-12 sm:flex-none sm:px-8 sm:text-base"
+                    asChild
+                  >
+                    <Link href="/login">Entrar</Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="ghost"
+                    className="h-11 flex-1 px-3 text-sm text-muted-foreground sm:h-12 sm:flex-none sm:text-base"
+                    asChild
+                  >
+                    <Link href="/pricing">Precios</Link>
+                  </Button>
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-2 pt-1 lg:justify-start">
+                  <Link
+                    href="/producto"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card sm:px-3 sm:py-1.5 sm:text-xs"
+                  >
+                    <Zap className="h-3 w-3 text-amber-500 sm:h-3.5 sm:w-3.5" aria-hidden />
+                    SaaS en el navegador
+                  </Link>
+                  <Link
+                    href="/producto/seo-gap-finder#ejemplo"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card sm:px-3 sm:py-1.5 sm:text-xs"
+                  >
+                    <Cloud className="h-3 w-3 text-primary sm:h-3.5 sm:w-3.5" aria-hidden />
+                    Google público + IA
+                  </Link>
+                  <Link
+                    href="/producto"
+                    className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-semibold text-primary transition-colors hover:bg-primary/10 sm:px-3 sm:py-1.5 sm:text-xs"
+                  >
+                    Ver piezas del producto →
+                  </Link>
                 </div>
               </div>
-
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                <Button
-                  size="lg"
-                  className="h-11 w-full border border-primary/25 bg-gradient-to-r from-primary to-primary/88 px-6 text-sm shadow-lg shadow-primary/30 sm:h-12 sm:w-auto sm:px-8 sm:text-base"
-                  asChild
-                >
-                  <Link href="/register">
-                    Registrarse gratis
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="h-11 flex-1 border-border/80 px-4 text-sm shadow-sm sm:h-12 sm:flex-none sm:px-8 sm:text-base" asChild>
-                  <Link href="/login">Entrar</Link>
-                </Button>
-                <Button size="lg" variant="ghost" className="h-11 flex-1 px-3 text-sm text-muted-foreground sm:h-12 sm:flex-none sm:text-base" asChild>
-                  <Link href="/pricing">Precios</Link>
-                </Button>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 pt-1">
-                <Link
-                  href="/producto"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card sm:px-3 sm:py-1.5 sm:text-xs"
-                >
-                  <Zap className="h-3 w-3 text-amber-500 sm:h-3.5 sm:w-3.5" aria-hidden />
-                  Abre en el navegador
-                </Link>
-                <Link
-                  href="/producto/seo-gap-finder#ejemplo"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card sm:px-3 sm:py-1.5 sm:text-xs"
-                >
-                  <Cloud className="h-3 w-3 text-primary sm:h-3.5 sm:w-3.5" aria-hidden />
-                  Usamos lo público de Google + IA
-                </Link>
-                <Link
-                  href="/producto"
-                  className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-semibold text-primary transition-colors hover:bg-primary/10 sm:px-3 sm:py-1.5 sm:text-xs"
-                >
-                  Ver piezas del producto →
-                </Link>
-              </div>
             </div>
-          </div>
+          </section>
 
           {/* Stats strip */}
           <div className="mt-16 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:mt-20 lg:gap-4">
@@ -363,7 +476,7 @@ export default function HomePage() {
                   d: "Pipeline optimizado: menos tiempo en teclado, más tiempo facturando.",
                 },
               ].map(({ icon: Icon, t, d }) => (
-                <div key={t} className="flex gap-4 text-left">
+                <div key={t} className="flex flex-col items-center gap-3 text-center md:flex-row md:items-start md:gap-4 md:text-left">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
                     <Icon className="h-5 w-5" />
                   </span>
@@ -430,6 +543,12 @@ export default function HomePage() {
                     ),
                   )}
                 </ul>
+                <Link
+                  href="/producto/boost-de-ficha#ejemplo"
+                  className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
+                >
+                  Guía boost y ejemplo →
+                </Link>
               </CardContent>
             </Card>
             <Card className="card-tech-hover overflow-hidden border-border/80 bg-card/95 shadow-md backdrop-blur-sm">
@@ -450,6 +569,12 @@ export default function HomePage() {
                     </li>
                   ))}
                 </ul>
+                <Link
+                  href="/producto/scan-seo-url#ejemplo"
+                  className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
+                >
+                  Guía auditoría URL y ejemplo →
+                </Link>
               </CardContent>
             </Card>
           </div>
