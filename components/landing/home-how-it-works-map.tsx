@@ -4,6 +4,11 @@ import { useCallback, useId, useState } from "react";
 import { ChevronRight, Globe2, Lightbulb, MousePointerClick, Send, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+export type HomeHowItWorksMapProps = {
+  /** Versión baja para situar bajo el mock en el hero. */
+  compact?: boolean;
+};
+
 const STEPS = [
   {
     key: "pick",
@@ -31,7 +36,7 @@ const STEPS = [
     label: "Prioridades",
     Icon: Lightbulb,
     lead: "Te lo ordenamos.",
-    body: "Te damos una lista clara de qué tocar primero y, cuando toca, textos sugeridos. Tú revisas y decides.",
+    body: "Prioridades claras y textos listos para publicar: mejor para humanos y para que asistentes como ChatGPT o DeepSeek capten bien tu oferta cuando alguien pregunta.",
   },
   {
     key: "ship",
@@ -42,7 +47,7 @@ const STEPS = [
   },
 ] as const;
 
-export function HomeHowItWorksMap() {
+export function HomeHowItWorksMap({ compact = false }: HomeHowItWorksMapProps) {
   const [active, setActive] = useState(0);
   const headingId = useId();
   const panelId = useId();
@@ -53,19 +58,38 @@ export function HomeHowItWorksMap() {
 
   return (
     <section
-      className="mx-auto max-w-xl rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm backdrop-blur-sm sm:p-5"
+      className={cn(
+        "rounded-xl border border-primary/15 bg-gradient-to-b from-card/95 to-muted/20 shadow-sm backdrop-blur-sm",
+        compact ? "mx-0 w-full p-3 ring-1 ring-border/40" : "mx-auto max-w-xl p-4 sm:p-5",
+      )}
       aria-labelledby={headingId}
     >
-      <h2 id={headingId} className="text-sm font-semibold text-foreground">
-        Cómo trabajamos <span className="font-normal text-muted-foreground">(toca cada paso)</span>
+      <h2
+        id={headingId}
+        className={cn(
+          "font-semibold tracking-tight text-foreground",
+          compact ? "font-mono text-[10px] uppercase tracking-[0.18em] text-primary/90" : "text-sm",
+        )}
+      >
+        Pipeline
+        {!compact ? (
+          <span className="font-sans font-normal text-muted-foreground"> · toca un paso</span>
+        ) : null}
       </h2>
 
-      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-1">
+      <div
+        className={cn(
+          "flex gap-1.5",
+          compact
+            ? "mt-2.5 snap-x snap-mandatory overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            : "mt-4 flex-col sm:flex-row sm:flex-wrap sm:items-center sm:gap-1",
+        )}
+      >
         {STEPS.map((step, i) => {
           const isOn = i === active;
           const Icon = step.Icon;
           return (
-            <div key={step.key} className="flex items-center gap-1 sm:contents">
+            <div key={step.key} className={cn("flex items-center gap-1", !compact && "sm:contents")}>
               <button
                 type="button"
                 onClick={() => go(i)}
@@ -82,23 +106,27 @@ export function HomeHowItWorksMap() {
                 aria-pressed={isOn}
                 aria-controls={panelId}
                 className={cn(
-                  "inline-flex w-full min-w-0 items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-xs font-semibold transition-colors sm:w-auto sm:shrink-0 sm:py-2",
+                  "inline-flex min-w-0 items-center gap-1.5 rounded-lg border text-left font-semibold transition-all",
+                  compact
+                    ? "snap-start shrink-0 px-2 py-1.5 text-[10px] sm:text-[11px]"
+                    : "w-full gap-2 rounded-xl px-3 py-2.5 text-xs sm:w-auto sm:shrink-0 sm:py-2",
                   isOn
-                    ? "border-primary/50 bg-primary/10 text-foreground shadow-sm"
-                    : "border-border/80 bg-muted/30 text-muted-foreground hover:border-primary/25 hover:bg-muted/50 hover:text-foreground",
+                    ? "border-primary/45 bg-primary/12 text-foreground shadow-[0_0_0_1px_hsl(var(--primary)/0.2)]"
+                    : "border-border/60 bg-background/50 text-muted-foreground hover:border-primary/30 hover:bg-muted/40 hover:text-foreground",
                 )}
               >
                 <span
                   className={cn(
-                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
-                    isOn ? "bg-primary/20 text-primary" : "bg-background/80 text-muted-foreground",
+                    "flex shrink-0 items-center justify-center rounded-md",
+                    compact ? "h-6 w-6" : "h-8 w-8 rounded-lg",
+                    isOn ? "bg-primary/20 text-primary" : "bg-muted/60 text-muted-foreground",
                   )}
                 >
-                  <Icon className="h-4 w-4" aria-hidden />
+                  <Icon className={compact ? "h-3 w-3" : "h-4 w-4"} aria-hidden />
                 </span>
-                <span className="min-w-0 leading-tight">{step.label}</span>
+                <span className="max-w-[4.5rem] leading-tight sm:max-w-none">{step.label}</span>
               </button>
-              {i < STEPS.length - 1 ? (
+              {!compact && i < STEPS.length - 1 ? (
                 <ChevronRight
                   className="mx-auto hidden h-4 w-4 shrink-0 text-muted-foreground/50 sm:mx-0 sm:block lg:mx-0.5"
                   aria-hidden
@@ -113,10 +141,13 @@ export function HomeHowItWorksMap() {
         id={panelId}
         role="region"
         aria-live="polite"
-        className="mt-4 rounded-xl border border-dashed border-primary/20 bg-primary/[0.04] px-3 py-3 text-sm leading-relaxed text-muted-foreground sm:px-4 sm:py-3.5"
+        className={cn(
+          "mt-3 rounded-lg border border-dashed border-primary/25 bg-primary/[0.05] text-muted-foreground",
+          compact ? "px-2.5 py-2 text-[11px] leading-snug sm:text-xs" : "px-3 py-3 text-sm sm:px-4 sm:py-3.5",
+        )}
       >
         <p className="text-foreground">
-          <span className="font-medium">{STEPS[active].lead}</span> {STEPS[active].body}
+          <span className="font-medium text-foreground/95">{STEPS[active].lead}</span> {STEPS[active].body}
         </p>
       </div>
     </section>

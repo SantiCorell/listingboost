@@ -6,6 +6,7 @@ import { APP_NAME, ENGINE_NAME } from "@/lib/constants";
 import { organizationSameAsUrls } from "@/lib/legal/site-legal";
 import { getPublicSiteUrl } from "@/lib/site-url";
 import { TRUST_STATS } from "@/lib/social-proof";
+import { HeroProductMock } from "@/components/landing/hero-product-mock";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -22,20 +23,6 @@ const HomeFaqSection = dynamic(
 const HomeHowItWorksMap = dynamic(
   () => import("@/components/landing/home-how-it-works-map").then((m) => ({ default: m.HomeHowItWorksMap })),
   { loading: () => <div className="mx-auto h-36 max-w-xl animate-pulse rounded-2xl bg-muted/30" aria-hidden /> },
-);
-
-/** Mock del panel: chunk aparte para menos JS inicial en la primera pintura móvil. */
-const HeroProductMock = dynamic(
-  () => import("@/components/landing/hero-product-mock").then((m) => ({ default: m.HeroProductMock })),
-  {
-    loading: () => (
-      <div
-        className="mx-auto w-full max-w-lg min-h-[min(72vw,26rem)] rounded-2xl bg-muted/40 animate-pulse"
-        aria-hidden
-      />
-    ),
-    ssr: true,
-  },
 );
 
 /** Enlaces del hero a guías con sección #ejemplo (demo o listado claro). */
@@ -75,7 +62,6 @@ import {
   ArrowRight,
   BarChart3,
   CheckCircle2,
-  Cloud,
   Globe2,
   ImagePlus,
   LineChart,
@@ -91,8 +77,8 @@ import {
 const siteUrl = getPublicSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Herramienta SEO SaaS — posicionamiento en Google, auditoría web e IA",
-  description: `${APP_NAME}: revisamos tu web, analizamos el SEO y te ayudamos con el posicionamiento en Google usando IA (${ENGINE_NAME}). Software SEO online tipo suite: competencia, URLs, rankings y catálogo. Empieza gratis.`,
+  title: "Herramienta SEO SaaS — Google, ChatGPT, DeepSeek y tu web",
+  description: `${APP_NAME}: SEO operativo para rankear en Google y dejar contenido claro para asistentes (ChatGPT, DeepSeek…). Auditoría URL, competencia y catálogo con ${ENGINE_NAME}. Gratis para empezar.`,
   keywords: [
     "herramienta SEO SaaS",
     "SEO tool España",
@@ -108,9 +94,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     siteName: APP_NAME,
-    title: `${APP_NAME} — Herramienta SEO SaaS, Google e IA`,
+    title: `${APP_NAME} — SEO para Google y contenido claro para IA`,
     description:
-      "Revisión web, análisis SEO y ayuda con el posicionamiento en Google. Datos públicos de búsqueda + IA. Plan Free.",
+      "Panel en vivo: auditoría, competencia y textos. Piensa en buscadores y en ChatGPT / DeepSeek. Plan Free.",
     url: siteUrl,
   },
 };
@@ -238,6 +224,14 @@ function buildHomeJsonLd() {
             text: `Muchos equipos lo usan como capa de ejecución: menos informes sueltos y más pasos claros para publicar. Combina auditoría, visión de competencia en búsqueda y catálogo multicanal en un solo flujo.`,
           },
         },
+        {
+          "@type": "Question",
+          name: `¿${APP_NAME} ayuda con la visibilidad en asistentes de IA (ChatGPT, DeepSeek, etc.)?`,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: `No controlamos lo que citan terceros, pero el producto te orienta a páginas y textos más claros, estructurados y alineados a búsqueda: eso suele ayudar tanto a Google como a que modelos de lenguaje entiendan mejor tu oferta cuando alguien pregunta por tu sector.`,
+          },
+        },
       ],
     },
   ];
@@ -259,174 +253,145 @@ export default function HomePage() {
         <div className="pointer-events-none absolute -left-20 top-[420px] h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
 
         <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pb-28 sm:pt-14">
-          {/* Hero: H1 largo + bloque centrado; mock lazy-chunk; enlaces internos */}
-          <section className="min-w-0 space-y-10 lg:space-y-12" aria-labelledby="home-hero-heading">
-            <div className="mx-auto max-w-4xl space-y-4 text-center sm:space-y-5">
-              <div className="flex justify-center">
-                <p className="inline-flex max-w-[min(100%,36rem)] flex-wrap items-center justify-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-3 py-1.5 text-[11px] font-medium text-primary shadow-sm backdrop-blur-md sm:px-4 sm:py-2 sm:text-xs">
-                  <LayoutGrid className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                  <span className="font-mono uppercase tracking-wider">{ENGINE_NAME}</span>
-                  <span className="text-muted-foreground">·</span>
-                  <span>Herramienta SEO SaaS — Google, tu web y catálogo</span>
-                </p>
-              </div>
-              <h1
-                id="home-hero-heading"
-                className="text-balance px-1 text-3xl font-bold tracking-tight text-foreground sm:px-0 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.12]"
-              >
-                <span className="text-gradient-brand">Revisamos tu web y analizamos el SEO</span>
-                {" "}— te ayudamos con el{" "}
-                <span className="text-foreground">posicionamiento en Google</span> usando{" "}
-                <span className="text-foreground">IA</span> y datos reales de búsqueda y competencia;{" "}
-                <span className="text-foreground">anuncios y fichas</span> en el mismo panel.
-              </h1>
-              <ul
-                className="mx-auto grid w-full max-w-3xl grid-cols-2 gap-2 sm:max-w-4xl sm:gap-3 lg:max-w-5xl lg:grid-cols-4"
-                aria-label="Ir a la guía de cada parte"
-              >
-                {HERO_MODULE_LINKS.map(({ href, label, hint }) => (
-                  <li key={href} className="min-w-0">
-                    <Link
-                      href={href}
-                      title={hint}
-                      className="flex min-h-[4.25rem] w-full flex-col items-center justify-center gap-0.5 rounded-xl border border-border/80 bg-card/90 px-2 py-2.5 text-center shadow-sm ring-offset-background transition-colors hover:border-primary/35 hover:bg-primary/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:min-h-0 sm:px-3 sm:py-3"
-                    >
-                      <span className="text-[10px] font-bold uppercase leading-tight tracking-wide text-foreground sm:text-[11px]">
-                        {label}
-                      </span>
-                      <span className="text-[10px] font-medium text-primary sm:text-xs">Ver ejemplo →</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <nav
-                aria-label="Enlaces SEO y producto"
-                className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-x-2 gap-y-1 border-t border-border/50 pt-4 text-[11px] sm:text-xs"
-              >
-                {HOME_INTERNAL_NAV.map(({ href, label }, i) => (
-                  <Fragment key={href}>
-                    {i > 0 ? (
-                      <span className="select-none text-muted-foreground/50" aria-hidden>
-                        ·
-                      </span>
-                    ) : null}
-                    <Link
-                      href={href}
-                      className="font-medium text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
-                    >
-                      {label}
-                    </Link>
-                  </Fragment>
-                ))}
-              </nav>
-            </div>
-
-            <div className="grid min-w-0 items-start gap-8 lg:grid-cols-2 lg:gap-12 lg:items-center">
-              <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
-                <div className="relative w-full max-w-md sm:max-w-lg">
-                  <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-primary/25 via-violet-500/15 to-accent/30 blur-3xl sm:-inset-6 sm:rounded-[2.5rem]" />
-                  <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--primary)/0.12),transparent_50%)]" />
-                  <div className="relative">
+          {/* Hero: panel + pipeline primero; copy corto tech; Google + asistentes IA */}
+          <section className="min-w-0" aria-labelledby="home-hero-heading">
+            <div className="grid min-w-0 items-start gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12">
+              {/* Columna visual: primero en móvil = ves el mock al abrir */}
+              <div className="relative space-y-3 lg:col-span-5 xl:col-span-5">
+                <div className="relative rounded-2xl border border-primary/20 bg-gradient-to-b from-card via-card to-primary/[0.04] p-1 shadow-[0_20px_60px_-24px_hsl(var(--primary)/0.45)] ring-1 ring-primary/10">
+                  <div className="pointer-events-none absolute -inset-px rounded-2xl bg-[linear-gradient(135deg,hsl(var(--primary)/0.12),transparent_42%,hsl(var(--accent)/0.08)_100%)]" />
+                  <div className="relative overflow-hidden rounded-[0.9rem] border border-white/40 bg-background/40 dark:border-white/5 dark:bg-black/20">
                     <HeroProductMock />
                   </div>
-                  <div className="pointer-events-none absolute -bottom-2 left-1/2 z-10 w-[calc(100%-1rem)] max-w-[16rem] -translate-x-1/2 rounded-xl border border-primary/25 bg-card/95 px-3 py-2 text-center shadow-lg backdrop-blur-md sm:-bottom-6 sm:left-auto sm:right-0 sm:max-w-none sm:translate-x-0 sm:text-left sm:rounded-2xl sm:px-4 sm:py-3">
-                    <div className="flex items-center justify-center gap-2 text-xs font-semibold text-primary sm:justify-start sm:text-sm">
-                      <TrendingUp className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
-                      +63% vistas típicas
+                </div>
+                <div className="relative z-[1] -mt-1 px-0 sm:px-0">
+                  <HomeHowItWorksMap compact />
+                </div>
+                <div className="pointer-events-none flex justify-center lg:justify-start">
+                  <div className="inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-card/90 px-3 py-1.5 text-center shadow-sm backdrop-blur-sm sm:text-left">
+                    <TrendingUp className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden />
+                    <div>
+                      <p className="text-xs font-semibold text-primary">+63% vistas típicas</p>
+                      <p className="text-[10px] text-muted-foreground">Tras mejorar títulos y estructura</p>
                     </div>
-                    <p className="text-[10px] text-muted-foreground sm:text-xs">Tras mejorar títulos y textos</p>
                   </div>
                 </div>
               </div>
 
-              <div className="order-2 mx-auto flex w-full max-w-xl flex-col items-center space-y-6 text-center lg:order-1 lg:mx-0 lg:items-stretch lg:text-left">
-                <p className="text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Sin complicaciones: <strong className="text-foreground">consultamos Google</strong>,{" "}
-                  <strong className="text-foreground">miramos páginas parecidas a la tuya</strong> y te decimos{" "}
-                  <strong className="text-foreground">qué mejorar primero</strong>. Una herramienta SEO online, no diez
-                  pestañas.
-                </p>
-
-                <div className="w-full">
-                  <HomeHowItWorksMap />
+              {/* Columna copy */}
+              <div className="flex min-w-0 flex-col gap-5 lg:col-span-7 xl:col-span-7">
+                <div className="space-y-3">
+                  <p className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-border/60 bg-muted/25 px-2.5 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-primary/95">
+                    <LayoutGrid className="h-3 w-3 shrink-0" aria-hidden />
+                    <span>{ENGINE_NAME}</span>
+                    <span className="text-muted-foreground/70">·</span>
+                    <span className="normal-case tracking-normal text-foreground/85">SaaS SEO + IA</span>
+                  </p>
+                  <h1
+                    id="home-hero-heading"
+                    className="text-balance text-2xl font-bold leading-[1.15] tracking-tight text-foreground sm:text-3xl lg:text-[2.125rem] lg:leading-tight"
+                  >
+                    <span className="text-gradient-brand">Google</span>
+                    <span className="text-foreground"> + </span>
+                    <span className="text-gradient-brand">IA</span>
+                    <span className="text-foreground">: posiciona y haz que </span>
+                    <span className="text-foreground">ChatGPT</span>
+                    <span className="text-foreground">, </span>
+                    <span className="text-foreground">DeepSeek</span>
+                    <span className="text-foreground"> y similares te reconozcan</span>
+                  </h1>
+                  <p className="max-w-xl text-pretty text-sm leading-snug text-muted-foreground">
+                    Revisamos tu web y el SEO, miramos la competencia en búsqueda y te damos textos y estructura listos
+                    para publicar — menos humo, más señal para{" "}
+                    <strong className="font-medium text-foreground">buscadores</strong> y para{" "}
+                    <strong className="font-medium text-foreground">asistentes</strong> cuando preguntan por tu nicho.
+                  </p>
                 </div>
 
-                <div className="w-full rounded-2xl border border-emerald-500/35 bg-gradient-to-br from-emerald-500/[0.12] via-card/95 to-primary/[0.06] p-4 text-center shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/20 sm:p-5 lg:text-left">
-                  <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200/95 sm:text-xs lg:justify-start">
-                    <Timer className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
-                    Sin tarjeta · sin instalar
-                  </div>
-                  <p className="mt-2 text-base font-bold leading-snug text-foreground sm:text-lg">
-                    Revisar una página <span className="text-emerald-700 dark:text-emerald-300">gratis</span>
-                  </p>
-                  <p className="mt-1.5 text-xs text-muted-foreground sm:text-sm">
-                    Nota y primeros arreglos claros. Plan Free con créditos de verdad cada mes.
-                  </p>
-                  <div className="mt-3 flex flex-col items-center gap-2 sm:mt-4 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
-                    <Button
-                      size="lg"
-                      className="h-10 w-full border border-emerald-600/30 bg-emerald-600 text-white shadow-md hover:bg-emerald-600/90 dark:bg-emerald-500 dark:hover:bg-emerald-500/90 sm:h-11 sm:w-auto"
-                      asChild
-                    >
-                      <Link href="/register?callbackUrl=/dashboard/audit">
-                        Probar revisión de página
-                        <ArrowRight className="h-4 w-4" />
+                <ul
+                  className="-mx-1 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [scrollbar-width:thin] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:pb-0"
+                  aria-label="Módulos con ejemplo"
+                >
+                  {HERO_MODULE_LINKS.map(({ href, label, hint }) => (
+                    <li key={href} className="min-w-0 shrink-0 snap-start sm:shrink">
+                      <Link
+                        href={href}
+                        title={hint}
+                        className="flex h-full min-h-[3.25rem] w-[7.75rem] flex-col justify-center gap-0.5 rounded-lg border border-border/70 bg-card/90 px-2.5 py-2 text-center shadow-sm transition-colors hover:border-primary/35 hover:bg-primary/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:w-auto sm:min-w-0 sm:px-3"
+                      >
+                        <span className="text-[9px] font-bold uppercase leading-tight tracking-wide text-foreground">
+                          {label}
+                        </span>
+                        <span className="text-[10px] font-medium text-primary">Ejemplo →</span>
                       </Link>
-                    </Button>
-                    <span className="text-center text-[10px] text-muted-foreground sm:text-[11px] lg:text-left">
-                      ~1 min · luego un clic
-                    </span>
-                  </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <nav
+                  aria-label="Enlaces SEO y producto"
+                  className="flex flex-wrap gap-x-2 gap-y-1 border-l-2 border-primary/25 pl-3 text-[11px] text-muted-foreground"
+                >
+                  {HOME_INTERNAL_NAV.map(({ href, label }, i) => (
+                    <Fragment key={href}>
+                      {i > 0 ? <span className="text-border">|</span> : null}
+                      <Link href={href} className="hover:text-primary hover:underline">
+                        {label}
+                      </Link>
+                    </Fragment>
+                  ))}
+                </nav>
+
+                <div className="rounded-xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.08] via-card to-transparent p-3.5 shadow-sm ring-1 ring-emerald-500/15 sm:p-4">
+                  <p className="font-mono text-[9px] font-semibold uppercase tracking-widest text-emerald-800/90 dark:text-emerald-200/90">
+                    Sin tarjeta
+                  </p>
+                  <p className="mt-1 text-sm font-bold text-foreground">
+                    Auditoría URL <span className="text-emerald-600 dark:text-emerald-400">gratis</span>
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">Puntuación + qué arreglar primero.</p>
+                  <Button
+                    size="sm"
+                    className="mt-3 h-9 w-full border border-emerald-600/40 bg-emerald-600 text-white hover:bg-emerald-600/90 dark:bg-emerald-600 sm:w-auto"
+                    asChild
+                  >
+                    <Link href="/register?callbackUrl=/dashboard/audit">
+                      Probar ahora
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
                 </div>
 
-                <div className="flex w-full flex-wrap items-center justify-center gap-2 sm:gap-3 lg:justify-start">
+                <div className="flex flex-wrap items-center gap-2">
                   <Button
                     size="lg"
-                    className="h-11 w-full border border-primary/25 bg-gradient-to-r from-primary to-primary/88 px-6 text-sm shadow-lg shadow-primary/30 sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+                    className="h-10 border border-primary/30 bg-gradient-to-r from-primary to-primary/88 px-5 text-sm shadow-md sm:h-11"
                     asChild
                   >
                     <Link href="/register">
-                      Registrarse gratis
+                      Crear cuenta
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-11 flex-1 border-border/80 px-4 text-sm shadow-sm sm:h-12 sm:flex-none sm:px-8 sm:text-base"
-                    asChild
-                  >
+                  <Button size="lg" variant="outline" className="h-10 px-4 text-sm sm:h-11" asChild>
                     <Link href="/login">Entrar</Link>
                   </Button>
-                  <Button
-                    size="lg"
-                    variant="ghost"
-                    className="h-11 flex-1 px-3 text-sm text-muted-foreground sm:h-12 sm:flex-none sm:text-base"
-                    asChild
-                  >
+                  <Button size="lg" variant="ghost" className="h-10 px-3 text-sm text-muted-foreground sm:h-11" asChild>
                     <Link href="/pricing">Precios</Link>
                   </Button>
                 </div>
-                <div className="flex flex-wrap items-center justify-center gap-2 pt-1 lg:justify-start">
+                <div className="flex flex-wrap gap-2 text-[10px] text-muted-foreground">
                   <Link
                     href="/producto"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card sm:px-3 sm:py-1.5 sm:text-xs"
+                    className="rounded-md border border-border/60 bg-muted/20 px-2 py-1 hover:border-primary/30 hover:text-foreground"
                   >
-                    <Zap className="h-3 w-3 text-amber-500 sm:h-3.5 sm:w-3.5" aria-hidden />
-                    SaaS en el navegador
+                    Producto
                   </Link>
                   <Link
                     href="/producto/seo-gap-finder#ejemplo"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card sm:px-3 sm:py-1.5 sm:text-xs"
+                    className="rounded-md border border-border/60 bg-muted/20 px-2 py-1 hover:border-primary/30 hover:text-foreground"
                   >
-                    <Cloud className="h-3 w-3 text-primary sm:h-3.5 sm:w-3.5" aria-hidden />
-                    Google público + IA
-                  </Link>
-                  <Link
-                    href="/producto"
-                    className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-semibold text-primary transition-colors hover:bg-primary/10 sm:px-3 sm:py-1.5 sm:text-xs"
-                  >
-                    Ver piezas del producto →
+                    Datos Google + IA
                   </Link>
                 </div>
               </div>
