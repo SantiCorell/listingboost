@@ -30,7 +30,7 @@ export function ManageBillingButton({ enabled }: { enabled: boolean }) {
   }
 
   return (
-    <div className="space-y-3 rounded-lg border border-border/70 bg-muted/20 p-4">
+    <div id="gestion-pago" className="scroll-mt-24 space-y-3 rounded-lg border border-border/70 bg-muted/20 p-4">
       <p className="text-sm font-medium text-foreground">Suscripción y facturación</p>
       <p className="text-xs text-muted-foreground leading-relaxed">
         Un solo sitio seguro para <strong className="text-foreground">cancelar la renovación</strong>, cambiar tarjeta o

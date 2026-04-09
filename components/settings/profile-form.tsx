@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import { ManageBillingButton } from "@/components/settings/manage-billing-button";
+import { AccountBajaSection } from "@/components/settings/account-baja-section";
 
 const accountKindLabels: Record<AccountKind, string> = {
   EMPRESA: "Empresa",
@@ -180,7 +181,7 @@ export function ProfileForm({ user, hasStripeCustomer }: Props) {
         <SubmitButton />
       </form>
 
-      <div className="border-t border-border/60 pt-6">
+      <div id="plan-y-pagos" className="scroll-mt-24 border-t border-border/60 pt-6">
         <h2 className="text-base font-semibold">Plan y pagos</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Cambiar plan, comprar créditos o dar de baja la renovación (el acceso sigue hasta fin de mes de facturación).
@@ -211,6 +212,7 @@ export function ProfileForm({ user, hasStripeCustomer }: Props) {
         <div className="mt-4">
           <ManageBillingButton enabled={commerceEnabled && hasStripeCustomer} />
         </div>
+        <AccountBajaSection hasStripeCustomer={hasStripeCustomer} commerceEnabled={commerceEnabled} />
       </div>
     </div>
   );

@@ -35,7 +35,11 @@ export default async function SettingsPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Ajustes de cuenta</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Edita tu perfil y revisa tu plan. El email de acceso no se puede cambiar aquí.
+          Perfil, plan, pagos y{" "}
+          <a href="#bajas-y-cuenta" className="font-medium text-primary underline-offset-4 hover:underline">
+            bajas (suscripción o cuenta)
+          </a>
+          . El email de acceso no se puede cambiar aquí.
         </p>
       </div>
       <Card>

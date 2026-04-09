@@ -90,6 +90,10 @@ const pricingFaqs = [
     a: "Entra en Ajustes de cuenta (perfil) y pulsa «Cancelar o gestionar mi plan». Ahí cancelas la renovación en un clic. Sigues con acceso completo hasta el último día del periodo que ya está pagado (normalmente el mismo día del mes en que empezó tu facturación). No se te cobra el siguiente ciclo.",
   },
   {
+    q: "¿Cómo cancelo mi cuenta o pido borrar mis datos?",
+    a: "Dejar de pagar y cerrar la cuenta son cosas distintas. Para parar la renovación usa el botón de gestión de pago en Ajustes. Para eliminar la cuenta por completo o ejercer derechos de borrado, abre Ajustes y baja hasta «Bajas: suscripción y cuenta»: ahí tienes el enlace de email y las preguntas rápidas. Escribe desde el mismo correo con el que te registraste.",
+  },
+  {
     q: "¿Puedo probar antes de pagar?",
     a: `Sí. El plan Free te permite usar ${APP_NAME} con un cupo mensual real: boost de ficha, scan de URL y hashtags. Cuando veas el ahorro de tiempo y la calidad del output, subir a Pro es un clic desde esta misma página.`,
   },
@@ -769,11 +773,15 @@ export default async function PricingPage() {
               <strong className="text-foreground">¿Baja o cambios?</strong>{" "}
               <span className="leading-relaxed">
                 Con cuenta iniciada:{" "}
-                <Link href="/settings" className="font-medium text-primary underline-offset-4 hover:underline">
-                  Ajustes
+                <Link href="/settings#gestion-pago" className="font-medium text-primary underline-offset-4 hover:underline">
+                  Ajustes → gestión de pago
                 </Link>{" "}
-                → «Cancelar o gestionar mi plan». La renovación se detiene al instante;{" "}
-                <strong className="text-foreground">el acceso dura hasta el final del periodo ya pagado</strong>.
+                para cancelar la renovación (acceso hasta fin del periodo pagado). Para{" "}
+                <strong className="text-foreground">cerrar la cuenta o borrar datos</strong>,{" "}
+                <Link href="/settings#bajas-y-cuenta" className="font-medium text-primary underline-offset-4 hover:underline">
+                  Ajustes → bajas y cuenta
+                </Link>
+                .
               </span>
             </div>
             <Accordion type="single" collapsible className="mt-8">

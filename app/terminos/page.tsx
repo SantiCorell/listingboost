@@ -104,7 +104,9 @@ export default function TerminosPage() {
         el Servicio en los doce meses anteriores al hecho causante, salvo en casos de dolo o negligencia grave.
       </p>
 
-      <h2>9. Duración y baja</h2>
+      <h2 id="duracion-y-baja" className="scroll-mt-24">
+        9. Duración y baja
+      </h2>
       <p>
         Puedes dejar de usar el Servicio en cualquier momento. Las suscripciones activas se rigen por las condiciones de
         facturación de Stripe y por lo acordado en el checkout. La baja puede no suponer reembolso de periodos ya
