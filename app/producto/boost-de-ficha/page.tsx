@@ -97,7 +97,7 @@ export default function BoostDeFichaPage() {
           </Button>
         </div>
 
-        <section className="mt-14 space-y-4">
+        <section className="mt-14 scroll-mt-24 space-y-4" id="ejemplo">
           <h2 className="text-2xl font-bold">Qué obtienes en cada análisis</h2>
           <ul className="space-y-3 text-muted-foreground">
             {[

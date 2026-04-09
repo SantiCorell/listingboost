@@ -104,19 +104,21 @@ export default function SeoEngineProductPage() {
           </Button>
         </div>
 
-        <ul className="mt-10 space-y-3 text-sm text-muted-foreground">
-          {[
-            "Flujo por pestañas: menos saltos entre herramientas sueltas.",
-            "Comparativa de dos URLs del mismo nicho: qué trabaja el competidor y qué reforzar en la tuya.",
-            "Exportación de informes en PDF en planes que lo incluyan.",
-            "Monitor de SERP conectado a tu estrategia cuando el plan lo permite.",
-          ].map((t) => (
-            <li key={t} className="flex gap-2">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-              <span>{t}</span>
-            </li>
-          ))}
-        </ul>
+        <section className="mt-10 scroll-mt-24" id="ejemplo" aria-label="Qué incluye y ejemplo de uso">
+          <ul className="space-y-3 text-sm text-muted-foreground">
+            {[
+              "Flujo por pestañas: menos saltos entre herramientas sueltas.",
+              "Comparativa de dos URLs del mismo nicho: qué trabaja el competidor y qué reforzar en la tuya.",
+              "Exportación de informes en PDF en planes que lo incluyan.",
+              "Monitor de posiciones en Google conectado a tu estrategia cuando el plan lo permite.",
+            ].map((t) => (
+              <li key={t} className="flex gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         <section className="mt-12 rounded-2xl border border-border/70 bg-muted/30 p-6">
           <h2 className="text-lg font-semibold">Acceso al panel</h2>

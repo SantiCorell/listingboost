@@ -46,7 +46,8 @@ export function HomeFaqSection() {
           <AccordionTrigger>¿Sois herramienta SEO o panel de redes / “comprar likes”?</AccordionTrigger>
           <AccordionContent>
             Somos <strong className="text-foreground">software SaaS de SEO y listings</strong>: auditoría de URLs,
-            análisis SERP, seguimiento de posiciones y texto de anuncios. No vendemos seguidores, likes, reproducciones
+            lectura de resultados en Google, seguimiento de posiciones y texto de anuncios. No vendemos seguidores, likes,
+            reproducciones
             ni reseñas; los hashtags son sugerencias en texto (#) para que tú publiques. “Boost de ficha” = mejorar el
             copy del anuncio, no inflar métricas.
           </AccordionContent>

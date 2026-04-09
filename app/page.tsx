@@ -17,6 +17,35 @@ const HomeFaqSection = dynamic(
   () => import("@/components/landing/home-faq-section").then((m) => ({ default: m.HomeFaqSection })),
   { loading: () => <div className="mx-auto mt-24 h-48 max-w-3xl rounded-xl bg-muted/20 animate-pulse" aria-hidden /> },
 );
+
+const HomeHowItWorksMap = dynamic(
+  () => import("@/components/landing/home-how-it-works-map").then((m) => ({ default: m.HomeHowItWorksMap })),
+  { loading: () => <div className="h-36 max-w-xl animate-pulse rounded-2xl bg-muted/30" aria-hidden /> },
+);
+
+/** Enlaces del hero a guías con sección #ejemplo (demo o listado claro). */
+const HERO_MODULE_LINKS = [
+  {
+    href: "/producto/seo-gap-finder#ejemplo",
+    label: "Huecos vs rivales",
+    hint: "Demo: oportunidades desde lo que muestra Google",
+  },
+  {
+    href: "/producto/seo-engine#ejemplo",
+    label: "Posiciones en Google",
+    hint: "Qué hace el motor SEO y el seguimiento",
+  },
+  {
+    href: "/producto/scan-seo-url#ejemplo",
+    label: "Revisar una web",
+    hint: "Qué miramos en una página pública",
+  },
+  {
+    href: "/producto/boost-de-ficha#ejemplo",
+    label: "Anuncios y fichas",
+    hint: "Qué sacas en cada análisis",
+  },
+] as const;
 import {
   ArrowRight,
   BarChart3,
@@ -45,7 +74,7 @@ function buildHomeJsonLd() {
     url: siteUrl,
     logo: `${siteUrl}/icon.svg`,
     description:
-      `${APP_NAME} es software web de SEO operativo y listing intelligence: investigación práctica en la SERP, auditoría on-page de URLs públicas, seguimiento de posiciones y generación de fichas multicanal con ${ENGINE_NAME}.`,
+      `${APP_NAME} es software web de SEO operativo y listing intelligence: lectura de resultados en Google, auditoría on-page de URLs públicas, seguimiento de posiciones y generación de fichas multicanal con ${ENGINE_NAME}.`,
   };
   if (sameAs.length) org.sameAs = sameAs;
 
@@ -58,7 +87,7 @@ function buildHomeJsonLd() {
       operatingSystem: "Web",
       url: siteUrl,
       description:
-        `Suite de SEO para equipos de catálogo y ecommerce: palabras clave y brechas frente a competidores en Google (SEO Gap), auditoría técnica y on-page de URLs, monitorización SERP, más copy multicanal con ${ENGINE_NAME} para marketplaces y tiendas.`,
+        `Suite de SEO para equipos de catálogo y ecommerce: palabras clave y brechas frente a competidores en Google, auditoría on-page de URLs, seguimiento de posiciones en búsqueda, más copy multicanal con ${ENGINE_NAME} para marketplaces y tiendas.`,
       offers: {
         "@type": "Offer",
         price: "0",
@@ -73,7 +102,7 @@ function buildHomeJsonLd() {
       name: APP_NAME,
       url: siteUrl,
       description:
-        `Herramienta SEO y listing intelligence: auditoría de páginas, oportunidades desde la búsqueda, seguimiento de rankings y fichas listas para Wallapop, Shopify, eBay y redes. Plan gratuito con cupos mensuales.`,
+        `Herramienta SEO y listing intelligence: auditoría de páginas, oportunidades desde Google, seguimiento de posiciones y fichas listas para Wallapop, Shopify, eBay y redes. Plan gratuito con cupos mensuales.`,
       potentialAction: {
         "@type": "SearchAction",
         target: {
@@ -92,7 +121,7 @@ function buildHomeJsonLd() {
           name: `¿Qué es ${APP_NAME}?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: `${APP_NAME} es una suite de SEO operativo y listing intelligence con ${ENGINE_NAME}: auditoría de URLs, oportunidades desde la SERP (SEO Gap), seguimiento de posiciones, comparativas y fichas multicanal listas para publicar.`,
+            text: `${APP_NAME} es una suite de SEO operativo y listing intelligence con ${ENGINE_NAME}: auditoría de URLs, oportunidades desde los resultados de Google, seguimiento de posiciones, comparativas y fichas multicanal listas para publicar.`,
           },
         },
         {
@@ -100,7 +129,7 @@ function buildHomeJsonLd() {
           name: `¿${APP_NAME} sirve como herramienta SEO profesional para ecommerce?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: `Sí. Cubre investigación práctica en Google, análisis on-page de páginas públicas, monitorización SERP y generación de contenidos alineados con el catálogo; encaja cuando el cuello de botella es ejecutar muchas fichas bien, no solo ver datos sueltos.`,
+            text: `Sí. Cubre investigación práctica en Google, análisis on-page de páginas públicas, seguimiento de posiciones en búsqueda y generación de contenidos alineados con el catálogo; encaja cuando el cuello de botella es ejecutar muchas fichas bien, no solo ver datos sueltos.`,
           },
         },
         {
@@ -171,27 +200,26 @@ export default function HomePage() {
                 <LayoutGrid className="h-3.5 w-3.5 shrink-0" aria-hidden />
                 <span className="font-mono uppercase tracking-wider">{ENGINE_NAME}</span>
                 <span className="text-muted-foreground">·</span>
-                <span>Suite SEO · SERP · catálogo</span>
+                <span>Un sitio para Google, tu web y tus anuncios</span>
               </p>
               <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-[2.65rem] lg:leading-[1.08]">
-                <span className="text-gradient-brand">SEO Gap y SERP</span>, URLs y{" "}
-                <span className="text-foreground">catálogo</span> — en un panel
+                <span className="text-gradient-brand">Miramos Google</span> y a la competencia,{" "}
+                <span className="text-foreground">revisamos tu web</span> y te ayudamos con los{" "}
+                <span className="text-foreground">anuncios</span>
               </h1>
-              <ul
-                className="flex flex-wrap gap-2 pt-1"
-                aria-label="Funciones principales"
-              >
-                {[
-                  "SEO Gap (SERP)",
-                  "Rankings",
-                  "Auditoría URL",
-                  "Copy + listings",
-                ].map((label) => (
-                  <li
-                    key={label}
-                    className="rounded-lg border border-border/80 bg-card/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground shadow-sm sm:text-xs"
-                  >
-                    {label}
+              <ul className="flex flex-wrap gap-2 pt-1" aria-label="Ir a la guía de cada parte">
+                {HERO_MODULE_LINKS.map(({ href, label, hint }) => (
+                  <li key={href} className="min-w-0">
+                    <Link
+                      href={href}
+                      title={hint}
+                      className="flex min-h-11 max-w-full flex-col justify-center rounded-xl border border-border/80 bg-card/90 px-3 py-2 text-left shadow-sm ring-offset-background transition-colors hover:border-primary/35 hover:bg-primary/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:min-h-0 sm:inline-flex sm:flex-row sm:items-center sm:gap-2 sm:py-1.5"
+                    >
+                      <span className="text-[11px] font-bold uppercase tracking-wide text-foreground sm:text-xs">
+                        {label}
+                      </span>
+                      <span className="text-[10px] font-medium text-primary sm:text-[11px]">Ver ejemplo →</span>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -208,17 +236,18 @@ export default function HomePage() {
                   <TrendingUp className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
                   +63% vistas típicas
                 </div>
-                <p className="text-[10px] text-muted-foreground sm:text-xs">Tras mejorar títulos y salida SEO</p>
+                <p className="text-[10px] text-muted-foreground sm:text-xs">Tras mejorar títulos y textos</p>
               </div>
             </div>
 
             <div className="space-y-6 lg:col-start-1 lg:row-start-2">
               <p className="max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-                Mira <strong className="text-foreground">huecos frente a competidores</strong>,{" "}
-                <strong className="text-foreground">audita URLs</strong> y{" "}
-                <strong className="text-foreground">genera fichas</strong> con el mismo flujo — sin saltar entre
-                herramientas.
+                Sin complicaciones: <strong className="text-foreground">vemos qué enseña Google</strong>,{" "}
+                <strong className="text-foreground">miramos páginas parecidas a la tuya</strong> y te decimos{" "}
+                <strong className="text-foreground">qué mejorar primero</strong>. Todo en el mismo sitio.
               </p>
+
+              <HomeHowItWorksMap />
 
               <div className="max-w-xl rounded-2xl border border-emerald-500/35 bg-gradient-to-br from-emerald-500/[0.12] via-card/95 to-primary/[0.06] p-4 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/20 sm:p-5">
                 <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200/95 sm:text-xs">
@@ -226,10 +255,10 @@ export default function HomePage() {
                   Sin tarjeta · sin instalar
                 </div>
                 <p className="mt-2 text-base font-bold leading-snug text-foreground sm:text-lg">
-                  Auditoría URL <span className="text-emerald-700 dark:text-emerald-300">gratis</span>
+                  Revisar una página <span className="text-emerald-700 dark:text-emerald-300">gratis</span>
                 </p>
                 <p className="mt-1.5 text-xs text-muted-foreground sm:text-sm">
-                  Puntuación y quick wins. Plan Free con créditos reales cada mes.
+                  Nota y primeros arreglos claros. Plan Free con créditos de verdad cada mes.
                 </p>
                 <div className="mt-3 flex flex-col gap-2 sm:mt-4 sm:flex-row sm:flex-wrap sm:items-center">
                   <Button
@@ -238,7 +267,7 @@ export default function HomePage() {
                     asChild
                   >
                     <Link href="/register?callbackUrl=/dashboard/audit">
-                      Probar auditoría
+                      Probar revisión de página
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
@@ -267,19 +296,25 @@ export default function HomePage() {
                 </Button>
               </div>
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm sm:px-3 sm:py-1.5 sm:text-xs">
-                  <Zap className="h-3 w-3 text-amber-500 sm:h-3.5 sm:w-3.5" />
-                  SaaS en el navegador
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm sm:px-3 sm:py-1.5 sm:text-xs">
-                  <Cloud className="h-3 w-3 text-primary sm:h-3.5 sm:w-3.5" />
-                  Datos SERP + IA
-                </span>
+                <Link
+                  href="/producto"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card sm:px-3 sm:py-1.5 sm:text-xs"
+                >
+                  <Zap className="h-3 w-3 text-amber-500 sm:h-3.5 sm:w-3.5" aria-hidden />
+                  Abre en el navegador
+                </Link>
+                <Link
+                  href="/producto/seo-gap-finder#ejemplo"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors hover:border-primary/30 hover:bg-card sm:px-3 sm:py-1.5 sm:text-xs"
+                >
+                  <Cloud className="h-3 w-3 text-primary sm:h-3.5 sm:w-3.5" aria-hidden />
+                  Usamos lo público de Google + IA
+                </Link>
                 <Link
                   href="/producto"
                   className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-semibold text-primary transition-colors hover:bg-primary/10 sm:px-3 sm:py-1.5 sm:text-xs"
                 >
-                  Ver módulos →
+                  Ver piezas del producto →
                 </Link>
               </div>
             </div>

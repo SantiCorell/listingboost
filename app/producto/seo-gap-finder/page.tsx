@@ -93,7 +93,7 @@ export default function SeoGapFinderProductPage() {
           </Button>
         </div>
 
-        <section className="mt-14">
+        <section className="mt-14 scroll-mt-24" id="ejemplo">
           <h2 className="sr-only">Vista previa del informe</h2>
           <SeoGapLandingDemo />
         </section>
