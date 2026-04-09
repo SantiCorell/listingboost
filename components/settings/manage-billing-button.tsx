@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, CreditCard } from "lucide-react";
+import { Loader2, Settings2 } from "lucide-react";
 
 export function ManageBillingButton({ enabled }: { enabled: boolean }) {
   const [loading, setLoading] = useState(false);
@@ -16,12 +16,12 @@ export function ManageBillingButton({ enabled }: { enabled: boolean }) {
     try {
       const r = await fetch("/api/stripe/portal", { method: "POST" });
       if (!r.ok) {
-        setMsg((await r.text()) || "No se pudo abrir el portal.");
+        setMsg((await r.text()) || "No se pudo abrir la gestión de pago. Inténtalo de nuevo en unos minutos.");
         return;
       }
       const data = (await r.json()) as { url?: string };
       if (data.url) window.location.href = data.url;
-      else setMsg("Respuesta sin URL del portal.");
+      else setMsg("No recibimos el enlace de gestión. Recarga la página e inténtalo de nuevo.");
     } catch {
       setMsg("Error de red.");
     } finally {
@@ -30,23 +30,28 @@ export function ManageBillingButton({ enabled }: { enabled: boolean }) {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3 rounded-lg border border-border/70 bg-muted/20 p-4">
+      <p className="text-sm font-medium text-foreground">Suscripción y facturación</p>
+      <p className="text-xs text-muted-foreground leading-relaxed">
+        Un solo sitio seguro para <strong className="text-foreground">cancelar la renovación</strong>, cambiar tarjeta o
+        descargar facturas.         Si cancelas,{" "}
+        <strong className="text-foreground">
+          sigues usando el plan hasta el último día del periodo ya pagado
+        </strong>{" "}
+        (típicamente el mismo día del mes en que te diste de alta); no se te cobra el siguiente ciclo.
+      </p>
       <Button
         type="button"
-        variant="outline"
+        variant="default"
         size="sm"
-        className="inline-flex items-center gap-2"
+        className="inline-flex w-full items-center justify-center gap-2 sm:w-auto"
         disabled={loading}
         onClick={openPortal}
       >
-        {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
-        Facturación y método de pago (Stripe)
+        {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Settings2 className="h-4 w-4" />}
+        Cancelar o gestionar mi plan
       </Button>
       {msg ? <p className="text-xs text-destructive">{msg}</p> : null}
-      <p className="text-xs text-muted-foreground">
-        Cancelar renovación, cambiar tarjeta o descargar facturas. Debes activar el portal de cliente en el
-        Dashboard de Stripe (Billing → Customer portal).
-      </p>
     </div>
   );
 }

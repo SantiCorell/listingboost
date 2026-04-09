@@ -6,25 +6,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ProductLandingFaq } from "@/components/producto/product-landing-faq";
 import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/seo-jsonld";
 import type { LucideIcon } from "lucide-react";
-import { ArrowRight, Building2, Hash, LineChart, PackageSearch, ScanSearch, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, Building2, Hash, LineChart, PackageSearch, ScanSearch, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
-  title: "Producto — motor propietario para listings",
-  description: `${APP_NAME}: motor ${ENGINE_NAME} con tono, hashtags, estructura y reglas por canal. Boost multicanal, auditoría SEO de URL, SEO Engine, SEO Gap Finder AI y hashtags. Empieza gratis.`,
+  title: "Producto — suite SEO y listings con IA",
+  description: `${APP_NAME}: SEO operativo con ${ENGINE_NAME} — brechas en Google, auditoría de URLs, seguimiento SERP, SEO Engine y fichas multicanal (Wallapop, Shopify, eBay…). Empieza gratis.`,
   keywords: [
-    "ListingBoost producto",
-    "motor propietario listings",
-    "optimizar ficha Wallapop SEO",
-    "auditoría URL ecommerce España",
-    "hashtags Instagram producto venta",
-    "generador listing eBay Shopify",
+    "suite SEO producto",
+    "herramienta palabras clave ecommerce",
+    "auditoría SEO ficha producto",
+    "SEO Gap Finder",
+    "monitorizar posiciones Google",
+    "optimizar listing marketplace",
+    "ListingBoost módulos",
   ],
   openGraph: {
     title: `Producto · ${APP_NAME}`,
-    description: `Boost multicanal, scan URL, SEO Engine, hashtags e inmobiliarias. Infra pensada para escalar catálogo.`,
+    description: `Módulos de SEO y catálogo: SERP, URLs, contenidos, hashtags e inmobiliaria.`,
     url: `${siteUrl}/producto`,
   },
   alternates: { canonical: `${siteUrl}/producto` },
@@ -134,9 +135,8 @@ export default function ProductoHubPage() {
             Módulos y sectores
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Cada página siguiente profundiza en un módulo: qué problema resuelve, qué entregables obtienes, para
-            qué canales está calibrado y preguntas frecuentes con respuestas directas — pensado tanto para
-            humanos como para motores de búsqueda y asistentes que resumen la web.
+            Elige según tu prioridad: oportunidades en buscadores, auditoría de páginas, contenidos, redes o un sector
+            concreto. Cada guía explica entregables y casos de uso.
           </p>
         </section>
 
@@ -176,21 +176,6 @@ export default function ProductoHubPage() {
             </Link>
           ))}
         </div>
-
-        <section className="mt-16 rounded-2xl border border-border/70 bg-muted/30 p-6 sm:p-8">
-          <div className="flex items-start gap-3">
-            <Zap className="mt-1 h-6 w-6 shrink-0 text-primary" />
-            <div>
-              <h2 className="text-xl font-bold">Por qué separar “producto” en páginas claras</h2>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                Documentar cada módulo en su propia URL mejora la claridad para buscadores y para IA que citan
-                fuentes: cada página tiene un propósito único (boost, URL, SEO Engine, hashtags…), títulos específicos y FAQs
-                alineadas. Así reducimos ambigüedad y ayudamos a que te encuentren quienes buscan exactamente esa
-                solución.
-              </p>
-            </div>
-          </div>
-        </section>
 
         <section className="mt-16" id="faq">
           <h2 className="text-2xl font-bold">Preguntas frecuentes sobre el producto</h2>

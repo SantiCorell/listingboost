@@ -182,7 +182,9 @@ export function ProfileForm({ user, hasStripeCustomer }: Props) {
 
       <div className="border-t border-border/60 pt-6">
         <h2 className="text-base font-semibold">Plan y pagos</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Suscripción y recarga de créditos.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Cambiar plan, comprar créditos o dar de baja la renovación (el acceso sigue hasta fin de mes de facturación).
+        </p>
         <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
           <span className="text-muted-foreground">Plan actual:</span>
           <Badge>{planLabel(user.plan)}</Badge>
@@ -199,7 +201,7 @@ export function ProfileForm({ user, hasStripeCustomer }: Props) {
               <span className="text-muted-foreground">Cupo ilimitado — no hace falta comprar créditos.</span>
             ) : (
               <Link href="/pricing/credits" className="text-primary hover:underline">
-                Comprar créditos (Stripe)
+                Comprar créditos
               </Link>
             )
           ) : (

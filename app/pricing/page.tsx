@@ -22,7 +22,6 @@ import { FEATURE_CREDITS } from "@/lib/feature-credits";
 import { getPublicContactEmail } from "@/lib/contact";
 import { CREDIT_COST_PRODUCT, CREDIT_COST_URL_AUDIT } from "@/lib/usage";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
   Accordion,
   AccordionContent,
@@ -48,14 +47,15 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://l
 
 export const metadata: Metadata = {
   title: "Precios y planes",
-  description: `Precios ${APP_NAME}: optimizar fichas marketplace, auditoría SEO de URL y hashtags Instagram/TikTok con ${ENGINE_NAME}. Stripe seguro, sin permanencia, créditos extra baratos según plan.`,
+  description: `Planes ${APP_NAME}: SEO operativo, auditoría de URLs, seguimiento en Google y listing multicanal con ${ENGINE_NAME}. Sin permanencia: cancelas cuando quieras; el acceso sigue hasta fin de periodo.`,
   keywords: [
     "precio ListingBoost",
-    "suscripción SEO marketplace",
-    "optimizar listing Wallapop precio",
-    "plan Pro ecommerce España",
-    "créditos análisis listing IA",
-    "Stripe SaaS multicanal",
+    "herramienta SEO precio España",
+    "cancelar suscripción SaaS",
+    "plan SEO ecommerce",
+    "auditoría URL precio",
+    "seguimiento posiciones Google",
+    "listing marketplace IA",
   ],
   openGraph: {
     title: `Precios · ${APP_NAME}`,
@@ -86,16 +86,20 @@ const enterpriseStripeReady =
 
 const pricingFaqs = [
   {
+    q: "¿Cómo cancelo la suscripción?",
+    a: "Entra en Ajustes de cuenta (perfil) y pulsa «Cancelar o gestionar mi plan». Ahí cancelas la renovación en un clic. Sigues con acceso completo hasta el último día del periodo que ya está pagado (normalmente el mismo día del mes en que empezó tu facturación). No se te cobra el siguiente ciclo.",
+  },
+  {
     q: "¿Puedo probar antes de pagar?",
     a: `Sí. El plan Free te permite usar ${APP_NAME} con un cupo mensual real: boost de ficha, scan de URL y hashtags. Cuando veas el ahorro de tiempo y la calidad del output, subir a Pro es un clic desde esta misma página.`,
   },
   {
     q: "¿Hay permanencia o letra pequeña?",
-    a: "Las suscripciones Pro y Pro+ se gestionan con Stripe: puedes cancelar o cambiar cuando quieras según las reglas de facturación de tu suscripción. No vendemos ataduras — queremos que sigas porque el producto te renta.",
+    a: "No hay permanencia. Puedes cancelar la renovación cuando quieras desde Ajustes. Queremos que sigas porque el producto te renta, no por cláusulas raras.",
   },
   {
     q: "¿El cobro del plan es solo una vez o cada mes?",
-    a: "Los planes de pago son suscripciones mensuales: Stripe cobra automáticamente al inicio de cada periodo hasta que canceles (desde Ajustes → facturación Stripe o el portal de cliente). Los créditos extra son compras aparte, no sustituyen la cuota del plan.",
+    a: "Los planes de pago son suscripciones mensuales: se renueva al inicio de cada periodo hasta que canceles desde Ajustes. Los créditos extra son compras aparte y no sustituyen la cuota del plan.",
   },
   {
     q: "¿Qué pasa si me paso del cupo mensual?",
@@ -151,7 +155,7 @@ export default async function PricingPage() {
     `SEO Engine: comparativa (${FEATURE_CREDITS.COMPETITOR_COMPARE} cr/ejec.) + monitoring SERP semanal`,
     "Informes: imprimir vista sin crédito; PDF auditoría 1 cr† · PDF comparativa 1 cr‡",
     `Créditos extra ${EXTRA_CREDIT_PRICE_EUR.PRO} €/u`,
-    "Cancelación en Stripe · prioridad en evolución del producto",
+    "Cancelación desde tu cuenta cuando quieras · prioridad en evolución del producto",
   ];
 
   const proPlusPlanBullets = [
@@ -758,6 +762,20 @@ export default async function PricingPage() {
             <p className="mt-2 text-center text-sm text-muted-foreground">
               Respuestas claras para decidir sin dudas.
             </p>
+            <div
+              id="cancelar-plan"
+              className="mx-auto mt-8 max-w-xl scroll-mt-24 rounded-xl border border-border/70 bg-muted/25 px-4 py-3 text-center text-sm text-muted-foreground"
+            >
+              <strong className="text-foreground">¿Baja o cambios?</strong>{" "}
+              <span className="leading-relaxed">
+                Con cuenta iniciada:{" "}
+                <Link href="/settings" className="font-medium text-primary underline-offset-4 hover:underline">
+                  Ajustes
+                </Link>{" "}
+                → «Cancelar o gestionar mi plan». La renovación se detiene al instante;{" "}
+                <strong className="text-foreground">el acceso dura hasta el final del periodo ya pagado</strong>.
+              </span>
+            </div>
             <Accordion type="single" collapsible className="mt-8">
               {pricingFaqs.map((item, i) => (
                 <AccordionItem key={i} value={`p-${i}`}>
@@ -768,32 +786,6 @@ export default async function PricingPage() {
             </Accordion>
           </section>
 
-          <Separator className="my-16 bg-border/60" />
-
-          {/* Footer técnico colapsable — no interrumpe conversión */}
-          <details className="mx-auto max-w-3xl rounded-lg border border-border/50 bg-muted/20 text-sm">
-            <summary className="cursor-pointer px-4 py-3 font-medium text-muted-foreground">
-              Configuración técnica (Stripe / desarrollo)
-            </summary>
-            <div className="border-t border-border/50 px-4 py-4 text-xs text-muted-foreground">
-              <p>
-                Variables: <code className="rounded bg-muted px-1">STRIPE_PRICE_ID_PRO</code>,{" "}
-                <code className="rounded bg-muted px-1">STRIPE_PRICE_ID_PRO_PLUS</code>,{" "}
-                <code className="rounded bg-muted px-1">STRIPE_PRICE_ID_ENTERPRISE</code> (opcional), créditos{" "}
-                <code className="rounded bg-muted px-1">STRIPE_PRICE_ID_CREDIT_*</code>.
-              </p>
-              <p className="mt-2">
-                Webhook: <code className="rounded bg-muted px-1">/api/webhooks/stripe</code> — checkout, suscripción,
-                <code className="mx-1 rounded bg-muted px-1">invoice.payment_succeeded</code>. Tras pagar, el retorno a{" "}
-                <code className="rounded bg-muted px-1">/dashboard</code> llama a{" "}
-                <code className="rounded bg-muted px-1">POST /api/stripe/complete</code> para aplicar plan o créditos
-                al instante.
-              </p>
-              <p className="mt-2">
-                Portal cliente: Stripe Dashboard → Billing → Customer portal (necesario para el botón en Ajustes).
-              </p>
-            </div>
-          </details>
         </div>
       </div>
     </>

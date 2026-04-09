@@ -43,32 +43,19 @@ export function HomeFaqSection() {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="5">
-          <AccordionTrigger>¿Vendéis reseñas o gestionáis reputación?</AccordionTrigger>
+          <AccordionTrigger>¿Sois herramienta SEO o panel de redes / “comprar likes”?</AccordionTrigger>
           <AccordionContent>
-            No. {APP_NAME} no vende ni compra reseñas en Google, Trustpilot ni en ningún sitio. “Boost de ficha”
-            significa mejorar el texto del anuncio (título, descripción, hashtags), no inflar valoraciones.
+            Somos <strong className="text-foreground">software SaaS de SEO y listings</strong>: auditoría de URLs,
+            análisis SERP, seguimiento de posiciones y texto de anuncios. No vendemos seguidores, likes, reproducciones
+            ni reseñas; los hashtags son sugerencias en texto (#) para que tú publiques. “Boost de ficha” = mejorar el
+            copy del anuncio, no inflar métricas.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="6">
           <AccordionTrigger>¿Garantizáis subir en Google o en Wallapop?</AccordionTrigger>
           <AccordionContent>
-            No garantizamos posiciones ni ventas. Te damos copy y auditorías accionables; tú publicas cumpliendo las
-            normas de cada plataforma.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="7">
-          <AccordionTrigger>¿Vendéis seguidores, likes o visualizaciones?</AccordionTrigger>
-          <AccordionContent>
-            No. {APP_NAME} no es un panel de redes sociales: no vendemos seguidores, likes, reproducciones ni “engagement
-            comprado”. Los hashtags son texto con # para que tú lo pegues; no publicamos por ti ni inflamos métricas.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="8">
-          <AccordionTrigger>¿Sois como MyBoost u otras webs de comprar interacciones?</AccordionTrigger>
-          <AccordionContent>
-            No. Somos software SaaS: optimización de fichas de producto, auditoría SEO de URL, generación de contenido y
-            herramientas de análisis (incl. seguimiento SERP). “Boost” aquí significa mejorar el anuncio, no comprar
-            interacciones en redes.
+            No garantizamos posiciones ni ventas. Te damos datos y textos accionables; tú publicas cumpliendo las normas
+            de cada plataforma.
           </AccordionContent>
         </AccordionItem>
       </Accordion>

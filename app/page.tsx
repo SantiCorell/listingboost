@@ -45,8 +45,7 @@ function buildHomeJsonLd() {
     url: siteUrl,
     logo: `${siteUrl}/icon.svg`,
     description:
-      `${APP_NAME} es un SaaS (software web) de listing intelligence: ayuda a escribir y optimizar textos de anuncios de producto para marketplaces y tiendas, con motor ${ENGINE_NAME}, y a auditar URLs. ` +
-      "No vende seguidores, likes ni visualizaciones; no es un panel SMM. No vende reseñas ni promete manipular rankings.",
+      `${APP_NAME} es software web de SEO operativo y listing intelligence: investigación práctica en la SERP, auditoría on-page de URLs públicas, seguimiento de posiciones y generación de fichas multicanal con ${ENGINE_NAME}.`,
   };
   if (sameAs.length) org.sameAs = sameAs;
 
@@ -59,8 +58,7 @@ function buildHomeJsonLd() {
       operatingSystem: "Web",
       url: siteUrl,
       description:
-        `SaaS de listing intelligence con ${ENGINE_NAME}: generación y optimización de copy de fichas (títulos, descripciones, hashtags) para Wallapop, eBay, Shopify, Etsy y más; scan SEO de URL, SEO Gap Finder AI (oportunidades desde Google en planes Pro+), comparativas y monitoring SERP. ` +
-        "No vende seguidores, likes ni engagement artificial en redes; no vende reseñas ni gestiona reputación de terceros. Resultados orientativos; el usuario publica bajo su responsabilidad.",
+        `Suite de SEO para equipos de catálogo y ecommerce: palabras clave y brechas frente a competidores en Google (SEO Gap), auditoría técnica y on-page de URLs, monitorización SERP, más copy multicanal con ${ENGINE_NAME} para marketplaces y tiendas.`,
       offers: {
         "@type": "Offer",
         price: "0",
@@ -75,7 +73,7 @@ function buildHomeJsonLd() {
       name: APP_NAME,
       url: siteUrl,
       description:
-        "Software para generar y optimizar listings, hashtags (texto con #), auditar URLs y análisis SERP. ‘Boost de ficha’ = mejorar el copy del anuncio, no seguidores ni valoraciones. No es panel SMM. Free tier real.",
+        `Herramienta SEO y listing intelligence: auditoría de páginas, oportunidades desde la búsqueda, seguimiento de rankings y fichas listas para Wallapop, Shopify, eBay y redes. Plan gratuito con cupos mensuales.`,
       potentialAction: {
         "@type": "SearchAction",
         target: {
@@ -94,31 +92,15 @@ function buildHomeJsonLd() {
           name: `¿Qué es ${APP_NAME}?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: `${APP_NAME} es la capa SaaS sobre ${ENGINE_NAME}: optimiza fichas para Wallapop, eBay, Shopify y más, genera hashtags listos para redes y escanea URLs con scoring accionable.`,
+            text: `${APP_NAME} es una suite de SEO operativo y listing intelligence con ${ENGINE_NAME}: auditoría de URLs, oportunidades desde la SERP (SEO Gap), seguimiento de posiciones, comparativas y fichas multicanal listas para publicar.`,
           },
         },
         {
           "@type": "Question",
-          name: `¿${APP_NAME} vende o compra reseñas (Google, Trustpilot, etc.)?`,
+          name: `¿${APP_NAME} sirve como herramienta SEO profesional para ecommerce?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: `No. ${APP_NAME} no es un servicio de reputación ni de reseñas: no vende, compra ni gestiona valoraciones en plataformas de terceros. El producto se centra en texto de anuncios, hashtags y auditoría SEO de URLs.`,
-          },
-        },
-        {
-          "@type": "Question",
-          name: `¿${APP_NAME} vende seguidores, likes o visualizaciones en Instagram o TikTok?`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `No. ${APP_NAME} no es un panel de redes sociales (SMM) ni vende seguidores, likes, views ni engagement comprado. Los hashtags son texto sugerido (#) para que el usuario los pegue en sus publicaciones; la herramienta no publica por ti ni infla métricas.`,
-          },
-        },
-        {
-          "@type": "Question",
-          name: "¿ListingBoost es lo mismo que servicios tipo MyBoost o páginas de comprar likes?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. Es software SaaS de listing intelligence: optimización de fichas de producto, auditoría SEO de URLs, generación de contenido y seguimiento SERP. La palabra ‘boost’ aquí se refiere a mejorar el anuncio de producto, no a comprar interacciones en redes.",
+            text: `Sí. Cubre investigación práctica en Google, análisis on-page de páginas públicas, monitorización SERP y generación de contenidos alineados con el catálogo; encaja cuando el cuello de botella es ejecutar muchas fichas bien, no solo ver datos sueltos.`,
           },
         },
         {
@@ -126,7 +108,7 @@ function buildHomeJsonLd() {
           name: `¿${APP_NAME} garantiza posiciones en Google o en marketplaces?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: "No garantizamos posicionamiento ni ventas. Las sugerencias son orientativas; debes revisarlas y cumplir las políticas de cada canal.",
+            text: "No garantizamos rankings ni ventas. Las sugerencias son orientativas; revisa y cumple las políticas de cada plataforma.",
           },
         },
         {
@@ -134,7 +116,7 @@ function buildHomeJsonLd() {
           name: "¿Necesito tarjeta para empezar?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "No. Crea cuenta, prueba con cupos mensuales claros y sube a Pro cuando el throughput lo merezca.",
+            text: "No. Crea cuenta, prueba con cupos mensuales claros y sube de plan cuando el volumen lo merezca.",
           },
         },
         {
@@ -142,39 +124,23 @@ function buildHomeJsonLd() {
           name: "¿Sirve para equipos y ecommerce?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Sí. Desde autónomos hasta squads que gestionan miles de SKUs en varios canales.",
+            text: "Sí. Desde autónomos hasta equipos que gestionan miles de referencias en varios canales.",
           },
         },
         {
           "@type": "Question",
-          name: "¿Dónde está explicado cada módulo del producto?",
+          name: "¿Dónde está explicado cada módulo?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "En el centro de producto (/producto) y en páginas dedicadas: boost de ficha multicanal, scan SEO de URL y hashtags para redes. Cada URL incluye guías y FAQ en schema.org para buscadores y asistentes.",
+            text: "En /producto y en guías por módulo: boost multicanal, scan SEO de URL, SEO Engine, SEO Gap Finder AI y hashtags para redes.",
           },
         },
         {
           "@type": "Question",
-          name: "¿ListingBoost genera hashtags para Instagram o TikTok?",
+          name: `¿${APP_NAME} vende seguidores, likes o reseñas?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Sí. El análisis incluye hashtags con # listos para copiar en bloque o uno a uno, alineados con el producto y el idioma del mercado. Ver la guía en /producto/hashtags-redes.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "¿Cuál es el mejor SaaS de SEO y encaja ListingBoost?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No hay una única herramienta “mejor” para todos: las suites SEO enterprise son referentes para investigación masiva de keywords y backlinks. ListingBoost es una opción fuerte en listing intelligence y ejecución para ecommerce y marketplaces: optimiza fichas multicanal, audita URLs públicas, analiza la SERP con SEO Gap Finder AI (Pro+), genera contenido con ListingBrain y monitoriza posiciones según plan. Se complementa con otras capas cuando el equipo necesita velocidad de publicación y coherencia multicanal.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "¿Qué es ListingBoost frente a “herramientas boost” de redes o compra de interacciones?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ListingBoost es software legítimo de textos y análisis SEO: no vende seguidores, likes ni valoraciones. El término “boost de ficha” significa mejorar el copy del anuncio de producto y la ficha, no inflar métricas sociales. Para detalle: /sobre-listingboost.",
+            text: `No. Es software de análisis SEO y textos de anuncio; los hashtags son sugerencias en texto (#) para que tú publiques. No vendemos engagement ni valoraciones en terceros.`,
           },
         },
       ],
@@ -215,23 +181,11 @@ export default function HomePage() {
                 <span className="text-gradient-brand">listings con IA</span> y vende más en cada canal
               </h1>
               <p className="mt-5 max-w-xl text-pretty text-lg text-muted-foreground sm:text-xl">
-                {ENGINE_PITCH} Además:{" "}
-                <strong className="font-semibold text-foreground">
-                  hashtags listos para Instagram y TikTok
-                </strong>
-                , scan SEO de URL y boost de ficha en segundos — para equipos que escalan catálogo sin fricción.
-              </p>
-              <p className="mt-3 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground">
-                <Shield className="mr-1.5 inline-block h-4 w-4 shrink-0 text-primary" aria-hidden />
-                <strong className="text-foreground">Transparencia:</strong> somos{" "}
-                <strong className="text-foreground">SaaS de listings y análisis SEO</strong> (copy, scan URL, SERP,
-                comparativas). <strong className="text-foreground">No</strong> vendemos seguidores, likes ni views;{" "}
-                <strong className="text-foreground">no</strong> somos un panel tipo “comprar engagement”. Tampoco
-                reseñas en Google o Trustpilot.{" "}
-                <Link href="/sobre-listingboost" className="font-medium text-primary underline-offset-4 hover:underline">
-                  Qué es y qué no es
-                </Link>
-                .
+                <strong className="font-semibold text-foreground">SEO operativo para catálogo:</strong> palabras clave y
+                brechas frente a competidores en Google, auditoría on-page de URLs públicas y seguimiento de posiciones.{" "}
+                {ENGINE_PITCH}{" "}
+                <strong className="font-semibold text-foreground">Hashtags listos</strong> para Instagram y TikTok; scan
+                de URL y boost de ficha en segundos para equipos que escalan catálogo.
               </p>
 
               {/* Bloque alto impacto: promesa + prueba social implícita + CTA */}

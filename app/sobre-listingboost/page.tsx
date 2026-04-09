@@ -11,20 +11,19 @@ const UPDATED = "3 de abril de 2026";
 const siteUrl = getPublicSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Sobre ListingBoost: qué es, qué no es y transparencia",
-  description: `${APP_NAME} es SaaS para optimizar fichas, auditar URLs y análisis SERP con IA (ListingBrain™). No vendemos seguidores/likes ni reseñas. Titular, contacto y cómo verificar el servicio.`,
+  title: "Sobre ListingBoost — SEO operativo y listing intelligence",
+  description: `${APP_NAME}: software de SEO para catálogo y ecommerce con ${ENGINE_NAME} (SERP, auditoría URL, posiciones y fichas). Titular, contacto y alcance del servicio.`,
   keywords: [
     "ListingBoost qué es",
-    "ListingBoost seguidores",
-    "ListingBoost no es MyBoost",
-    "software listings IA",
-    "SaaS marketplace SEO",
-    "transparencia SaaS",
+    "software SEO ecommerce",
+    "listing intelligence SaaS",
+    "auditoría URL producto",
+    "análisis SERP herramienta",
   ],
   openGraph: {
     title: `Sobre ${APP_NAME}`,
     description:
-      "SaaS de fichas, auditoría URL y análisis SERP — no reseñas, no seguidores ni likes comprados.",
+      "Suite de SEO operativo y optimización de listings: datos de búsqueda, URLs y ejecución multicanal.",
     url: `${siteUrl}/sobre-listingboost`,
   },
   alternates: { canonical: `${siteUrl}/sobre-listingboost` },
