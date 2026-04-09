@@ -254,23 +254,23 @@ export default function HomePage() {
         <div className="pointer-events-none absolute -right-24 top-32 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 top-[420px] h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
 
-        <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pb-28 sm:pt-14">
+        <div className="relative mx-auto max-w-6xl min-w-0 overflow-x-clip px-4 pb-20 pt-10 sm:px-6 sm:pb-28 sm:pt-14">
           {/* Hero: visual SEO/Google + IA; mock de listings más abajo */}
-          <section className="min-w-0" aria-labelledby="home-hero-heading">
-            <div className="grid min-w-0 items-start gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12">
+          <section className="min-w-0 max-w-full" aria-labelledby="home-hero-heading">
+            <div className="grid min-w-0 max-w-full items-start gap-6 sm:gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12">
               {/* Columna visual: primero en móvil = ves el mock al abrir */}
-              <div className="relative space-y-3 lg:col-span-5 xl:col-span-5">
-                <div className="relative rounded-2xl border border-primary/20 bg-gradient-to-b from-card via-card to-primary/[0.04] p-1 shadow-[0_20px_60px_-24px_hsl(var(--primary)/0.45)] ring-1 ring-primary/10">
+              <div className="relative min-w-0 max-w-full space-y-2.5 sm:space-y-3 lg:col-span-5 xl:col-span-5">
+                <div className="relative max-w-full rounded-2xl border border-primary/20 bg-gradient-to-b from-card via-card to-primary/[0.04] p-0.5 shadow-[0_20px_60px_-24px_hsl(var(--primary)/0.45)] ring-1 ring-primary/10 sm:p-1">
                   <div className="pointer-events-none absolute -inset-px rounded-2xl bg-[linear-gradient(135deg,hsl(var(--primary)/0.12),transparent_42%,hsl(var(--accent)/0.08)_100%)]" />
-                  <div className="relative overflow-hidden rounded-[0.9rem] border border-white/40 bg-background/40 dark:border-white/5 dark:bg-black/20">
+                  <div className="relative max-w-full overflow-hidden rounded-[0.85rem] border border-white/40 bg-background/40 dark:border-white/5 dark:bg-black/20 sm:rounded-[0.9rem]">
                     <HeroSeoMock />
                   </div>
                 </div>
-                <div className="relative z-[1] -mt-1 px-0 sm:px-0">
+                <div className="relative z-[1] min-w-0 max-w-full">
                   <HomeHowItWorksMap compact />
                 </div>
                 <div className="pointer-events-none flex justify-center lg:justify-start">
-                  <div className="inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-card/90 px-3 py-1.5 text-center shadow-sm backdrop-blur-sm sm:text-left">
+                  <div className="inline-flex max-w-full items-center gap-2 rounded-lg border border-primary/20 bg-card/90 px-2.5 py-1.5 text-center shadow-sm backdrop-blur-sm sm:px-3 sm:text-left">
                     <TrendingUp className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden />
                     <div>
                       <p className="text-xs font-semibold text-primary">+63% vistas típicas</p>
@@ -281,7 +281,7 @@ export default function HomePage() {
               </div>
 
               {/* Columna copy */}
-              <div className="flex min-w-0 flex-col gap-5 lg:col-span-7 xl:col-span-7">
+              <div className="flex min-w-0 max-w-full flex-col gap-4 sm:gap-5 lg:col-span-7 xl:col-span-7">
                 <div className="space-y-3">
                   <p className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-border/60 bg-muted/25 px-2.5 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-primary/95">
                     <LayoutGrid className="h-3 w-3 shrink-0" aria-hidden />
@@ -306,15 +306,15 @@ export default function HomePage() {
                 </div>
 
                 <ul
-                  className="-mx-1 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [scrollbar-width:thin] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:pb-0"
+                  className="grid min-w-0 grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-2"
                   aria-label="Módulos con ejemplo"
                 >
                   {HERO_MODULE_LINKS.map(({ href, label, hint }) => (
-                    <li key={href} className="min-w-0 shrink-0 snap-start sm:shrink">
+                    <li key={href} className="min-w-0 sm:w-auto sm:shrink-0">
                       <Link
                         href={href}
                         title={hint}
-                        className="flex h-full min-h-[3.25rem] w-[7.75rem] flex-col justify-center gap-0.5 rounded-lg border border-border/70 bg-card/90 px-2.5 py-2 text-center shadow-sm transition-colors hover:border-primary/35 hover:bg-primary/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:w-auto sm:min-w-0 sm:px-3"
+                        className="flex h-full min-h-[3.25rem] w-full flex-col justify-center gap-0.5 rounded-lg border border-border/70 bg-card/90 px-2 py-2 text-center shadow-sm transition-colors hover:border-primary/35 hover:bg-primary/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:w-auto sm:min-w-[7rem] sm:px-3"
                       >
                         <span className="text-[9px] font-bold uppercase leading-tight tracking-wide text-foreground">
                           {label}
@@ -418,11 +418,11 @@ export default function HomePage() {
           {/* Listings multicanal: mock mejorado + copy dedicado */}
           <section
             id="listings-multicanal"
-            className="mt-16 scroll-mt-20 lg:mt-20"
+            className="mt-16 min-w-0 max-w-full scroll-mt-20 lg:mt-20"
             aria-labelledby="home-listings-heading"
           >
-            <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
-              <div className="order-2 space-y-4 lg:order-1 lg:col-span-5">
+            <div className="grid min-w-0 max-w-full items-center gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-12">
+              <div className="order-2 min-w-0 max-w-full space-y-4 lg:order-1 lg:col-span-5">
                 <p className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-muted/25 px-2.5 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-primary/95">
                   <ShoppingBag className="h-3.5 w-3.5 shrink-0" aria-hidden />
                   Catálogo & marketplaces
@@ -464,10 +464,10 @@ export default function HomePage() {
                   </Button>
                 </div>
               </div>
-              <div className="order-1 lg:order-2 lg:col-span-7">
-                <div className="relative rounded-2xl border border-primary/20 bg-gradient-to-b from-card via-card to-accent/[0.05] p-1 shadow-[0_24px_64px_-28px_hsl(var(--primary)/0.4)] ring-1 ring-primary/10">
+              <div className="order-1 min-w-0 max-w-full lg:order-2 lg:col-span-7">
+                <div className="relative max-w-full rounded-2xl border border-primary/20 bg-gradient-to-b from-card via-card to-accent/[0.05] p-0.5 shadow-[0_24px_64px_-28px_hsl(var(--primary)/0.4)] ring-1 ring-primary/10 sm:p-1">
                   <div className="pointer-events-none absolute -inset-px rounded-2xl bg-[linear-gradient(135deg,hsl(var(--accent)/0.1),transparent_45%,hsl(var(--primary)/0.08)_100%)]" />
-                  <div className="relative overflow-hidden rounded-[0.9rem] border border-white/40 bg-background/40 dark:border-white/5 dark:bg-black/20">
+                  <div className="relative max-w-full overflow-hidden rounded-[0.85rem] border border-white/40 bg-background/40 dark:border-white/5 dark:bg-black/20 sm:rounded-[0.9rem]">
                     <HeroProductMock />
                   </div>
                 </div>

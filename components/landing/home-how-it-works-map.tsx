@@ -59,8 +59,8 @@ export function HomeHowItWorksMap({ compact = false }: HomeHowItWorksMapProps) {
   return (
     <section
       className={cn(
-        "rounded-xl border border-primary/15 bg-gradient-to-b from-card/95 to-muted/20 shadow-sm backdrop-blur-sm",
-        compact ? "mx-0 w-full p-3 ring-1 ring-border/40" : "mx-auto max-w-xl p-4 sm:p-5",
+        "max-w-full min-w-0 overflow-hidden rounded-xl border border-primary/15 bg-gradient-to-b from-card/95 to-muted/20 shadow-sm backdrop-blur-sm",
+        compact ? "mx-0 w-full p-2.5 ring-1 ring-border/40 sm:p-3" : "mx-auto max-w-xl p-4 sm:p-5",
       )}
       aria-labelledby={headingId}
     >
@@ -79,17 +79,24 @@ export function HomeHowItWorksMap({ compact = false }: HomeHowItWorksMapProps) {
 
       <div
         className={cn(
-          "flex gap-1.5",
+          "min-w-0 max-w-full",
           compact
-            ? "mt-2.5 snap-x snap-mandatory overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            : "mt-4 flex-col sm:flex-row sm:flex-wrap sm:items-center sm:gap-1",
+            ? "mt-2 grid grid-cols-2 gap-1.5 sm:mt-2.5 sm:flex sm:flex-wrap sm:gap-2"
+            : "mt-4 flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-1",
         )}
       >
         {STEPS.map((step, i) => {
           const isOn = i === active;
           const Icon = step.Icon;
           return (
-            <div key={step.key} className={cn("flex items-center gap-1", !compact && "sm:contents")}>
+            <div
+              key={step.key}
+              className={cn(
+                compact
+                  ? cn("min-w-0 max-w-full", i === STEPS.length - 1 && "col-span-2")
+                  : "flex items-center gap-1 sm:contents",
+              )}
+            >
               <button
                 type="button"
                 onClick={() => go(i)}
@@ -108,7 +115,7 @@ export function HomeHowItWorksMap({ compact = false }: HomeHowItWorksMapProps) {
                 className={cn(
                   "inline-flex min-w-0 items-center gap-1.5 rounded-lg border text-left font-semibold transition-all",
                   compact
-                    ? "snap-start shrink-0 px-2 py-1.5 text-[10px] sm:text-[11px]"
+                    ? "h-auto min-h-[2.5rem] w-full px-2 py-1.5 text-[10px] leading-tight sm:min-h-[2.25rem] sm:w-auto sm:shrink-0 sm:px-2.5 sm:text-[11px]"
                     : "w-full gap-2 rounded-xl px-3 py-2.5 text-xs sm:w-auto sm:shrink-0 sm:py-2",
                   isOn
                     ? "border-primary/45 bg-primary/12 text-foreground shadow-[0_0_0_1px_hsl(var(--primary)/0.2)]"
@@ -124,7 +131,7 @@ export function HomeHowItWorksMap({ compact = false }: HomeHowItWorksMapProps) {
                 >
                   <Icon className={compact ? "h-3 w-3" : "h-4 w-4"} aria-hidden />
                 </span>
-                <span className="max-w-[4.5rem] leading-tight sm:max-w-none">{step.label}</span>
+                <span className="min-w-0 flex-1 text-balance leading-tight">{step.label}</span>
               </button>
               {!compact && i < STEPS.length - 1 ? (
                 <ChevronRight
@@ -142,11 +149,11 @@ export function HomeHowItWorksMap({ compact = false }: HomeHowItWorksMapProps) {
         role="region"
         aria-live="polite"
         className={cn(
-          "mt-3 rounded-lg border border-dashed border-primary/25 bg-primary/[0.05] text-muted-foreground",
-          compact ? "px-2.5 py-2 text-[11px] leading-snug sm:text-xs" : "px-3 py-3 text-sm sm:px-4 sm:py-3.5",
+          "mt-2.5 max-w-full min-w-0 rounded-lg border border-dashed border-primary/25 bg-primary/[0.05] text-muted-foreground sm:mt-3",
+          compact ? "px-2 py-2 text-[10px] leading-snug sm:px-2.5 sm:text-[11px] md:text-xs" : "px-3 py-3 text-sm sm:px-4 sm:py-3.5",
         )}
       >
-        <p className="text-foreground">
+        <p className="break-words text-foreground">
           <span className="font-medium text-foreground/95">{STEPS[active].lead}</span> {STEPS[active].body}
         </p>
       </div>
