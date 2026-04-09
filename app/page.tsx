@@ -1,6 +1,6 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { APP_NAME, ENGINE_NAME, ENGINE_PITCH } from "@/lib/constants";
+import { APP_NAME, ENGINE_NAME } from "@/lib/constants";
 import { organizationSameAsUrls } from "@/lib/legal/site-legal";
 import { getPublicSiteUrl } from "@/lib/site-url";
 import { HeroProductMock } from "@/components/landing/hero-product-mock";
@@ -22,10 +22,10 @@ import {
   BarChart3,
   CheckCircle2,
   Cloud,
-  Cpu,
   Globe2,
   ImagePlus,
   LineChart,
+  LayoutGrid,
   Shield,
   Sparkles,
   Star,
@@ -164,65 +164,94 @@ export default function HomePage() {
         <div className="pointer-events-none absolute -left-20 top-[420px] h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
 
         <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pb-28 sm:pt-14">
-          {/* Hero */}
-          <div className="grid min-w-0 items-center gap-10 sm:gap-12 lg:grid-cols-[1fr_minmax(280px,1.05fr)] lg:gap-10">
-            <div className="min-w-0">
-              <p className="mb-4 inline-flex flex-wrap items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-4 py-2 text-xs font-medium text-primary shadow-sm backdrop-blur-md">
-                <Cpu className="h-3.5 w-3.5" />
+          {/* Hero: poco texto, mock visible pronto en móvil (grid 2 filas + panel derecho en desktop) */}
+          <div className="grid min-w-0 gap-6 sm:gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
+            <header className="space-y-3 sm:space-y-4 lg:col-start-1 lg:row-start-1">
+              <p className="inline-flex flex-wrap items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-3 py-1.5 text-[11px] font-medium text-primary shadow-sm backdrop-blur-md sm:px-4 sm:py-2 sm:text-xs">
+                <LayoutGrid className="h-3.5 w-3.5 shrink-0" aria-hidden />
                 <span className="font-mono uppercase tracking-wider">{ENGINE_NAME}</span>
-                <span className="hidden text-muted-foreground sm:inline">·</span>
-                <span className="flex items-center gap-1">
-                  <Zap className="h-3.5 w-3.5" />
-                  SEO + hashtags + scan URL
-                </span>
+                <span className="text-muted-foreground">·</span>
+                <span>Suite SEO · SERP · catálogo</span>
               </p>
-              <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-[3.15rem] lg:leading-[1.06]">
-                Potencia tus{" "}
-                <span className="text-gradient-brand">listings con IA</span> y vende más en cada canal
+              <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-[2.65rem] lg:leading-[1.08]">
+                <span className="text-gradient-brand">SEO Gap y SERP</span>, URLs y{" "}
+                <span className="text-foreground">catálogo</span> — en un panel
               </h1>
-              <p className="mt-5 max-w-xl text-pretty text-lg text-muted-foreground sm:text-xl">
-                <strong className="font-semibold text-foreground">SEO operativo para catálogo:</strong> palabras clave y
-                brechas frente a competidores en Google, auditoría on-page de URLs públicas y seguimiento de posiciones.{" "}
-                {ENGINE_PITCH}{" "}
-                <strong className="font-semibold text-foreground">Hashtags listos</strong> para Instagram y TikTok; scan
-                de URL y boost de ficha en segundos para equipos que escalan catálogo.
+              <ul
+                className="flex flex-wrap gap-2 pt-1"
+                aria-label="Funciones principales"
+              >
+                {[
+                  "SEO Gap (SERP)",
+                  "Rankings",
+                  "Auditoría URL",
+                  "Copy + listings",
+                ].map((label) => (
+                  <li
+                    key={label}
+                    className="rounded-lg border border-border/80 bg-card/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground shadow-sm sm:text-xs"
+                  >
+                    {label}
+                  </li>
+                ))}
+              </ul>
+            </header>
+
+            <div className="relative mx-auto w-full max-w-md sm:max-w-lg lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:max-w-none lg:self-center">
+              <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-primary/25 via-violet-500/15 to-accent/30 blur-3xl sm:-inset-6 sm:rounded-[2.5rem]" />
+              <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--primary)/0.12),transparent_50%)]" />
+              <div className="relative">
+                <HeroProductMock />
+              </div>
+              <div className="pointer-events-none absolute -bottom-2 left-1/2 z-10 w-[calc(100%-1rem)] max-w-[16rem] -translate-x-1/2 rounded-xl border border-primary/25 bg-card/95 px-3 py-2 shadow-lg backdrop-blur-md sm:-bottom-6 sm:left-auto sm:right-0 sm:max-w-none sm:translate-x-0 sm:rounded-2xl sm:px-4 sm:py-3">
+                <div className="flex items-center gap-2 text-xs font-semibold text-primary sm:text-sm">
+                  <TrendingUp className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                  +63% vistas típicas
+                </div>
+                <p className="text-[10px] text-muted-foreground sm:text-xs">Tras mejorar títulos y salida SEO</p>
+              </div>
+            </div>
+
+            <div className="space-y-6 lg:col-start-1 lg:row-start-2">
+              <p className="max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
+                Mira <strong className="text-foreground">huecos frente a competidores</strong>,{" "}
+                <strong className="text-foreground">audita URLs</strong> y{" "}
+                <strong className="text-foreground">genera fichas</strong> con el mismo flujo — sin saltar entre
+                herramientas.
               </p>
 
-              {/* Bloque alto impacto: promesa + prueba social implícita + CTA */}
-              <div className="mt-7 max-w-xl rounded-2xl border border-emerald-500/35 bg-gradient-to-br from-emerald-500/[0.12] via-card/95 to-primary/[0.06] p-4 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/20 sm:p-5">
-                <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200/95">
-                  <Timer className="h-4 w-4 shrink-0" />
-                  Sin tarjeta · sin instalar nada
+              <div className="max-w-xl rounded-2xl border border-emerald-500/35 bg-gradient-to-br from-emerald-500/[0.12] via-card/95 to-primary/[0.06] p-4 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/20 sm:p-5">
+                <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200/95 sm:text-xs">
+                  <Timer className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                  Sin tarjeta · sin instalar
                 </div>
-                <p className="mt-2 text-lg font-bold leading-snug tracking-tight text-foreground sm:text-xl">
-                  Analiza tu web en segundos — <span className="text-emerald-700 dark:text-emerald-300">gratis</span>
+                <p className="mt-2 text-base font-bold leading-snug text-foreground sm:text-lg">
+                  Auditoría URL <span className="text-emerald-700 dark:text-emerald-300">gratis</span>
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Pega la URL y obtén <strong className="text-foreground">puntuación</strong>,{" "}
-                  <strong className="text-foreground">fallos por impacto</strong> y el siguiente paso claro. Cada mes
-                  incluye créditos en el plan Free: prueba real, no demo vacía.
+                <p className="mt-1.5 text-xs text-muted-foreground sm:text-sm">
+                  Puntuación y quick wins. Plan Free con créditos reales cada mes.
                 </p>
-                <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+                <div className="mt-3 flex flex-col gap-2 sm:mt-4 sm:flex-row sm:flex-wrap sm:items-center">
                   <Button
                     size="lg"
-                    className="h-11 w-full border border-emerald-600/30 bg-emerald-600 text-white shadow-md hover:bg-emerald-600/90 dark:bg-emerald-500 dark:hover:bg-emerald-500/90 sm:w-auto"
+                    className="h-10 w-full border border-emerald-600/30 bg-emerald-600 text-white shadow-md hover:bg-emerald-600/90 dark:bg-emerald-500 dark:hover:bg-emerald-500/90 sm:h-11 sm:w-auto"
                     asChild
                   >
                     <Link href="/register?callbackUrl=/dashboard/audit">
-                      Quiero mi informe gratis
+                      Probar auditoría
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
-                  <span className="text-center text-[11px] text-muted-foreground sm:text-left">
-                    ~1 min crear cuenta · luego scan en un clic
+                  <span className="text-center text-[10px] text-muted-foreground sm:text-left sm:text-[11px]">
+                    ~1 min · luego un clic
                   </span>
                 </div>
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 <Button
                   size="lg"
-                  className="h-12 border border-primary/25 bg-gradient-to-r from-primary to-primary/88 px-8 text-base shadow-lg shadow-primary/30"
+                  className="h-11 w-full border border-primary/25 bg-gradient-to-r from-primary to-primary/88 px-6 text-sm shadow-lg shadow-primary/30 sm:h-12 sm:w-auto sm:px-8 sm:text-base"
                   asChild
                 >
                   <Link href="/register">
@@ -230,43 +259,28 @@ export default function HomePage() {
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-12 border-border/80 px-8 text-base shadow-sm" asChild>
-                  <Link href="/login">Iniciar sesión</Link>
+                <Button size="lg" variant="outline" className="h-11 flex-1 border-border/80 px-4 text-sm shadow-sm sm:h-12 sm:flex-none sm:px-8 sm:text-base" asChild>
+                  <Link href="/login">Entrar</Link>
                 </Button>
-                <Button size="lg" variant="ghost" className="h-12 px-6 text-base text-muted-foreground" asChild>
-                  <Link href="/pricing">Ver precios</Link>
+                <Button size="lg" variant="ghost" className="h-11 flex-1 px-3 text-sm text-muted-foreground sm:h-12 sm:flex-none sm:text-base" asChild>
+                  <Link href="/pricing">Precios</Link>
                 </Button>
               </div>
-              <div className="mt-6 flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-3 py-1.5 text-xs font-medium backdrop-blur-sm">
-                  <Zap className="h-3.5 w-3.5 text-amber-500" />
-                  Rápido y fácil
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm sm:px-3 sm:py-1.5 sm:text-xs">
+                  <Zap className="h-3 w-3 text-amber-500 sm:h-3.5 sm:w-3.5" />
+                  SaaS en el navegador
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-3 py-1.5 text-xs font-medium backdrop-blur-sm">
-                  <Cloud className="h-3.5 w-3.5 text-primary" />
-                  IA + reglas por canal
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/80 px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm sm:px-3 sm:py-1.5 sm:text-xs">
+                  <Cloud className="h-3 w-3 text-primary sm:h-3.5 sm:w-3.5" />
+                  Datos SERP + IA
                 </span>
                 <Link
                   href="/producto"
-                  className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+                  className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-semibold text-primary transition-colors hover:bg-primary/10 sm:px-3 sm:py-1.5 sm:text-xs"
                 >
-                  Explorar producto →
+                  Ver módulos →
                 </Link>
-              </div>
-            </div>
-
-            <div className="relative mx-auto min-w-0 w-full max-w-lg lg:mx-0 lg:max-w-none">
-              <div className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-gradient-to-tr from-primary/25 via-violet-500/15 to-accent/30 blur-3xl" />
-              <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--primary)/0.12),transparent_50%)]" />
-              <div className="relative">
-                <HeroProductMock />
-              </div>
-              <div className="pointer-events-none absolute -bottom-6 -left-4 z-10 hidden rounded-2xl border border-primary/25 bg-card/95 px-4 py-3 shadow-xl backdrop-blur-md sm:block">
-                <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-                  <TrendingUp className="h-4 w-4" />
-                  +63% vistas típicas
-                </div>
-                <p className="text-xs text-muted-foreground">Tras optimizar títulos + hashtags</p>
               </div>
             </div>
           </div>
