@@ -7,6 +7,7 @@ import { organizationSameAsUrls } from "@/lib/legal/site-legal";
 import { getPublicSiteUrl } from "@/lib/site-url";
 import { TRUST_STATS } from "@/lib/social-proof";
 import { HeroProductMock } from "@/components/landing/hero-product-mock";
+import { HeroSeoMock } from "@/components/landing/hero-seo-mock";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -67,6 +68,7 @@ import {
   LineChart,
   LayoutGrid,
   Shield,
+  ShoppingBag,
   Sparkles,
   Star,
   Timer,
@@ -253,7 +255,7 @@ export default function HomePage() {
         <div className="pointer-events-none absolute -left-20 top-[420px] h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
 
         <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pb-28 sm:pt-14">
-          {/* Hero: panel + pipeline primero; copy corto tech; Google + asistentes IA */}
+          {/* Hero: visual SEO/Google + IA; mock de listings más abajo */}
           <section className="min-w-0" aria-labelledby="home-hero-heading">
             <div className="grid min-w-0 items-start gap-8 lg:grid-cols-12 lg:gap-10 xl:gap-12">
               {/* Columna visual: primero en móvil = ves el mock al abrir */}
@@ -261,7 +263,7 @@ export default function HomePage() {
                 <div className="relative rounded-2xl border border-primary/20 bg-gradient-to-b from-card via-card to-primary/[0.04] p-1 shadow-[0_20px_60px_-24px_hsl(var(--primary)/0.45)] ring-1 ring-primary/10">
                   <div className="pointer-events-none absolute -inset-px rounded-2xl bg-[linear-gradient(135deg,hsl(var(--primary)/0.12),transparent_42%,hsl(var(--accent)/0.08)_100%)]" />
                   <div className="relative overflow-hidden rounded-[0.9rem] border border-white/40 bg-background/40 dark:border-white/5 dark:bg-black/20">
-                    <HeroProductMock />
+                    <HeroSeoMock />
                   </div>
                 </div>
                 <div className="relative z-[1] -mt-1 px-0 sm:px-0">
@@ -412,6 +414,66 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+
+          {/* Listings multicanal: mock mejorado + copy dedicado */}
+          <section
+            id="listings-multicanal"
+            className="mt-16 scroll-mt-20 lg:mt-20"
+            aria-labelledby="home-listings-heading"
+          >
+            <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+              <div className="order-2 space-y-4 lg:order-1 lg:col-span-5">
+                <p className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-muted/25 px-2.5 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-primary/95">
+                  <ShoppingBag className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                  Catálogo & marketplaces
+                </p>
+                <h2
+                  id="home-listings-heading"
+                  className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+                >
+                  Mismo producto,{" "}
+                  <span className="text-gradient-brand">listings que convierten</span> en cada canal
+                </h2>
+                <p className="max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  Cuando el SEO de tu web ya está encaminado, el cuello de botella suele ser el throughput: títulos,
+                  bullets, hashtags y tono distintos para Wallapop, eBay, Shopify o redes — sin perder coherencia de
+                  marca. El boost de ficha transforma tu input en copy listo para publicar con reglas por canal y{" "}
+                  {ENGINE_NAME}.
+                </p>
+                <ul className="max-w-lg space-y-2.5 text-sm text-muted-foreground">
+                  {[
+                    "Estructura pensada para escaneo rápido y CTR en buscadores internos de marketplaces.",
+                    "Bloque de hashtags y variaciones para redes sin reescribir desde cero.",
+                    "Salida alineada a políticas del canal: menos rechazos, más velocidad de publicación.",
+                  ].map((line) => (
+                    <li key={line} className="flex gap-2">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <Button className="h-10" asChild>
+                    <Link href="/producto/boost-de-ficha">
+                      Ver módulo boost
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button variant="outline" className="h-10" asChild>
+                    <Link href="/producto/boost-de-ficha#ejemplo">Ver ejemplo</Link>
+                  </Button>
+                </div>
+              </div>
+              <div className="order-1 lg:order-2 lg:col-span-7">
+                <div className="relative rounded-2xl border border-primary/20 bg-gradient-to-b from-card via-card to-accent/[0.05] p-1 shadow-[0_24px_64px_-28px_hsl(var(--primary)/0.4)] ring-1 ring-primary/10">
+                  <div className="pointer-events-none absolute -inset-px rounded-2xl bg-[linear-gradient(135deg,hsl(var(--accent)/0.1),transparent_45%,hsl(var(--primary)/0.08)_100%)]" />
+                  <div className="relative overflow-hidden rounded-[0.9rem] border border-white/40 bg-background/40 dark:border-white/5 dark:bg-black/20">
+                    <HeroProductMock />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
 
           {/* Value bar */}
           <div
