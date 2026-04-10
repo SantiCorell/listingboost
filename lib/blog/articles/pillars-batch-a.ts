@@ -179,6 +179,18 @@ ${rel([
 </ul>
 <p>Para profundizar en el mix técnico + contenido, enlaza esta lectura con la guía de <a href="/mejores-herramientas-seo-2026">mejores herramientas SEO en 2026</a> y con <a href="/auditoria-seo">auditoría SEO paso a paso</a>.</p>
 
+<h2>Presupuesto mental: precio mensual vs horas ahorradas</h2>
+<p>Cuando evalúas <strong>alternativas a SEMrush</strong>, divide el coste entre las horas que tu equipo dedicaría a exportar CSV, cruzar hojas y redactar desde cero. Si una suite “barata” te obliga a tres herramientas más para cerrar el informe, el TCO sube. Anota también costes ocultos: formación, integraciones rotas y duplicidad de datos entre cuentas.</p>
+<p>Para pymes, un patrón que funciona es: suite mediana o datos gratuitos para visión + una capa operativa para publicar. Para enterprise, a veces SEMrush se queda por contrato y compliance, y la innovación llega en paralelo con pilotos de IA supervisada.</p>
+
+<h2>Errores al sustituir una suite grande</h2>
+<ul>
+<li><strong>Perder definiciones</strong> de keywords (marca vs genérico, geo, idioma).</li>
+<li><strong>Mezclar proyectos</strong> de clientes en un solo login sin permisos.</li>
+<li><strong>Confundir “visibilidad estimada”</strong> entre proveedores sin recalibrar.</li>
+<li><strong>Cancelar demasiado pronto</strong> el histórico antes de exportar series comparables.</li>
+</ul>
+
 <h2>Conclusión</h2>
 <p>No hay un único sustituto perfecto: depende del tamaño del sitio, del equipo y del presupuesto. Lo razonable es <strong>apilar</strong>: datos donde los necesitas + una herramienta que te lleve al “siguiente clic” en tu CMS. Si tu cuello de botella es publicar, prueba ListingBoost antes de subir de plan en una suite que ya no usas al 40 %.</p>
 ${cta}
@@ -264,6 +276,10 @@ ${rel([
 <h2>Errores que reinician el reloj</h2>
 <p>Migraciones sin redirecciones 301 mapeadas, cambios masivos de plantilla sin prueba en staging, o publicar cientos de URLs vacías “para tenerlas” suelen borrar meses de progreso. Antes de escalar contenido, valida que Google indexa y que la intención de cada plantilla coincide con la SERP. Si algo falla, revisa primero <a href="/por-que-mi-web-no-posiciona">por qué tu web no posiciona</a> con un checklist de causas.</p>
 
+<h2>Cadencia editorial realista (12 semanas)</h2>
+<p>Semanas 1–2: inventario de URLs con impresiones y lista de “ganadores potenciales” (posición 8–20). Semanas 3–6: reescritura de introducciones, títulos y bloques de respuesta directa en esas URLs; sin crear cien posts nuevos si las plantillas están rotas. Semanas 7–9: enlaces internos desde hubs temáticos y actualización de contenidos con fecha. Semanas 10–12: medición de CTR y prueba de nuevos formatos (tabla, FAQ ampliada) solo donde la SERP lo premia.</p>
+<p>Este ritmo encaja con equipos pequeños: <strong>posicionar en Google</strong> no exige publicar a diario, sino reducir la distancia entre diagnóstico y cambio publicado. Si necesitas acelerar borradores, combina esta cadencia con <a href="/herramientas-seo-ia">herramientas SEO con IA</a> siempre con revisión humana.</p>
+
 <h2>Conclusión</h2>
 <p><strong>Posicionar tu web en Google</strong> es un proceso iterativo: publicar, medir, ajustar. Cuanto más rápido cierres el ciclo, antes verás tráfico cualificado. Refuerza el plan con <a href="/aumentar-trafico-web">estrategias para aumentar tráfico</a> cuando ya tengas bases técnicas sanas.</p>
 ${cta}
@@ -342,6 +358,10 @@ ${rel([
 </ul>
 <p>Evita páginas-muro de texto sin anclas semánticas: los resúmenes automáticos funcionan mejor con jerarquía clara. Complementa con <a href="/herramientas-seo-ia">herramientas SEO con IA</a> para producir borradores que luego humanos validan.</p>
 
+<h2>Antipatrones que perjudican AEO</h2>
+<p>Páginas que mezclan cinco intenciones distintas en un solo H1 suelen ser resumidas de forma genérica. Lo mismo ocurre con FAQs que repiten la keyword sin aportar información nueva: los modelos detectan relleno. Otro fallo habitual es publicar cifras sin fuente o con ambigüedad (“crecimos mucho”): preferible “+32 % de demos cualificadas en Q1 2026 (muestra interna)”.</p>
+<p>El <strong>SEO para IA</strong> castiga la inconsistencia entre canales: si el chatbot de ventas dice una cosa y la web otra, la IA tenderá a promediar o a omitirte. Audita mensajes en email transaccional, app y documentación con la misma checklist que usas para meta descriptions.</p>
+
 <h2>Conclusión</h2>
 <p><strong>SEO para IA</strong> y SEO tradicional convergen: menos humo, más hechos. Empieza por las páginas de ingreso y dinero; mantén alineados precio, garantías y FAQs entre legal, producto y marketing.</p>
 ${cta}
@@ -416,7 +436,11 @@ ${rel([
 </ol>
 
 <h2>Por tipo de negocio</h2>
-<p><strong>SaaS</strong>: documenta integraciones, límites de API y estados de disponibilidad por región. <strong>Ecommerce</strong>: especifica envíos, devoluciones y compatibilidades en la propia ficha. <strong>Servicios locales</strong>: horarios, radio de actuación y proceso de presupuesto. Cuanto más predecible sea tu contenido para un humano, más fácil es que un modelo lo parafreeze sin inventar.</p>
+<p><strong>SaaS</strong>: documenta integraciones, límites de API y estados de disponibilidad por región. <strong>Ecommerce</strong>: especifica envíos, devoluciones y compatibilidades en la propia ficha. <strong>Servicios locales</strong>: horarios, radio de actuación y proceso de presupuesto. Cuanto más predecible sea tu contenido para un humano, más fácil es que un modelo lo parafrasee sin inventar.</p>
+
+<h2>Medición indirecta de visibilidad en IA</h2>
+<p>No existe un Search Console para ChatGPT público. Lo que sí puedes medir es <strong>búsquedas de marca + variaciones</strong> en Google, tráfico directo tras menciones en newsletters del sector, y preguntas cualitativas en ventas (“¿cómo nos encontraste?”). Si publicas recursos muy citables, monitoriza enlaces nuevos y menciones en foros o comunidades donde los early adopters preguntan a asistentes.</p>
+<p>Combina esa lectura cualitativa con el SEO clásico: si <a href="/como-posicionar-web-google">posicionas mejor en Google</a>, aumentas la probabilidad de que humanos y sistemas te descubran en rutas paralelas. La consistencia de marca reduce la confusión cuando un modelo sintetiza varias fuentes.</p>
 
 <h2>Conclusión</h2>
 <p>La visibilidad en IA es <strong>derivada de claridad + autoridad</strong>. Refuerza el SEO clásico y el <a href="/seo-para-ia">SEO para IA</a> en paralelo; usa <a href="/mejores-herramientas-seo-2026">herramientas SEO</a> que te ayuden a auditar títulos y bloques de respuesta rápida.</p>

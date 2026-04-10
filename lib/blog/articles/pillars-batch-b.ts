@@ -69,6 +69,10 @@ export const pillarBatchB: BlogPost[] = [
 <h2>Pruebas sociales y datos estructurados</h2>
 <p>Reseñas verificables, vídeos cortos de uso y comparativas “vs modelo anterior” aumentan tiempo en página y claridad para buscadores. Si implementas <code>Product</code> o <code>Offer</code> en schema, que coincida con el precio visible; discrepancias son señal de baja calidad.</p>
 
+<h2>Stock, estacionalidad y páginas sin compra</h2>
+<p>Las URLs de producto agotado durante meses pueden seguir recibiendo enlaces internos y tráfico. Decide política: mantener la URL con alternativas visibles, 410 solo si el producto no volverá, o redirección a categoría cuando tenga sentido para el usuario. En campañas estacionales, anticipa contenido y metadatos antes del pico de búsqueda; retroceder fechas en título cuando pasa la temporada evita clics decepcionados.</p>
+<p>El <strong>SEO ecommerce</strong> también vive en marketplaces: si publicas en varios canales, alinea título y atributos para no canibalizar tu propio dominio con fichas idénticas. Usa la web para profundidad (guías, compatibilidades) y el marketplace para descubrimiento, enlazando entre ambos cuando las reglas lo permitan.</p>
+
 <h2>Herramientas</h2>
 <p>Combina Search Console con una <a href="/auditoria-seo">auditoría SEO</a> por plantilla y, si publicas en marketplaces, revisa el flujo multicanal en ListingBoost.</p>
 
@@ -142,6 +146,15 @@ ${rel([
 </ol>
 <p>Encaja este flujo con la visión general de <a href="/seo-para-ia">SEO para IA</a> y con <a href="/alternativas-a-semrush">alternativas a SEMrush</a> si buscas recortar coste fijo.</p>
 
+<h2>Evaluación de proveedores: checklist</h2>
+<ul>
+<li><strong>Salida estructurada</strong>: ¿puedes forzar formato H2, bullets y FAQs sin re-prompts infinitos?</li>
+<li><strong>Memoria de marca</strong>: ¿respeta vocabulario prohibido y claims legales?</li>
+<li><strong>Trazabilidad</strong>: ¿indica cuando no tiene datos suficientes en lugar de inventar?</li>
+<li><strong>Integración</strong>: ¿exporta a tu CMS o copia/pega limpio?</li>
+</ul>
+<p>Las <strong>herramientas SEO con IA</strong> maduras separan “borrador creativo” de “texto publicable”: si mezclan ambos sin fricción, tu equipo publica más; si no, acumulas borradores que nadie revisa.</p>
+
 <h2>Conclusión</h2>
 <p>Las <strong>mejores herramientas SEO con IA</strong> son las que tu equipo confía para ejecutar. Prueba siempre con una URL real antes de comprometer anualidades.</p>
 ${cta}
@@ -211,6 +224,10 @@ ${rel([
 
 <h2>Stakeholders y handoff</h2>
 <p>Los desarrolladores necesitan tickets con criterios de aceptación; contenido necesita briefs con keyword y SERP objetivo; diseño debe saber qué CWV tocar sin romper la marca. La <strong>auditoría SEO</strong> es un documento vivo: vuelve a ejecutarla tras cada release grande.</p>
+
+<h2>Plantilla mínima de informe</h2>
+<p>Portada con alcance (dominio, muestra, fechas). Resumen ejecutivo de cinco líneas para dirección. Tabla priorizada con impacto estimado (alto/medio/bajo) y esfuerzo. Anexo técnico con ejemplos de URL. Lista de “no hacer” heredada de la auditoría anterior para no repetir errores. Esta estructura evita PDFs de 80 páginas que nadie implementa.</p>
+<p>Cruza hallazgos con <a href="/por-que-mi-web-no-posiciona">diagnóstico de falta de visibilidad</a> cuando el cliente llega frustrado: a menudo la auditoría confirma una hipótesis ya sospechada pero aporta evidencia y orden.</p>
 
 <h2>Conclusión</h2>
 <p>Empieza con una <strong>seo audit tool</strong> que te dé score y prioridades; luego profundiza con crawl manual donde duela. Conecta hallazgos con <a href="/como-posicionar-web-google">cómo posicionar en Google</a> para el plan editorial posterior.</p>
@@ -285,6 +302,15 @@ ${rel([
 <h2>Cuando sí es Google (y no tú)</h2>
 <p>Features de SERP (People Also Ask, vídeos, mapas) pueden robar clics aunque subas posición. Ajusta el tipo de contenido o amplía long-tail. Revisa también si tu sector tiene resultados oficiales o agregadores que monopolizan la intención.</p>
 
+<h2>Diagnóstico en 30 minutos</h2>
+<ol>
+<li>Search Console: cobertura, manual actions, rendimiento por página clave.</li>
+<li>Busca <code>site:tu-dominio</code> con operadores para ver indexación aproximada.</li>
+<li>Abre tres URLs representativas en móvil real: velocidad percibida y popups.</li>
+<li>Compara tu H1 + primer párrafo con el top 3 de la keyword objetivo.</li>
+</ol>
+<p>Si todo parece “bien” pero no entra tráfico, vuelve a la pregunta <strong>por qué no posiciona mi web</strong> desde demanda: quizá nadie busca esa formulación o tu autoridad es insuficiente para el head term. Ahí toca long-tail o PR, no más meta keywords.</p>
+
 <h2>Conclusión</h2>
 <p>La respuesta a <strong>por qué no posiciona mi web</strong> está en datos: Search Console + <a href="/auditoria-seo">auditoría</a> + criterio. Sin datos, solo opiniones.</p>
 ${cta}
@@ -350,6 +376,10 @@ ${rel([
 
 <h2>Canal orgánico + IA</h2>
 <p>Prepara resúmenes cortos de tus guías largas: listas y definiciones que otros puedan citar. Eso refuerza marca y puede traer menciones; enlaza siempre a la fuente canónica en tu dominio. Combina con <a href="/seo-para-ia">SEO para IA</a> para coherencia de mensaje.</p>
+
+<h2>Experimentos de crecimiento de 30 días</h2>
+<p>Elige un segmento (por ejemplo, un país o una categoría de producto) y aplica solo dos palancas: mejora de títulos en URLs con CTR bajo y tres piezas nuevas de contenido enlazadas desde la home. Mide antes/después en Search Console. Si el experimento no mueve la aguja, el problema puede ser demanda o cannibalización interna, no “falta de posts”.</p>
+<p>Para escalar lo que funciona, automatiza plantillas con <a href="/seo-ecommerce">SEO ecommerce</a> o con pilares informativos que alimenten enlaces internos. <strong>Aumentar tráfico web</strong> sostenible suele ser repetir un patrón ganador, no lanzar tácticas nuevas cada semana.</p>
 
 <h2>Conclusión</h2>
 <p><strong>Aumentar tráfico</strong> es un sistema: publicar, medir, iterar. Usa ListingBoost para acortar el camino entre idea y página publicada.</p>

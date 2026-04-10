@@ -12,6 +12,21 @@ import { article10 } from "./articles/article-10";
 import { article11 } from "./articles/article-11";
 import { pillarBatchA } from "./articles/pillars-batch-a";
 import { pillarBatchB } from "./articles/pillars-batch-b";
+import { PILLAR_LONG_APPENDIX } from "./articles/pillar-long-appendix";
+import { PILLAR_LONG_APPENDIX_PART2 } from "./articles/pillar-long-appendix-part2";
+import { PILLAR_LONG_APPENDIX_PART3 } from "./articles/pillar-long-appendix-part3";
+
+function withPillarAppendix(post: BlogPost): BlogPost {
+  const extra = [
+    PILLAR_LONG_APPENDIX[post.slug],
+    PILLAR_LONG_APPENDIX_PART2[post.slug],
+    PILLAR_LONG_APPENDIX_PART3[post.slug],
+  ]
+    .filter(Boolean)
+    .join("\n");
+  if (!extra) return post;
+  return { ...post, contentHtml: `${post.contentHtml}\n${extra}` };
+}
 
 /** Todos los artículos, más recientes primero. */
 export const BLOG_POSTS: BlogPost[] = [
@@ -26,8 +41,8 @@ export const BLOG_POSTS: BlogPost[] = [
   article09,
   article10,
   article11,
-  ...pillarBatchA,
-  ...pillarBatchB,
+  ...pillarBatchA.map(withPillarAppendix),
+  ...pillarBatchB.map(withPillarAppendix),
 ].sort(
   (a, b) =>
     new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
