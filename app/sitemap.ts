@@ -18,10 +18,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   const blogPosts: MetadataRoute.Sitemap = BLOG_POSTS.map((p) => ({
-    url: `${base}/blog/${p.slug}`,
+    url: `${base}${p.canonicalPath ?? `/blog/${p.slug}`}`,
     lastModified: new Date(p.updatedAt ?? p.publishedAt),
     changeFrequency: "monthly" as const,
-    priority: 0.72,
+    priority: p.canonicalPath ? 0.78 : 0.72,
   }));
 
   const merged = [...marketing, ...blogPosts];

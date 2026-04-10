@@ -10,7 +10,8 @@ import { article08 } from "./articles/article-08";
 import { article09 } from "./articles/article-09";
 import { article10 } from "./articles/article-10";
 import { article11 } from "./articles/article-11";
-import { article12 } from "./articles/article-12";
+import { pillarBatchA } from "./articles/pillars-batch-a";
+import { pillarBatchB } from "./articles/pillars-batch-b";
 
 /** Todos los artículos, más recientes primero. */
 export const BLOG_POSTS: BlogPost[] = [
@@ -25,7 +26,8 @@ export const BLOG_POSTS: BlogPost[] = [
   article09,
   article10,
   article11,
-  article12,
+  ...pillarBatchA,
+  ...pillarBatchB,
 ].sort(
   (a, b) =>
     new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),

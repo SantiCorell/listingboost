@@ -3,7 +3,26 @@ import type { NextConfig } from "next";
 /** Si `next dev` va con Turbopack, no definir `webpack` evita el warning de Next. */
 const isTurbopackDev = process.argv.some((a) => a === "--turbopack" || a === "--turbo");
 
+const BLOG_CANONICAL_REWRITES = [
+  "mejores-herramientas-seo-2026",
+  "alternativas-a-semrush",
+  "como-posicionar-web-google",
+  "seo-para-ia",
+  "como-aparecer-en-chatgpt",
+  "seo-ecommerce",
+  "herramientas-seo-ia",
+  "auditoria-seo",
+  "por-que-mi-web-no-posiciona",
+  "aumentar-trafico-web",
+] as const;
+
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return BLOG_CANONICAL_REWRITES.map((slug) => ({
+      source: `/${slug}`,
+      destination: `/blog/${slug}`,
+    }));
+  },
   async redirects() {
     return [
       {

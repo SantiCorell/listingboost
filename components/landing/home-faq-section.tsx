@@ -47,7 +47,7 @@ export function HomeFaqSection() {
             Somos complementarios: las suites grandes mandan en datos masivos; nosotros en{" "}
             <strong className="text-foreground">pasar del informe a la publicación</strong> con IA y checklists
             accionables. Lee la{" "}
-            <Link href="/blog/mejores-herramientas-seo-2026-semrush-alternativas" className="font-medium text-primary hover:underline">
+            <Link href="/mejores-herramientas-seo-2026" className="font-medium text-primary hover:underline">
               comparativa de herramientas SEO 2026
             </Link>
             .

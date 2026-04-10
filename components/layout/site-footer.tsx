@@ -248,9 +248,22 @@ export function SiteFooter() {
         <Separator className="my-10 bg-border/60" />
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-muted-foreground sm:text-sm">
-            © {year} {APP_NAME}. Todos los derechos reservados.
-          </p>
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground sm:text-sm">
+              © {year} {APP_NAME}. Todos los derechos reservados.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Web creada por{" "}
+              <a
+                href="https://metrio.es/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                metrio.es
+              </a>
+            </p>
+          </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground">
             <span className="hidden sm:inline">Hecho para vendedores y equipos de ecommerce</span>
             <Link href="/pricing" className="transition-colors hover:text-foreground">

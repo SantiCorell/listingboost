@@ -8,7 +8,7 @@ import { ArticleBody } from "@/components/blog/article-body";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BLOG_POSTS, getBlogPostBySlug } from "@/lib/blog/registry";
-import { blogArticleJsonLd, breadcrumbJsonLd } from "@/lib/seo-jsonld";
+import { blogArticleJsonLd, breadcrumbJsonLd, faqPageJsonLd } from "@/lib/seo-jsonld";
 import { estimateReadingMinutes, estimateWordCount } from "@/lib/blog/types";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Artículo no encontrado" };
   }
   const base = getPublicSiteUrl();
-  const url = `${base}/blog/${slug}`;
+  const url = `${base}${post.canonicalPath ?? `/blog/${slug}`}`;
   return {
     title: post.title,
     description: post.description,
@@ -53,7 +53,7 @@ export default async function BlogArticlePage({ params }: Props) {
   if (!post) notFound();
 
   const base = getPublicSiteUrl();
-  const url = `${base}/blog/${slug}`;
+  const url = `${base}${post.canonicalPath ?? `/blog/${slug}`}`;
   const words = estimateWordCount(post.contentHtml);
   const mins = estimateReadingMinutes(words);
 
@@ -73,10 +73,18 @@ export default async function BlogArticlePage({ params }: Props) {
     { name: post.title, url },
   ]);
 
+  const faqLd =
+    post.faqItems && post.faqItems.length > 0
+      ? faqPageJsonLd(post.faqItems.map((f) => ({ q: f.question, a: f.answer })))
+      : null;
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbs) }} />
+      {faqLd ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      ) : null}
 
       <article className="relative mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
         <div className="pointer-events-none absolute inset-x-0 -top-24 h-72 bg-gradient-to-b from-primary/10 via-transparent to-transparent blur-2xl" />
@@ -139,14 +147,39 @@ export default async function BlogArticlePage({ params }: Props) {
           <ArticleBody html={post.contentHtml} />
         </div>
 
+        {post.faqItems && post.faqItems.length > 0 ? (
+          <section
+            className="relative mt-12 border-t border-border/70 pt-10"
+            aria-labelledby={`faq-${slug}`}
+          >
+            <h2 id={`faq-${slug}`} className="text-2xl font-bold tracking-tight text-foreground">
+              Preguntas frecuentes
+            </h2>
+            <div className="mt-6 space-y-3">
+              {post.faqItems.map((f) => (
+                <details
+                  key={f.question}
+                  className="rounded-lg border border-border/60 bg-muted/15 px-3 py-2 [&_p]:mt-2 [&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted-foreground"
+                >
+                  <summary className="cursor-pointer select-none text-sm font-semibold text-foreground">
+                    {f.question}
+                  </summary>
+                  <p>{f.answer}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
         <footer className="relative mt-14 rounded-2xl border border-border/80 bg-muted/30 p-6 sm:p-8">
           <p className="text-sm font-semibold text-foreground">¿Te ha sido útil?</p>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Pásalo a tu equipo y prueba {APP_NAME} en el panel: convierte estas ideas en fichas reales más rápido.
+            Pásalo a tu equipo y prueba {APP_NAME}: auditoría SEO, huecos en Google y contenido con IA listo para
+            publicar.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Button asChild>
-              <Link href="/dashboard/product">Ir a boost de ficha</Link>
+              <Link href="/register?callbackUrl=/dashboard/audit">Analizar mi web gratis</Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/pricing">Ver planes</Link>
