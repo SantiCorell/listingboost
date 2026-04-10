@@ -21,11 +21,6 @@ const HomeFaqSection = dynamic(
   { loading: () => <div className="mx-auto mt-24 h-48 max-w-3xl rounded-xl bg-muted/20 animate-pulse" aria-hidden /> },
 );
 
-const HomeHowItWorksMap = dynamic(
-  () => import("@/components/landing/home-how-it-works-map").then((m) => ({ default: m.HomeHowItWorksMap })),
-  { loading: () => <div className="mx-auto h-36 max-w-xl animate-pulse rounded-2xl bg-muted/30" aria-hidden /> },
-);
-
 /** Enlaces del hero a guías con sección #ejemplo (demo o listado claro). */
 const HERO_MODULE_LINKS = [
   {
@@ -283,8 +278,14 @@ export default function HomePage() {
                     <HeroSeoMock />
                   </div>
                 </div>
-                <div className="relative z-[1] min-w-0 max-w-full">
-                  <HomeHowItWorksMap compact />
+                <div className="relative z-[1] min-w-0 max-w-full rounded-xl border border-primary/15 bg-card/85 p-3 shadow-sm">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-primary/90">Pipeline</p>
+                  <ul className="mt-2 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground sm:flex sm:flex-wrap sm:gap-2.5">
+                    <li className="rounded-md border border-border/60 bg-muted/20 px-2 py-1.5">1. URL o keyword</li>
+                    <li className="rounded-md border border-border/60 bg-muted/20 px-2 py-1.5">2. SERP + rivales</li>
+                    <li className="rounded-md border border-border/60 bg-muted/20 px-2 py-1.5">3. Prioridades</li>
+                    <li className="rounded-md border border-border/60 bg-muted/20 px-2 py-1.5">4. Publicar</li>
+                  </ul>
                 </div>
                 <div className="pointer-events-none flex justify-center lg:justify-start">
                   <div className="inline-flex max-w-full items-center gap-2 rounded-lg border border-primary/20 bg-card/90 px-2.5 py-1.5 text-center shadow-sm backdrop-blur-sm sm:px-3 sm:text-left">
@@ -328,6 +329,7 @@ export default function HomePage() {
                     <li key={href} className="min-w-0 sm:w-auto sm:shrink-0">
                       <Link
                         href={href}
+                        prefetch={false}
                         title={hint}
                         className="flex h-full min-h-[3.25rem] w-full flex-col justify-center gap-0.5 rounded-lg border border-border/70 bg-card/90 px-2 py-2 text-center shadow-sm transition-colors hover:border-primary/35 hover:bg-primary/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:w-auto sm:min-w-[7rem] sm:px-3"
                       >
@@ -347,7 +349,7 @@ export default function HomePage() {
                   {HOME_INTERNAL_NAV.map(({ href, label }, i) => (
                     <Fragment key={href}>
                       {i > 0 ? <span className="text-border">|</span> : null}
-                      <Link href={href} className="hover:text-primary hover:underline">
+                      <Link href={href} prefetch={false} className="inline-flex min-h-9 items-center hover:text-primary hover:underline">
                         {label}
                       </Link>
                     </Fragment>
@@ -398,19 +400,22 @@ export default function HomePage() {
                 <div className="flex flex-wrap gap-2 text-[10px] text-muted-foreground">
                   <Link
                     href="/producto"
-                    className="rounded-md border border-border/60 bg-muted/20 px-2 py-1 hover:border-primary/30 hover:text-foreground"
+                    prefetch={false}
+                    className="inline-flex min-h-9 items-center rounded-md border border-border/60 bg-muted/20 px-2.5 py-1.5 hover:border-primary/30 hover:text-foreground"
                   >
                     Producto
                   </Link>
                   <Link
                     href="/blog/seo-vs-aeo-guia-completa-2026"
-                    className="rounded-md border border-border/60 bg-muted/20 px-2 py-1 hover:border-primary/30 hover:text-foreground"
+                    prefetch={false}
+                    className="inline-flex min-h-9 items-center rounded-md border border-border/60 bg-muted/20 px-2.5 py-1.5 hover:border-primary/30 hover:text-foreground"
                   >
                     Guía SEO vs AEO
                   </Link>
                   <Link
                     href="/appear-in-chatgpt"
-                    className="rounded-md border border-border/60 bg-muted/20 px-2 py-1 hover:border-primary/30 hover:text-foreground"
+                    prefetch={false}
+                    className="inline-flex min-h-9 items-center rounded-md border border-border/60 bg-muted/20 px-2.5 py-1.5 hover:border-primary/30 hover:text-foreground"
                   >
                     Aparecer en IA
                   </Link>
@@ -889,7 +894,8 @@ export default function HomePage() {
                 <li key={x.href}>
                   <Link
                     href={x.href}
-                    className="font-medium text-primary underline-offset-4 hover:underline"
+                    prefetch={false}
+                    className="inline-flex min-h-9 items-center font-medium text-primary underline-offset-4 hover:underline"
                   >
                     {x.label}
                   </Link>

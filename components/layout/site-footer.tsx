@@ -6,7 +6,7 @@ import { getPublicContactEmail } from "@/lib/contact";
 import { Separator } from "@/components/ui/separator";
 
 function detailsSummaryClass() {
-  return "flex w-full cursor-pointer list-none items-center justify-between gap-2 py-4 text-left text-sm font-semibold text-foreground outline-none [&::-webkit-details-marker]:hidden";
+  return "flex min-h-11 w-full cursor-pointer list-none items-center justify-between gap-2 py-4 text-left text-sm font-semibold text-foreground outline-none [&::-webkit-details-marker]:hidden";
 }
 
 export function SiteFooter() {
@@ -182,7 +182,7 @@ export function SiteFooter() {
                 </p>
                 <a
                   href={`mailto:${contactEmail}?subject=${encodeURIComponent(`Consulta ${APP_NAME}`)}`}
-                  className="mt-3 inline-block font-medium text-primary underline-offset-4 hover:underline"
+                  className="mt-3 inline-flex min-h-10 items-center font-medium text-primary underline-offset-4 hover:underline"
                 >
                   {contactEmail}
                 </a>
@@ -232,12 +232,12 @@ export function SiteFooter() {
             </a>
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
               <li>
-                <Link href="/login" className="transition-colors hover:text-foreground">
+                <Link href="/login" className="inline-flex min-h-10 items-center transition-colors hover:text-foreground">
                   Iniciar sesión
                 </Link>
               </li>
               <li>
-                <Link href="/register" className="transition-colors hover:text-foreground">
+                <Link href="/register" className="inline-flex min-h-10 items-center transition-colors hover:text-foreground">
                   Crear cuenta gratis
                 </Link>
               </li>
@@ -266,16 +266,16 @@ export function SiteFooter() {
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground">
             <span className="hidden sm:inline">Hecho para vendedores y equipos de ecommerce</span>
-            <Link href="/pricing" className="transition-colors hover:text-foreground">
+            <Link href="/pricing" className="inline-flex min-h-10 items-center transition-colors hover:text-foreground">
               Ver planes
             </Link>
-            <Link href="/#faq" className="transition-colors hover:text-foreground">
+            <Link href="/#faq" className="inline-flex min-h-10 items-center transition-colors hover:text-foreground">
               FAQ
             </Link>
-            <Link href="/cookies" className="transition-colors hover:text-foreground">
+            <Link href="/cookies" className="inline-flex min-h-10 items-center transition-colors hover:text-foreground">
               Cookies
             </Link>
-            <CookieSettingsLink className="text-muted-foreground transition-colors hover:text-foreground" />
+            <CookieSettingsLink className="inline-flex min-h-10 items-center text-muted-foreground transition-colors hover:text-foreground" />
           </div>
         </div>
       </div>
