@@ -18,6 +18,10 @@ export const VENDER_WALLAPOP_PRODUCTOS = ["zapatillas", "muebles", "iphone", "co
 export type VenderWallapopSlug = (typeof VENDER_WALLAPOP_PRODUCTOS)[number];
 
 export const GROWTH_STATIC_ROUTES = [
+  "/what-is-seo-tool",
+  "/how-to-rank-on-google",
+  "/seo-for-ai",
+  "/appear-in-chatgpt",
   "/seo-operativo-ecommerce",
   "/seo-wallapop",
   "/optimizar-listings-wallapop",

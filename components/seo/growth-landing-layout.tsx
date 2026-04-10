@@ -24,7 +24,19 @@ export function GrowthBreadcrumb({ items }: { items: { href?: string; label: str
   );
 }
 
-export function GrowthCtaCluster({ className }: { className?: string }) {
+export function GrowthCtaCluster({
+  className,
+  primaryHref = "/register",
+  primaryLabel = "Analizar listing gratis",
+  secondaryHref = "/dashboard/product",
+  secondaryLabel = "Ir al boost de ficha",
+}: {
+  className?: string;
+  primaryHref?: string;
+  primaryLabel?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+}) {
   return (
     <div
       className={cn(
@@ -37,13 +49,13 @@ export function GrowthCtaCluster({ className }: { className?: string }) {
         className="h-12 w-full gap-2 bg-gradient-to-r from-violet-600 to-purple-600 shadow-md sm:w-auto sm:min-w-[220px]"
         asChild
       >
-        <Link href="/register">
-          Analizar listing gratis
+        <Link href={primaryHref}>
+          {primaryLabel}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </Button>
       <Button size="lg" variant="outline" className="h-12 w-full sm:w-auto" asChild>
-        <Link href="/dashboard/product">Ir al boost de ficha</Link>
+        <Link href={secondaryHref}>{secondaryLabel}</Link>
       </Button>
       <p className="w-full text-sm text-muted-foreground sm:w-auto sm:flex-1 sm:pl-2">
         Sin tarjeta en Free: prueba el mismo motor que Pro con cupo mensual.
@@ -125,7 +137,7 @@ export function GrowthRelatedLinks({ links }: { links: { href: string; label: st
   if (links.length === 0) return null;
   return (
     <section className="mt-14 rounded-2xl border border-border/70 bg-muted/20 p-6">
-      <h2 className="text-lg font-semibold text-foreground">Sigue mejorando tu catálogo</h2>
+      <h2 className="text-lg font-semibold text-foreground">Sigue mejorando tu SEO y AEO</h2>
       <ul className="mt-4 space-y-2 text-sm">
         {links.map((l) => (
           <li key={l.href}>

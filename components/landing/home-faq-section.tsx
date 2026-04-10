@@ -15,48 +15,56 @@ export function HomeFaqSection() {
       <h2 className="text-2xl font-bold">FAQ</h2>
       <Accordion type="single" collapsible className="mt-6 w-full text-left">
         <AccordionItem value="1">
+          <AccordionTrigger>¿Es una SEO tool para Google y para IA (ChatGPT)?</AccordionTrigger>
+          <AccordionContent>
+            Sí. {APP_NAME} cubre auditoría on-page, huecos competitivos desde Google, seguimiento de posiciones y textos
+            con {ENGINE_NAME} pensados también para{" "}
+            <strong className="text-foreground">answer engine optimization</strong>: contenido claro que ayuda a
+            buscadores y a asistentes a entender tu oferta.{" "}
+            <Link href="/appear-in-chatgpt" className="font-medium text-primary hover:underline">
+              Más sobre aparecer en ChatGPT
+            </Link>
+            .
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="2">
           <AccordionTrigger>¿Tarjeta en el tier free?</AccordionTrigger>
           <AccordionContent>
             No. Registro → cupos mensuales claros → upgrade a Pro cuando quieras más análisis, sin marca de agua y con
             historial completo.
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="2">
-          <AccordionTrigger>¿Los hashtags funcionan en redes?</AccordionTrigger>
-          <AccordionContent>
-            Sí: generamos etiquetas con # listas para copiar. Puedes pegar la línea completa en Instagram o TikTok;
-            también puedes copiar tag a tag.
-          </AccordionContent>
-        </AccordionItem>
         <AccordionItem value="3">
-          <AccordionTrigger>¿Soporta imágenes de producto?</AccordionTrigger>
+          <AccordionTrigger>¿Qué incluye la auditoría URL gratis?</AccordionTrigger>
           <AccordionContent>
-            Sí. El pipeline incorpora visión cuando el despliegue lo permite; el texto sigue siendo suficiente para una
-            ficha sólida.
+            Una primera pasada con puntuación y prioridades para mejorar SEO on-page en una URL pública. Es el mejor
+            punto de entrada si buscas una <strong className="text-foreground">seo audit tool</strong> rápida.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="4">
-          <AccordionTrigger>¿Por qué {APP_NAME}?</AccordionTrigger>
+          <AccordionTrigger>¿Sois alternativa a Semrush o Ahrefs?</AccordionTrigger>
           <AccordionContent>
-            Porque une scoring verificable con recomendaciones accionables vía {ENGINE_NAME} — pensado para que inviertas
-            menos tiempo y captures más valor por listing.
+            Somos complementarios: las suites grandes mandan en datos masivos; nosotros en{" "}
+            <strong className="text-foreground">pasar del informe a la publicación</strong> con IA y checklists
+            accionables. Lee la{" "}
+            <Link href="/blog/mejores-herramientas-seo-2026-semrush-alternativas" className="font-medium text-primary hover:underline">
+              comparativa de herramientas SEO 2026
+            </Link>
+            .
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="5">
-          <AccordionTrigger>¿Sois herramienta SEO o panel de redes / “comprar likes”?</AccordionTrigger>
+          <AccordionTrigger>¿Garantizáis posiciones en Google o menciones en ChatGPT?</AccordionTrigger>
           <AccordionContent>
-            Somos <strong className="text-foreground">software SaaS de SEO y listings</strong>: auditoría de URLs,
-            lectura de resultados en Google, seguimiento de posiciones y texto de anuncios. No vendemos seguidores, likes,
-            reproducciones
-            ni reseñas; los hashtags son sugerencias en texto (#) para que tú publiques. “Boost de ficha” = mejorar el
-            copy del anuncio, no inflar métricas.
+            No garantizamos rankings ni citas en terceros. Te damos datos y textos accionables; tú publicas cumpliendo las
+            normas de cada plataforma.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="6">
-          <AccordionTrigger>¿Garantizáis subir en Google o en Wallapop?</AccordionTrigger>
+          <AccordionTrigger>¿También sirve para anuncios en marketplaces?</AccordionTrigger>
           <AccordionContent>
-            No garantizamos posiciones ni ventas. Te damos datos y textos accionables; tú publicas cumpliendo las normas
-            de cada plataforma.
+            Sí, como capa opcional: boost de ficha y hashtags para Wallapop, eBay, Shopify y similares. El núcleo del
+            producto es <strong className="text-foreground">SEO web + AEO</strong>; el multicanal acelera si ya vendes ahí.
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -66,7 +74,7 @@ export function HomeFaqSection() {
           size="lg"
           className="h-12 border border-primary/20 bg-gradient-to-r from-primary to-primary/88 px-8 shadow-lg shadow-primary/20"
         >
-          <Link href="/register">Registrarse</Link>
+          <Link href="/register?callbackUrl=/dashboard/audit">Analizar mi web gratis</Link>
         </Button>
         <Button asChild size="lg" variant="outline" className="h-12 border-border/80 px-8">
           <Link href="/login">Iniciar sesión</Link>

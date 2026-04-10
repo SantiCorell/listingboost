@@ -52,25 +52,29 @@ const HERO_MODULE_LINKS = [
 
 const HOME_INTERNAL_NAV = [
   { href: "/producto", label: "Producto" },
+  { href: "/what-is-seo-tool", label: "SEO tool" },
+  { href: "/appear-in-chatgpt", label: "IA & ChatGPT" },
   { href: "/pricing", label: "Precios" },
-  { href: "/seo-operativo-ecommerce", label: "SEO operativo" },
-  { href: "/producto/seo-gap-finder", label: "Huecos en Google" },
-  { href: "/producto/scan-seo-url", label: "Auditoría URL" },
-  { href: "/blog", label: "Blog SEO" },
+  { href: "/seo-operativo-ecommerce", label: "vs Semrush/Ahrefs" },
+  { href: "/producto/seo-gap-finder", label: "Huecos Google" },
+  { href: "/blog", label: "Blog" },
 ] as const;
 
 import {
+  AlertTriangle,
   ArrowRight,
   BarChart3,
+  Bot,
   CheckCircle2,
   Globe2,
   ImagePlus,
   LineChart,
-  LayoutGrid,
+  Search,
   Shield,
   ShoppingBag,
   Sparkles,
   Star,
+  Target,
   Timer,
   TrendingUp,
   Zap,
@@ -79,16 +83,21 @@ import {
 const siteUrl = getPublicSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Herramienta SEO SaaS — Google, contenido optimizado y sistemas de IA",
-  description: `${APP_NAME}: mejora el SEO en Google y el contenido que entienden buscadores y algoritmos de IA. Auditoría URL, competencia y catálogo con ${ENGINE_NAME}. Gratis para empezar.`,
+  title: "SEO Tool para Google y AI | ListingBoost",
+  description:
+    "Mejora tu SEO y haz que tu web aparezca en Google y en respuestas de IA como ChatGPT. Auditoría SEO, optimización de contenido y AEO con ListingBrain™.",
   keywords: [
-    "herramienta SEO SaaS",
-    "SEO tool España",
-    "mejor herramienta SEO",
-    "software posicionamiento Google",
-    "auditoría SEO online",
-    "suite SEO IA",
-    "SaaS SEO ecommerce",
+    "seo tool",
+    "seo audit tool",
+    "improve seo website",
+    "how to rank on google",
+    "seo ai tool",
+    "ai seo optimization",
+    "how to appear in chatgpt",
+    "ai search optimization",
+    "answer engine optimization",
+    "herramienta SEO",
+    "auditoría web",
     "ListingBoost",
   ],
   alternates: { canonical: siteUrl },
@@ -96,9 +105,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     siteName: APP_NAME,
-    title: `${APP_NAME} — SEO en Google y contenido para algoritmos de IA`,
+    title: "SEO Tool para Google y IA (AEO) | ListingBoost",
     description:
-      "Panel en vivo: auditoría, competencia y textos para Google y para sistemas de IA. Plan Free.",
+      "Rankea en Google y optimiza para asistentes de IA. Auditoría URL gratis + contenido con IA.",
     url: siteUrl,
   },
 };
@@ -112,7 +121,7 @@ function buildHomeJsonLd() {
     url: siteUrl,
     logo: `${siteUrl}/icon.svg`,
     description:
-      `${APP_NAME} es software web de SEO operativo y listing intelligence: lectura de resultados en Google, auditoría on-page de URLs públicas, seguimiento de posiciones y generación de fichas multicanal con ${ENGINE_NAME}.`,
+      `${APP_NAME} es una SEO tool SaaS para Google y AEO: auditoría de URLs, huecos desde la SERP, seguimiento de posiciones y contenido optimizado con ${ENGINE_NAME} para buscadores y asistentes de IA.`,
   };
   if (sameAs.length) org.sameAs = sameAs;
 
@@ -125,7 +134,7 @@ function buildHomeJsonLd() {
       operatingSystem: "Web",
       url: siteUrl,
       description:
-        `Herramienta SEO SaaS y suite online para equipos de catálogo y ecommerce: revisión de páginas, análisis SEO, posicionamiento en Google con IA, brechas frente a competidores, seguimiento de posiciones y copy multicanal con ${ENGINE_NAME}.`,
+        `SEO tool y plataforma AEO: auditoría web, mejora de contenido con IA, keywords accionables, posicionamiento en Google y señales claras para modelos de lenguaje. Incluye ejecución multicanal con ${ENGINE_NAME}.`,
       offers: {
         "@type": "Offer",
         price: "0",
@@ -140,7 +149,7 @@ function buildHomeJsonLd() {
       name: APP_NAME,
       url: siteUrl,
       description:
-        `Herramienta SEO y listing intelligence: auditoría de páginas, oportunidades desde Google, seguimiento de posiciones y fichas listas para Wallapop, Shopify, eBay y redes. Plan gratuito con cupos mensuales.`,
+        `SEO tool para rankear en Google y optimizar para IA: auditorías, gaps competitivos, tracking y textos listos. Plan gratuito con cupos mensuales.`,
       potentialAction: {
         "@type": "SearchAction",
         target: {
@@ -159,7 +168,7 @@ function buildHomeJsonLd() {
           name: `¿Qué es ${APP_NAME}?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: `${APP_NAME} es una suite de SEO operativo y listing intelligence con ${ENGINE_NAME}: auditoría de URLs, oportunidades desde los resultados de Google, seguimiento de posiciones, comparativas y fichas multicanal listas para publicar.`,
+            text: `${APP_NAME} es una SEO tool con ${ENGINE_NAME}: auditoría de URLs, oportunidades desde Google, AEO (answer engine optimization), seguimiento de posiciones y contenido para publicar. Opcional: fichas multicanal.`,
           },
         },
         {
@@ -167,7 +176,7 @@ function buildHomeJsonLd() {
           name: `¿${APP_NAME} sirve como herramienta SEO profesional para ecommerce?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: `Sí. Cubre investigación práctica en Google, análisis on-page de páginas públicas, seguimiento de posiciones en búsqueda y generación de contenidos alineados con el catálogo; encaja cuando el cuello de botella es ejecutar muchas fichas bien, no solo ver datos sueltos.`,
+            text: `Sí. Auditoría SEO, lectura de la SERP, seguimiento de rankings y generación de contenido con IA. Encaja cuando necesitas pasar del informe a la publicación: ecommerce, SaaS, agencias y equipos de marketing.`,
           },
         },
         {
@@ -231,7 +240,15 @@ function buildHomeJsonLd() {
           name: `¿${APP_NAME} ayuda con contenido entendible por algoritmos de IA y asistentes?`,
           acceptedAnswer: {
             "@type": "Answer",
-            text: `No controlamos lo que citan terceros, pero el producto te orienta a páginas y textos más claros, estructurados y alineados a búsqueda: eso suele ayudar tanto a Google como a que sistemas de IA interpreten mejor tu oferta cuando un usuario pregunta por tu sector.`,
+            text: `No controlamos menciones en ChatGPT u otros asistentes. Sí te ayudamos a estructurar contenido claro (AEO): FAQs honestas, entidades consistentes y datos visibles — lo que suele mejorar tanto el SEO en Google como cómo la IA resume tu negocio.`,
+          },
+        },
+        {
+          "@type": "Question",
+          name: "¿ListingBoost es una SEO tool para Google y para IA?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Sí. Combina auditoría SEO (seo audit tool), huecos desde la SERP, seguimiento de posiciones y generación de contenido con IA orientada a rankear y a answer engine optimization (AEO) para asistentes como ChatGPT.",
           },
         },
       ],
@@ -284,24 +301,22 @@ export default function HomePage() {
               <div className="order-1 flex min-w-0 max-w-full flex-col gap-4 sm:gap-5 lg:order-2 lg:col-span-7 xl:col-span-7">
                 <div className="space-y-3">
                   <p className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-border/60 bg-muted/25 px-2.5 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-primary/95">
-                    <LayoutGrid className="h-3 w-3 shrink-0" aria-hidden />
-                    <span>{ENGINE_NAME}</span>
+                    <Search className="h-3 w-3 shrink-0" aria-hidden />
+                    <span>SEO tool</span>
                     <span className="text-muted-foreground/70">·</span>
-                    <span className="normal-case tracking-normal text-foreground/85">SaaS SEO + IA</span>
+                    <span className="normal-case tracking-normal text-foreground/85">Google + AEO · {ENGINE_NAME}</span>
                   </p>
                   <h1
                     id="home-hero-heading"
                     className="text-balance text-2xl font-bold leading-[1.15] tracking-tight text-foreground sm:text-3xl lg:text-[2.125rem] lg:leading-tight"
                   >
-                    <span className="text-gradient-brand">Mejora tu SEO en Google</span>
-                    <span className="text-foreground">
-                      {" "}
-                      y crea contenido que los algoritmos de IA entienden
-                    </span>
+                    <span className="text-gradient-brand">Rankea en Google</span>
+                    <span className="text-foreground"> y haz que la IA recomiende tu web</span>
                   </h1>
                   <p className="max-w-xl text-pretty text-sm leading-snug text-muted-foreground">
-                    Analizamos tu web, tu SEO y tu competencia para generar contenido optimizado que mejora tu
-                    posicionamiento en Google y es entendido por buscadores y sistemas de IA.
+                    Audita tu web, optimiza tu contenido y mejora tu posicionamiento en buscadores y asistentes como
+                    ChatGPT o DeepSeek. Te ayudamos a posicionar en Google y a preparar respuestas que la IA pueda
+                    entender y citar con más precisión.
                   </p>
                 </div>
 
@@ -341,19 +356,19 @@ export default function HomePage() {
 
                 <div className="rounded-xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.08] via-card to-transparent p-3.5 shadow-sm ring-1 ring-emerald-500/15 sm:p-4">
                   <p className="font-mono text-[9px] font-semibold uppercase tracking-widest text-emerald-800/90 dark:text-emerald-200/90">
-                    Sin tarjeta
+                    Sin tarjeta · seo audit tool
                   </p>
                   <p className="mt-1 text-sm font-bold text-foreground">
-                    Auditoría URL <span className="text-emerald-600 dark:text-emerald-400">gratis</span>
+                    Primera URL <span className="text-emerald-600 dark:text-emerald-400">gratis</span>
                   </p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">Puntuación + qué arreglar primero.</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">Score rápido + prioridades para rankear.</p>
                   <Button
                     size="sm"
                     className="mt-3 h-9 w-full border border-emerald-600/40 bg-emerald-600 text-white hover:bg-emerald-600/90 dark:bg-emerald-600 sm:w-auto"
                     asChild
                   >
                     <Link href="/register?callbackUrl=/dashboard/audit">
-                      Probar ahora
+                      Analizar mi web gratis
                       <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                   </Button>
@@ -365,12 +380,15 @@ export default function HomePage() {
                     className="h-10 border border-primary/30 bg-gradient-to-r from-primary to-primary/88 px-5 text-sm shadow-md sm:h-11"
                     asChild
                   >
-                    <Link href="/register">
-                      Crear cuenta
+                    <Link href="/register?callbackUrl=/dashboard/audit">
+                      Analizar mi web gratis
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" className="h-10 px-4 text-sm sm:h-11" asChild>
+                    <Link href="/register">Crear cuenta</Link>
+                  </Button>
+                  <Button size="lg" variant="ghost" className="h-10 px-3 text-sm text-muted-foreground sm:h-11" asChild>
                     <Link href="/login">Entrar</Link>
                   </Button>
                   <Button size="lg" variant="ghost" className="h-10 px-3 text-sm text-muted-foreground sm:h-11" asChild>
@@ -390,16 +408,164 @@ export default function HomePage() {
                   >
                     Guía SEO vs AEO
                   </Link>
+                  <Link
+                    href="/appear-in-chatgpt"
+                    className="rounded-md border border-border/60 bg-muted/20 px-2 py-1 hover:border-primary/30 hover:text-foreground"
+                  >
+                    Aparecer en IA
+                  </Link>
                 </div>
               </div>
             </div>
           </section>
 
+          {/* Problema → solución → IA → cómo funciona (narrativa conversión) */}
+          <div className="mx-auto mt-14 max-w-5xl space-y-12 sm:mt-16 sm:space-y-16">
+            <section
+              id="problema-visibilidad"
+              className="rounded-2xl border border-rose-500/30 bg-gradient-to-br from-rose-500/[0.07] via-card/80 to-transparent px-4 py-8 shadow-sm sm:px-8 sm:py-10"
+              aria-labelledby="home-problema-heading"
+            >
+              <h2
+                id="home-problema-heading"
+                className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+              >
+                Tu web no aparece donde importa
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm text-muted-foreground sm:text-base">
+                <li className="flex gap-3">
+                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600 dark:text-rose-400" aria-hidden />
+                  <span>
+                    <strong className="text-foreground">No estás en Google</strong> en las búsquedas que te traen
+                    clientes.
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600 dark:text-rose-400" aria-hidden />
+                  <span>
+                    <strong className="text-foreground">No apareces cuando alguien pregunta a la IA</strong> — o te
+                    resumen mal.
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600 dark:text-rose-400" aria-hidden />
+                  <span>
+                    <strong className="text-foreground">Tus competidores sí</strong> están captando ese tráfico y esa
+                    intención.
+                  </span>
+                </li>
+              </ul>
+              <p className="mt-6 text-base font-semibold text-foreground sm:text-lg">
+                Pierdes tráfico y ventas cada día.
+              </p>
+            </section>
+
+            <section id="solucion-producto" aria-labelledby="home-solucion-heading">
+              <h2
+                id="home-solucion-heading"
+                className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+              >
+                {APP_NAME} lo soluciona en segundos
+              </h2>
+              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+                {[
+                  "Auditoría SEO completa de páginas públicas (seo audit tool).",
+                  "Optimización de contenido con IA alineada a intención de búsqueda.",
+                  "Keywords y temas que de verdad mueven la aguja en Google.",
+                  "Mejoras pensadas para Google y para answer engine optimization (AEO).",
+                  "Huecos frente a rivales desde lo que muestra la SERP.",
+                ].map((line) => (
+                  <li
+                    key={line}
+                    className="flex gap-3 rounded-xl border border-border/60 bg-card/80 px-4 py-3 text-sm text-muted-foreground"
+                  >
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden />
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section
+              id="seo-para-ia-home"
+              className="rounded-2xl border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.08] via-card/90 to-primary/[0.04] px-4 py-8 sm:px-8 sm:py-10"
+              aria-labelledby="home-aeo-block-heading"
+            >
+              <div className="flex flex-wrap items-start gap-3">
+                <Bot className="h-8 w-8 shrink-0 text-violet-600 dark:text-violet-400" aria-hidden />
+                <div className="min-w-0">
+                  <h2
+                    id="home-aeo-block-heading"
+                    className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+                  >
+                    Optimiza también para IA (no solo Google)
+                  </h2>
+                  <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    Las búsquedas están cambiando: ahora la gente pregunta a ChatGPT y a otros asistentes. Nosotros te
+                    ayudamos a preparar contenido <strong className="text-foreground">claro, estructurado y verificable</strong>{" "}
+                    para que rankees en Google y para que la IA tenga mejores señales al recomendar soluciones en tu
+                    categoría.
+                  </p>
+                  <Button className="mt-5" variant="secondary" asChild>
+                    <Link href="/seo-for-ai">
+                      SEO para IA y AEO
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </section>
+
+            <section id="como-funciona-home" aria-labelledby="home-como-heading">
+              <h2
+                id="home-como-heading"
+                className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+              >
+                Cómo funciona
+              </h2>
+              <ol className="mt-6 grid gap-4 sm:grid-cols-2">
+                {[
+                  {
+                    n: "1",
+                    t: "Introduces tu web",
+                    d: "URL, keyword o producto: tú eliges por dónde empezar.",
+                  },
+                  {
+                    n: "2",
+                    t: "Analizamos SEO + contenido",
+                    d: "SERP, competencia pública, on-page y brechas accionables.",
+                  },
+                  {
+                    n: "3",
+                    t: "Te damos mejoras claras",
+                    d: "Prioridades, textos y checklist — sin humo.",
+                  },
+                  {
+                    n: "4",
+                    t: "Copias y subes",
+                    d: "Tú publicas en tu CMS, Shopify o donde toque; mantienes control total.",
+                  },
+                ].map((step) => (
+                  <li
+                    key={step.n}
+                    className="list-none rounded-2xl border border-border/70 bg-card/90 p-5 shadow-sm backdrop-blur-sm"
+                  >
+                    <span className="font-mono text-xs font-bold uppercase tracking-widest text-primary">
+                      Paso {step.n}
+                    </span>
+                    <h3 className="mt-2 text-lg font-semibold text-foreground">{step.t}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.d}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </div>
+
           {/* Stats strip */}
           <div className="mt-16 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:mt-20 lg:gap-4">
             {[
-              { k: "Listings procesados", v: TRUST_STATS.productsAnalyzed },
-              { k: "Operadores activos", v: TRUST_STATS.sellersActive },
+              { k: "Contenidos optimizados", v: TRUST_STATS.productsAnalyzed },
+              { k: "Equipos activos", v: TRUST_STATS.sellersActive },
               { k: "Horas ahorradas", v: TRUST_STATS.hoursSaved },
               { k: "Valor estimado", v: TRUST_STATS.estimatedValueSaved },
             ].map((item) => (
@@ -415,7 +581,7 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Listings multicanal: mock mejorado + copy dedicado */}
+          {/* Ejecución multicanal (opcional): marketplaces y redes */}
           <section
             id="listings-multicanal"
             className="mt-16 min-w-0 max-w-full scroll-mt-20 lg:mt-20"
@@ -425,20 +591,18 @@ export default function HomePage() {
               <div className="order-2 min-w-0 max-w-full space-y-4 lg:order-1 lg:col-span-5">
                 <p className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-muted/25 px-2.5 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-primary/95">
                   <ShoppingBag className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                  Catálogo & marketplaces
+                  Extra · ecommerce & marketplaces
                 </p>
                 <h2
                   id="home-listings-heading"
                   className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
                 >
-                  Mismo producto,{" "}
-                  <span className="text-gradient-brand">listings que convierten</span> en cada canal
+                  ¿Vendes también en{" "}
+                  <span className="text-gradient-brand">Wallapop, eBay o Shopify</span>?
                 </h2>
                 <p className="max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Cuando el SEO de tu web ya está encaminado, el cuello de botella suele ser el throughput: títulos,
-                  bullets, hashtags y tono distintos para Wallapop, eBay, Shopify o redes — sin perder coherencia de
-                  marca. El boost de ficha transforma tu input en copy listo para publicar con reglas por canal y{" "}
-                  {ENGINE_NAME}.
+                  Además del SEO web, puedes generar fichas y anuncios con el mismo motor: títulos, bullets, hashtags y
+                  tono por canal — para escalar publicación sin perder coherencia de marca con {ENGINE_NAME}.
                 </p>
                 <ul className="max-w-lg space-y-2.5 text-sm text-muted-foreground">
                   {[
@@ -475,72 +639,46 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Value bar */}
+          {/* Visibilidad dual: Google + IA (AI visibility score — concepto producto) */}
           <div
             id="features"
             className="relative mt-16 overflow-hidden rounded-2xl border border-primary/15 value-bar-pattern bg-gradient-to-r from-primary/[0.08] via-card/90 to-accent/[0.08] px-4 py-10 sm:px-8"
           >
-            <div className="grid gap-8 md:grid-cols-3">
-              {[
-                {
-                  icon: CheckCircle2,
-                  t: "SEO que trae tráfico",
-                  d: "Keywords, títulos y estructura alineados a intención de búsqueda real.",
-                },
-                {
-                  icon: TrendingUp,
-                  t: "Copy que cierra ventas",
-                  d: "Bullets, CTAs y prueba social sugerida para subir conversión en el listing.",
-                },
-                {
-                  icon: Timer,
-                  t: "Resultados en segundos",
-                  d: "Pipeline optimizado: menos tiempo en teclado, más tiempo facturando.",
-                },
-              ].map(({ icon: Icon, t, d }) => (
-                <div key={t} className="flex flex-col items-center gap-3 text-center md:flex-row md:items-start md:gap-4 md:text-left">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <p className="font-semibold">{t}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{d}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Steps */}
-          <div className="mx-auto mt-16 grid max-w-5xl gap-4 sm:grid-cols-3">
-            {[
-              {
-                step: "01",
-                t: "Ingest",
-                d: "Imagen + texto. Detectamos intención de compra y señales de conversión.",
-              },
-              {
-                step: "02",
-                t: `${ENGINE_NAME}`,
-                d: "Motor propietario: tono, hashtags, estructura y reglas por marketplace o tienda.",
-              },
-              {
-                step: "03",
-                t: "Ship",
-                d: "Copia en un clic, export limpio, historial para iterar y escalar revenue.",
-              },
-            ].map((s) => (
-              <div
-                key={s.step}
-                className="card-tech-hover relative rounded-2xl border border-border/70 bg-card/95 p-6 text-left shadow-sm backdrop-blur-sm"
-              >
-                <span className="mb-3 inline-flex font-mono text-xs font-bold uppercase tracking-widest text-primary">
-                  {s.step}
+            <h2 className="text-center text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Visibilidad en Google y en IA
+            </h2>
+            <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-muted-foreground sm:text-base">
+              Piensa en dos puntuaciones complementarias:{" "}
+              <strong className="text-foreground">score en buscadores</strong> y{" "}
+              <strong className="text-foreground">score AEO</strong> (qué tan bien puede una IA entender y resumir tu
+              oferta).
+            </p>
+            <div className="mx-auto mt-10 grid max-w-4xl gap-6 md:grid-cols-2">
+              <div className="flex gap-4 rounded-2xl border border-border/70 bg-card/95 p-6 shadow-sm backdrop-blur-sm">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                  <Target className="h-6 w-6" aria-hidden />
                 </span>
-                <h2 className="text-lg font-semibold">{s.t}</h2>
-                <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">Score en Google</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    Posiciones, huecos frente a rivales, intención de búsqueda y quick wins on-page desde la auditoría y el
+                    SEO Gap Finder.
+                  </p>
+                </div>
               </div>
-            ))}
+              <div className="flex gap-4 rounded-2xl border border-violet-500/20 bg-card/95 p-6 shadow-sm backdrop-blur-sm">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-violet-700 dark:text-violet-300">
+                  <Bot className="h-6 w-6" aria-hidden />
+                </span>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">Score en IA (AEO)</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    Claridad semántica, FAQs útiles, coherencia título–H1–texto y contenido que reduce ambigüedad cuando
+                    alguien pregunta a ChatGPT u otros asistentes.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Feature cards */}
@@ -550,10 +688,10 @@ export default function HomePage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary/15 bg-primary/10 text-primary">
                   <ImagePlus className="h-6 w-6" />
                 </div>
-                <h2 className="text-xl font-semibold">Boost multicanal + hashtags</h2>
+                <h2 className="text-xl font-semibold">Boost multicanal + hashtags (opcional)</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Títulos con intención, descripciones escaneables, bloque de hashtags para redes y long-tail
-                  sin relleno. Shopify: meta, slug, FAQs y schema sugerido.
+                  Si vendes en varios canales: títulos con intención, descripciones escaneables, hashtags para redes y
+                  long-tail sin relleno. Shopify: meta, slug, FAQs y schema sugerido.
                 </p>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   {["CTR + visibilidad en búsqueda", "Hashtags copiables en un clic", "Tono adaptativo por canal"].map(
@@ -628,7 +766,7 @@ export default function HomePage() {
             </Card>
             <div className="space-y-6">
               <h2 className="text-2xl font-bold sm:text-3xl">
-                Prueba {APP_NAME} gratis. Únete a miles de vendedores que ya priorizan margen.
+                Prueba {APP_NAME} gratis. Equipos de marketing y ecommerce que priorizan SEO + ejecución.
               </h2>
               <Card className="border-border/80 bg-card/95 backdrop-blur-sm">
                 <CardContent className="p-6">
@@ -661,7 +799,7 @@ export default function HomePage() {
                 className="h-12 border border-primary/20 bg-gradient-to-r from-primary to-primary/88 px-8 shadow-lg shadow-primary/25"
                 asChild
               >
-                <Link href="/register">Registrarse y generar mi primer boost</Link>
+                <Link href="/register?callbackUrl=/dashboard/audit">Analizar mi web gratis</Link>
               </Button>
             </div>
           </div>
@@ -669,11 +807,11 @@ export default function HomePage() {
           {/* Why grid */}
           <div className="mx-auto mt-20 max-w-5xl">
             <h2 className="text-center text-2xl font-bold sm:text-3xl">
-              Motor diseñado para que factures más
+              Motor para rankear y para que la IA te entienda
             </h2>
             <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-muted-foreground">
-              No es un LLM suelto: {ENGINE_NAME} entrena el output en SEO real, intención de búsqueda y reglas
-              de cada canal.
+              No es un LLM genérico: {ENGINE_NAME} orienta el output a SEO real, AEO, intención de búsqueda y reglas por
+              canal cuando publicas en marketplaces.
             </p>
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
@@ -721,13 +859,18 @@ export default function HomePage() {
 
           {/* Guías SEO — enlazo interno a landings de adquisición */}
           <div className="mx-auto mt-20 max-w-5xl rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.06] via-card/90 to-violet-500/[0.05] p-6 shadow-sm sm:p-10">
-            <h2 className="text-2xl font-bold sm:text-3xl">Guías gratis: más visibilidad y más ventas</h2>
+            <h2 className="text-2xl font-bold sm:text-3xl">Guías: SEO tool, Google, IA y marketplaces</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Playbooks para Wallapop, eBay, Etsy y Shopify: títulos, descripciones y diagnósticos cuando no vendes.
-              Todo enlaza con el mismo motor que usas en el panel.
+              Páginas tipo AEO + playbooks de catálogo. Mezcla estrategia SEO, answer engine optimization y ejecución con
+              el mismo motor.
             </p>
             <ul className="mt-6 grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
               {[
+                { href: "/what-is-seo-tool", label: "¿Qué es una SEO tool?" },
+                { href: "/how-to-rank-on-google", label: "Cómo rankear en Google" },
+                { href: "/seo-for-ai", label: "SEO para IA (AEO)" },
+                { href: "/appear-in-chatgpt", label: "Aparecer en ChatGPT" },
+                { href: "/blog/mejores-herramientas-seo-2026-semrush-alternativas", label: "Herramientas SEO 2026 vs Semrush" },
                 { href: "/seo-wallapop", label: "SEO Wallapop" },
                 { href: "/optimizar-listings-wallapop", label: "Optimizar listings Wallapop" },
                 { href: "/como-vender-mas-en-wallapop", label: "Cómo vender más en Wallapop" },
@@ -754,16 +897,40 @@ export default function HomePage() {
             </ul>
             <div className="mt-6">
               <Button asChild className="h-11">
-                <Link href="/register">Analizar listing gratis</Link>
+                <Link href="/register?callbackUrl=/dashboard/audit">Analizar mi web gratis</Link>
               </Button>
             </div>
           </div>
 
+          <section
+            id="cta-final-home"
+            className="mx-auto mt-16 max-w-3xl rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/[0.1] via-card to-violet-500/[0.06] p-8 text-center shadow-lg shadow-primary/10 sm:p-10"
+            aria-labelledby="home-cta-final-heading"
+          >
+            <h2 id="home-cta-final-heading" className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Empieza gratis y mejora tu SEO hoy
+            </h2>
+            <p className="mt-3 text-sm text-muted-foreground sm:text-base">
+              Auditoría URL sin tarjeta. Luego escala con planes transparentes.
+            </p>
+            <Button
+              asChild
+              size="lg"
+              className="mt-6 h-12 border border-primary/20 bg-gradient-to-r from-primary to-primary/88 px-8 shadow-lg"
+            >
+              <Link href="/register?callbackUrl=/dashboard/audit">
+                Analizar mi web gratis
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </section>
+
           <div className="mx-auto mt-16 max-w-5xl rounded-2xl border border-border/70 bg-card/90 p-6 shadow-sm sm:p-8">
             <h2 className="text-2xl font-bold sm:text-3xl">Comparativa honesta: suite SEO vs SEO operativo</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Las suites SEO clásicas son excelentes para investigación y reporting a gran escala. ListingBoost destaca
-              en el cuello de botella más habitual: convertir análisis en ejecución real de catálogo y páginas con IA.
+              Semrush, Ahrefs y similares son best-in-class para datos y reporting. {APP_NAME} destaca cuando el cuello
+              de botella es <strong className="text-foreground">ejecutar</strong>: pasar del análisis a páginas y textos
+              publicados con IA, sin perder control editorial.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
               Si tu objetivo es throughput SEO + ecommerce, revisa la comparativa por caso de uso y decide qué capa
