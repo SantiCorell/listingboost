@@ -4,6 +4,7 @@ import {
   SEO_CATEGORIAS,
   VENDER_WALLAPOP_PRODUCTOS,
 } from "@/lib/seo/growth-registry";
+import { KEYWORD_LANDING_SLUGS } from "@/lib/seo/keyword-landings";
 
 type ChangeFrequency = NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
 
@@ -27,6 +28,11 @@ function collectRawSpecs(): MarketingSitemapSpec[] {
     { path: "", priority: 1, changeFrequency: "weekly" },
     /** Hub SEO comercial — prioridad por encima del resto de landings estáticas. */
     { path: "/seo-operativo-ecommerce", priority: 0.93, changeFrequency: "weekly" },
+    ...KEYWORD_LANDING_SLUGS.map((slug) => ({
+      path: `/${slug}`,
+      priority: 0.92,
+      changeFrequency: "weekly" as const,
+    })),
     { path: "/blog", priority: 0.82, changeFrequency: "weekly" },
     ...GROWTH_STATIC_ROUTES.map((path) => ({
       path,
