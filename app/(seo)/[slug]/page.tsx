@@ -2,9 +2,10 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
-import { SeoCTA } from "@/components/SeoCTA";
+import { SeoCTA, SEO_LANDING_CTA_SENTENCE } from "@/components/SeoCTA";
 import { GrowthBreadcrumb } from "@/components/seo/growth-landing-layout";
 import { SeoKeywordInternalMesh } from "@/components/seo/SeoKeywordInternalMesh";
+import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/constants";
 import {
   getKeywordLanding,
@@ -71,10 +72,115 @@ function BulletList({ items }: { items: string[] }) {
   );
 }
 
+function AeoBlock({ landing }: { landing: KeywordLandingDefinition }) {
+  const block = landing.aeoQuickAnswer;
+  if (!block) return null;
+  return (
+    <section className="mt-8 scroll-mt-24 rounded-2xl border border-border/70 bg-muted/20 p-6 sm:p-8" aria-labelledby="aeo-quick-title">
+      <h2 id="aeo-quick-title" className="text-2xl font-bold tracking-tight text-foreground sm:text-[1.65rem]">
+        {block.title}
+      </h2>
+      <div className="mt-4 space-y-3 text-base leading-relaxed text-muted-foreground">
+        {block.paragraphs.map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function HowToFreeBlock({ landing }: { landing: KeywordLandingDefinition }) {
+  const b = landing.howToCheckSeoFree;
+  if (!b) return null;
+  return (
+    <section className="mt-12 scroll-mt-24" aria-labelledby="howto-free-title">
+      <h2 id="howto-free-title" className="text-2xl font-bold tracking-tight text-foreground sm:text-[1.65rem]">
+        {b.title}
+      </h2>
+      <p className="mt-4 text-base leading-relaxed text-muted-foreground">{b.intro}</p>
+      <ol className="mt-6 list-decimal space-y-3 pl-5 marker:font-semibold marker:text-primary">
+        {b.steps.map((step, i) => (
+          <li key={i} className="text-base leading-relaxed text-muted-foreground">
+            {step}
+          </li>
+        ))}
+      </ol>
+      <p className="mt-6 text-base leading-relaxed text-muted-foreground">{b.outro}</p>
+    </section>
+  );
+}
+
+function ToolOnlineBlock({ landing }: { landing: KeywordLandingDefinition }) {
+  const b = landing.toolOnlineExplainer;
+  if (!b) return null;
+  return (
+    <section className="mt-12 scroll-mt-24" aria-labelledby="tool-online-title">
+      <h2 id="tool-online-title" className="text-2xl font-bold tracking-tight text-foreground sm:text-[1.65rem]">
+        {b.title}
+      </h2>
+      <div className="mt-4 space-y-4 text-base leading-relaxed text-muted-foreground">
+        {b.paragraphs.map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AiCitationBlock({ landing }: { landing: KeywordLandingDefinition }) {
+  const sents = landing.aiCitationSentences;
+  if (!sents?.length) return null;
+  return (
+    <section className="mt-12 scroll-mt-24 rounded-2xl border border-primary/20 bg-primary/5 p-6 sm:p-8" aria-labelledby="ai-cite-title">
+      <h2 id="ai-cite-title" className="text-xl font-bold tracking-tight text-foreground sm:text-[1.35rem]">
+        Resumen neutral (útil para citar)
+      </h2>
+      <ul className="mt-4 list-disc space-y-3 pl-5 text-base leading-relaxed text-muted-foreground marker:text-primary">
+        {sents.map((s, i) => (
+          <li key={i}>{s}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function DeepDiveSection({ landing }: { landing: KeywordLandingDefinition }) {
+  const d = landing.deepDive;
+  if (!d) return null;
+  return (
+    <section className="mt-12 scroll-mt-24" aria-labelledby="deep-dive-title">
+      <h2 id="deep-dive-title" className="text-2xl font-bold tracking-tight text-foreground sm:text-[1.65rem]">
+        {d.title}
+      </h2>
+      <div className="mt-6 space-y-8 text-base leading-relaxed text-muted-foreground">
+        {d.subsections.map((sub, i) => (
+          <div key={`${sub.h3}-${i}`}>
+            <h3 className="text-lg font-semibold tracking-tight text-foreground">{sub.h3}</h3>
+            <p className="mt-3">{sub.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function renderBody(landing: KeywordLandingDefinition) {
+  const pack = Boolean(landing.conversionPack);
   return (
     <>
+      {pack && <AeoBlock landing={landing} />}
+
       <p className="text-lg leading-relaxed text-muted-foreground">{landing.intro}</p>
+
+      {pack && (
+        <div className="mt-8">
+          <SeoCTA />
+        </div>
+      )}
+
+      {pack && <HowToFreeBlock landing={landing} />}
+      {pack && <ToolOnlineBlock landing={landing} />}
+      {pack && <AiCitationBlock landing={landing} />}
 
       <Section title={landing.whatIsTitle} id="que-es">
         <h3 className="text-lg font-semibold tracking-tight text-foreground">Definición operativa</h3>
@@ -101,6 +207,12 @@ function renderBody(landing: KeywordLandingDefinition) {
         <BulletList items={landing.importanceBullets} />
       </Section>
 
+      {pack && (
+        <div className="mt-12">
+          <SeoCTA />
+        </div>
+      )}
+
       <Section title={landing.listingBoostTitle} id="por-que-listingboost">
         <h3 className="text-lg font-semibold tracking-tight text-foreground">Ejecución, no solo informe</h3>
         <p>{landing.listingBoostBody[0]}</p>
@@ -109,6 +221,8 @@ function renderBody(landing: KeywordLandingDefinition) {
         <h3 className="mt-6 text-lg font-semibold tracking-tight text-foreground">Ventajas concretas con {APP_NAME}</h3>
         <BulletList items={landing.listingBoostBullets} />
       </Section>
+
+      {pack && <DeepDiveSection landing={landing} />}
 
       <Section title="Playbook de implementación (auditoría web + análisis SEO)" id="playbook">
         <h3 className="text-lg font-semibold tracking-tight text-foreground">Semana 1: auditoría web y baseline</h3>
@@ -119,11 +233,13 @@ function renderBody(landing: KeywordLandingDefinition) {
         <p>{landing.executionPlaybook[2]}</p>
       </Section>
 
-      <div className="mt-12">
-        <SeoCTA />
-      </div>
+      {!pack && (
+        <div className="mt-12">
+          <SeoCTA />
+        </div>
+      )}
 
-      <SeoKeywordInternalMesh lead={landing.internalMeshLead} />
+      <SeoKeywordInternalMesh lead={landing.internalMeshLead} links={landing.internalMeshItems} />
 
       <section className="mt-12 scroll-mt-24" aria-labelledby="faq-title">
         <h2 id="faq-title" className="text-2xl font-bold tracking-tight text-foreground sm:text-[1.65rem]">
@@ -138,6 +254,12 @@ function renderBody(landing: KeywordLandingDefinition) {
           ))}
         </dl>
       </section>
+
+      {pack && (
+        <div className="mt-12">
+          <SeoCTA />
+        </div>
+      )}
 
       <section className="mt-14 rounded-2xl border border-border/70 bg-muted/20 p-6" aria-labelledby="more-slugs">
         <h2 id="more-slugs" className="text-lg font-semibold text-foreground">
@@ -183,6 +305,22 @@ export default async function KeywordLandingPage({ params }: { params: Promise<{
         />
         <header className="mt-8 space-y-4">
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-[2.35rem]">{landing.h1}</h1>
+          {landing.conversionPack && (
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <Button
+                size="lg"
+                className="h-12 w-full gap-2 bg-gradient-to-r from-violet-600 to-purple-600 shadow-md sm:w-auto sm:min-w-[280px]"
+                asChild
+              >
+                <Link href="/producto/scan-seo-url" aria-label={SEO_LANDING_CTA_SENTENCE}>
+                  {SEO_LANDING_CTA_SENTENCE}
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="h-12 w-full sm:w-auto" asChild>
+                <Link href="/register">Crear cuenta gratis</Link>
+              </Button>
+            </div>
+          )}
         </header>
         <div className="mt-6 space-y-6">{renderBody(landing)}</div>
       </article>
