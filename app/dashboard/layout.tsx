@@ -5,6 +5,7 @@ import { userIsAdmin } from "@/lib/auth/admin";
 import { hasSeoGapFinder } from "@/lib/plan-features";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { DashboardStripeReturnSync } from "@/components/dashboard/dashboard-stripe-return-sync";
+import { JobNotificationsProvider } from "@/components/jobs/job-notifications-provider";
 
 export default async function DashboardLayout({
   children,
@@ -26,6 +27,7 @@ export default async function DashboardLayout({
       <Suspense fallback={null}>
         <DashboardStripeReturnSync />
       </Suspense>
+      <JobNotificationsProvider />
       {children}
     </DashboardShell>
   );

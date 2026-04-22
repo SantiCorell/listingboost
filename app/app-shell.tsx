@@ -31,8 +31,12 @@ export default async function AppShell({ children }: { children: React.ReactNode
     <>
       <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
       <AppProviders session={session}>
-        <NavigationStyleReset />
-        <RouteStyleGuard />
+        {process.env.NODE_ENV === "development" ? (
+          <>
+            <NavigationStyleReset />
+            <RouteStyleGuard />
+          </>
+        ) : null}
         <div className="flex min-h-screen flex-col">
           <a
             href="#contenido-principal"

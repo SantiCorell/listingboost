@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useState, type ComponentType } from "react";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -39,8 +40,12 @@ import {
   SearchCheck,
   ScanSearch,
 } from "lucide-react";
-import { AuthModal } from "@/components/auth/auth-modal";
 import { cn } from "@/lib/utils";
+
+const AuthModal = dynamic(
+  () => import("@/components/auth/auth-modal").then((m) => ({ default: m.AuthModal })),
+  { ssr: false },
+);
 
 type ProductGuide = {
   href: string;
@@ -677,12 +682,14 @@ export function SiteHeader({ googleAuthAvailable }: { googleAuthAvailable: boole
           )}
         </div>
       </div>
-      <AuthModal
-        open={authOpen}
-        onOpenChange={setAuthOpen}
-        googleAuthAvailable={googleAuthAvailable}
-        initialTab={authInitialTab}
-      />
+      {authOpen ? (
+        <AuthModal
+          open={authOpen}
+          onOpenChange={setAuthOpen}
+          googleAuthAvailable={googleAuthAvailable}
+          initialTab={authInitialTab}
+        />
+      ) : null}
     </header>
   );
 }
