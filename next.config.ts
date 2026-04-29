@@ -17,6 +17,8 @@ const BLOG_CANONICAL_REWRITES = [
 ] as const;
 
 const nextConfig: NextConfig = {
+  compress: true,
+  poweredByHeader: false,
   async rewrites() {
     return BLOG_CANONICAL_REWRITES.map((slug) => ({
       source: `/${slug}`,
@@ -33,6 +35,8 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 14,
     remotePatterns: [
       { protocol: "https", hostname: "utfs.io", pathname: "/**" },
       { protocol: "https", hostname: "*.uploadthing.com", pathname: "/**" },

@@ -33,12 +33,26 @@ export function PageViewTracker() {
     const id = visitorId();
     if (!id) return;
 
-    void fetch("/api/analytics/page-view", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ path: pathname, visitorId: id }),
-      keepalive: true,
-    }).catch(() => {});
+    const payload = JSON.stringify({ path: pathname, visitorId: id });
+    const send = () => {
+      if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+        const blob = new Blob([payload], { type: "application/json" });
+        navigator.sendBeacon("/api/analytics/page-view", blob);
+        return;
+      }
+      void fetch("/api/analytics/page-view", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+        keepalive: true,
+      }).catch(() => {});
+    };
+
+    if (typeof window !== "undefined" && typeof window.requestIdleCallback === "function") {
+      window.requestIdleCallback(send, { timeout: 1200 });
+      return;
+    }
+    window.setTimeout(send, 0);
   }, [pathname, ready, analyticsAllowed]);
 
   useEffect(() => {
